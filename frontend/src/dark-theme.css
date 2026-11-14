@@ -1,0 +1,581 @@
+/*
+ * Dark theme overrides for component styles that hardcode light colors.
+ * Every rule is scoped to body[data-faithflow-theme="dark"] so the light theme is untouched,
+ * and the extra specificity lets these win over lazily loaded page stylesheets.
+ * Screen-only so printed reports keep their light paper styling.
+ */
+@media screen {
+
+/* Layout */
+body[data-faithflow-theme="dark"] .dashboard-layout {
+  background: linear-gradient(180deg, #0b1729 0%, var(--ff-background) 45%, var(--ff-background) 100%);
+}
+
+body[data-faithflow-theme="dark"] :is(
+  .dashboard-panel:not(.dashboard-hero):not(.admin-parish-activities-card) h2,
+  .dashboard-panel:not(.dashboard-hero):not(.admin-parish-activities-card) h3,
+  .admin-content-card:not(.admin-announcements-card):not(.admin-special-programs-card):not(.admin-parish-activities-card) h3,
+  .profile-card h2,
+  .settings-section-card h3,
+  .priest-management-header h3,
+  .priest-schedule-scroll-body h4,
+  .priest-schedule-appointments-section h4,
+  .priest-dashboard-list-header h3,
+  .appointment-confirm-modal h3,
+  .appointment-details-modal h3,
+  .account-type-modal h2,
+  .priest-confirm-modal h4,
+  .priest-calendar-modal-header h3,
+  .priest-details-modal-header h3,
+  .priest-modal-card .priest-management-header h3,
+  .user-history-modal-section h4,
+  .user-history-confirm-modal h4,
+  .certificate-approve-modal-header h3,
+  .profile-edit-modal h3,
+  .template-step-editor-modal-body h4,
+  .sacrament-requirements-modal-heading,
+  .about-parish-activity-modal-header h4
+) {
+  color: var(--ff-primary-on-dark);
+}
+
+/* Sidebar */
+body[data-faithflow-theme="dark"] .app-sidebar {
+  background-color: var(--ff-surface);
+  border-right-color: var(--ff-border);
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .sidebar-icon {
+  background: var(--ff-surface-elevated);
+  border-color: var(--ff-border);
+  color: var(--ff-primary-on-dark);
+}
+
+body[data-faithflow-theme="dark"] .sidebar-item.is-active::before {
+  background: var(--ff-primary-on-dark);
+}
+
+body[data-faithflow-theme="dark"] :is(.sidebar-item button:hover, .sidebar-item.is-active button) {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* Header dropdowns */
+body[data-faithflow-theme="dark"] .user-menu-item:hover {
+  background-color: var(--ff-surface-elevated);
+}
+
+body[data-faithflow-theme="dark"] :is(.header-schedule-notice__time, .notification-menu-schedule-time) {
+  background: var(--ff-surface-elevated);
+  border-color: var(--ff-border);
+  color: var(--ff-text);
+}
+
+/* Generic surfaces: panels, modals and cards */
+body[data-faithflow-theme="dark"] :is(.dashboard-layout, .page-guide-modal)
+  :is([class$="-panel"], [class*="-panel "], [class$="-modal"], [class*="-modal "]):not(
+    [class*="hero"],
+    [class*="field"],
+    .admin-announcements-card,
+    .admin-special-programs-card,
+    .admin-parish-activities-card,
+    :is(.dashboard-hero, .admin-announcements-card, .admin-special-programs-card, .admin-parish-activities-card) *
+  ) {
+  background: var(--ff-container);
+  border-color: var(--ff-container-border);
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] :is(.dashboard-layout, .page-guide-modal)
+  :is([class$="-card"], [class*="-card "], .dashboard-list-item, .appointment-request-item, .appointment-detail-item, .template-step-task-item, .progress-request-overview-item, .priest-dashboard-item):not(
+    [class*="hero"],
+    .admin-announcements-card,
+    .admin-special-programs-card,
+    .admin-parish-activities-card,
+    .progress-step-card,
+    .settings-dashboard-preview-card,
+    :is(.dashboard-hero, .admin-announcements-card, .admin-special-programs-card, .admin-parish-activities-card, .progress-step-card, .settings-dashboard-preview-card) *
+  ) {
+  background: var(--ff-container-elevated);
+  border-color: var(--ff-container-border);
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] :is(.dashboard-main, .page-guide-modal)
+  :is(p, label, li, dt, dd, h4, h5, h6, strong, em, small, legend, figcaption, td, th):not(
+    [class*="badge"],
+    [class*="chip"],
+    [class*="status"],
+    [class*="pill"],
+    [class*="tag"],
+    [class*="error"],
+    [class*="success"],
+    [class*="warning"],
+    :is(.dashboard-hero, .admin-announcements-card, .admin-special-programs-card, .admin-parish-activities-card, .progress-step-card, .settings-dashboard-preview-card) *
+  ) {
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] :is(.dashboard-main, .page-guide-modal) :is(p, small, dd, figcaption)[class*="muted"],
+body[data-faithflow-theme="dark"] :is(.dashboard-main, .page-guide-modal) :is([class*="-meta"], [class*="-hint"], [class*="-subtitle"], [class*="-label"]):not([class*="badge"], [class*="chip"]) {
+  color: var(--ff-text-muted);
+}
+
+/* Tables */
+body[data-faithflow-theme="dark"] .dashboard-main table {
+  background: transparent;
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .dashboard-main :is(thead, thead tr, th) {
+  background: var(--ff-surface-elevated);
+  border-color: var(--ff-border);
+}
+
+body[data-faithflow-theme="dark"] .dashboard-main :is(tbody tr, td) {
+  background: transparent;
+  border-color: var(--ff-border);
+}
+
+body[data-faithflow-theme="dark"] .dashboard-main tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+body[data-faithflow-theme="dark"] .dashboard-main tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Form controls */
+body[data-faithflow-theme="dark"] :is(.dashboard-layout, .page-guide-modal)
+  :is(input:not([type="checkbox"], [type="radio"], [type="color"], [type="range"], [type="file"]), select, textarea) {
+  background-color: var(--ff-surface-elevated);
+  border-color: var(--ff-border);
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] :is(input, textarea)::placeholder {
+  color: color-mix(in srgb, var(--ff-text-muted) 80%, transparent 20%);
+}
+
+body[data-faithflow-theme="dark"] select option {
+  background-color: var(--ff-surface);
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] :is(.progress-tracker-search-wrapper, .user-history-search) {
+  background: var(--ff-surface-elevated);
+  border-color: var(--ff-border);
+}
+
+body[data-faithflow-theme="dark"] :is(.progress-tracker-search-wrapper .appointment-search-input, .user-history-search input) {
+  background: transparent !important;
+}
+
+body[data-faithflow-theme="dark"] .appointment-requests-toolbar .appointment-filter-field span,
+body[data-faithflow-theme="dark"] .appointment-filter-field span {
+  color: var(--ff-text-muted);
+}
+
+/* Admin dashboard */
+body[data-faithflow-theme="dark"] .admin-stat-card h3 {
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .admin-verse-content span {
+  color: var(--ff-primary-on-dark);
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-day {
+  color: var(--ff-text-muted);
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-date:not(.is-empty, .is-day-off, .is-church, .is-priest, .is-activity, .is-appointment, .is-special) {
+  background-color: var(--ff-surface-elevated);
+  border-color: var(--ff-border);
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-date:is(.is-day-off, .is-church, .is-priest, .is-activity, .is-appointment, .is-special) {
+  border-color: transparent;
+  color: #1f2937;
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-date.is-today {
+  border-color: #60a5fa;
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-date.is-selected {
+  border-color: var(--ff-primary-on-dark);
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-form-actions button.secondary {
+  background: var(--ff-surface-elevated);
+  color: var(--ff-text);
+}
+
+/* Appointment requests */
+body[data-faithflow-theme="dark"] :is(
+  .request-type-card strong,
+  .appointment-request-top strong,
+  .appointment-attachments-section h4,
+  .appointment-extra-details-section h4,
+  .appointment-marriage-group h5
+) {
+  color: var(--ff-primary-on-dark);
+}
+
+body[data-faithflow-theme="dark"] .request-type-card em {
+  color: var(--ff-text-muted);
+}
+
+body[data-faithflow-theme="dark"] .request-type-card.is-active {
+  background: color-mix(in srgb, var(--ff-primary) 22%, var(--ff-container-elevated) 78%);
+  border-color: color-mix(in srgb, var(--ff-primary-on-dark) 50%, var(--ff-border) 50%);
+}
+
+body[data-faithflow-theme="dark"] .appointment-request-item.is-read {
+  background: var(--ff-container);
+  border-color: var(--ff-border);
+}
+
+body[data-faithflow-theme="dark"] .appointment-request-icon {
+  background: color-mix(in srgb, var(--ff-primary) 26%, var(--ff-surface) 74%);
+  border-color: color-mix(in srgb, var(--ff-primary) 40%, var(--ff-border) 60%);
+  color: var(--ff-primary-on-dark);
+  box-shadow: none;
+}
+
+body[data-faithflow-theme="dark"] :is(.appointment-request-row, .appointment-card-note, .appointment-detail-value) {
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .appointment-detail-label {
+  color: var(--ff-text-muted);
+}
+
+body[data-faithflow-theme="dark"] .appointment-detail-value a {
+  color: #93c5fd;
+}
+
+body[data-faithflow-theme="dark"] :is(.appointment-badge, .appointment-type-badge, .appointment-details-chip, .appointment-details-id) {
+  background: color-mix(in srgb, var(--ff-primary) 22%, var(--ff-surface) 78%);
+  border-color: color-mix(in srgb, var(--ff-primary) 45%, var(--ff-border) 55%);
+  color: var(--ff-primary-on-dark);
+}
+
+body[data-faithflow-theme="dark"] :is(.appointment-category-badge, .appointment-details-chip.is-category, .trash-request-id) {
+  background: rgba(234, 179, 8, 0.12);
+  border-color: rgba(234, 179, 8, 0.35);
+  color: #fcd34d;
+}
+
+body[data-faithflow-theme="dark"] .appointment-review-flag.is-unread,
+body[data-faithflow-theme="dark"] .trash-status-chip {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+body[data-faithflow-theme="dark"] .appointment-review-flag.is-read {
+  background: rgba(148, 163, 184, 0.12);
+  border-color: rgba(148, 163, 184, 0.35);
+  color: #cbd5e1;
+}
+
+body[data-faithflow-theme="dark"] .appointment-review-flag.is-under-review {
+  background: rgba(234, 179, 8, 0.12);
+  border-color: rgba(234, 179, 8, 0.35);
+  color: #fcd34d;
+}
+
+body[data-faithflow-theme="dark"] .appointment-request-actions .approve-button {
+  background: linear-gradient(180deg, #1f7a4d 0%, #14583a 100%);
+  border-color: #2a8f5e;
+  color: #ffffff;
+}
+
+body[data-faithflow-theme="dark"] .appointment-request-actions .decline-button {
+  background: transparent;
+  border-color: rgba(248, 113, 113, 0.6);
+  color: #fca5a5;
+}
+
+body[data-faithflow-theme="dark"] .appointment-request-actions .decline-button:hover:not(:disabled) {
+  background: linear-gradient(180deg, #a32121 0%, #821717 100%);
+  border-color: #b42323;
+  color: #ffffff;
+}
+
+body[data-faithflow-theme="dark"] .appointment-request-actions .delete-button {
+  background: rgba(239, 68, 68, 0.14);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+body[data-faithflow-theme="dark"] .appointment-request-actions .restore-button {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.4);
+  color: #93c5fd;
+}
+
+body[data-faithflow-theme="dark"] :is(.view-details-button, .history-pagination-button, .request-cards-arrow) {
+  background: var(--ff-surface-elevated) !important;
+  border-color: color-mix(in srgb, var(--ff-secondary) 55%, var(--ff-border) 45%) !important;
+  color: var(--ff-primary-on-dark) !important;
+  box-shadow: none;
+}
+
+body[data-faithflow-theme="dark"] :is(.view-details-button, .history-pagination-button, .request-cards-arrow):hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ff-secondary) 22%, var(--ff-surface-elevated) 78%) !important;
+  border-color: var(--ff-secondary) !important;
+  color: var(--ff-primary-on-dark) !important;
+}
+
+body[data-faithflow-theme="dark"] .appointment-file-link {
+  background: rgba(59, 130, 246, 0.12);
+  border-color: rgba(59, 130, 246, 0.35);
+  color: #93c5fd;
+}
+
+body[data-faithflow-theme="dark"] .appointment-file-missing {
+  color: var(--ff-text-muted);
+}
+
+body[data-faithflow-theme="dark"] :is(.appointment-requests-empty-state, .appointment-requests-empty-state--search) {
+  background: var(--ff-container-soft);
+  border-color: var(--ff-border);
+}
+
+body[data-faithflow-theme="dark"] .appointment-requests-empty-state-icon {
+  background: color-mix(in srgb, var(--ff-primary) 24%, var(--ff-surface) 76%);
+  border-color: color-mix(in srgb, var(--ff-primary) 45%, var(--ff-border) 55%);
+  color: var(--ff-primary-on-dark);
+  box-shadow: none;
+}
+
+body[data-faithflow-theme="dark"] .appointment-requests-empty-state-icon--muted {
+  background: var(--ff-surface-elevated);
+  border-color: var(--ff-border);
+  color: var(--ff-text-muted);
+}
+
+body[data-faithflow-theme="dark"] :is(.appointment-requests-empty-state-title, .appointment-requests-empty-state--search .appointment-requests-empty-state-title) {
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] :is(.appointment-requests-empty-state-text, .appointment-requests-empty) {
+  color: var(--ff-text-muted);
+}
+
+body[data-faithflow-theme="dark"] :is(.appointment-requests-error, .appointment-decline-error) {
+  color: #fca5a5;
+}
+
+/* Appointment modals */
+body[data-faithflow-theme="dark"] :is(.appointment-details-header, .appointment-details-actions) {
+  background: var(--ff-surface-elevated);
+  border-color: var(--ff-border);
+}
+
+body[data-faithflow-theme="dark"] :is(.appointment-marriage-group, .appointment-attachment-card) {
+  background: var(--ff-container-soft);
+  border-color: var(--ff-border);
+}
+
+body[data-faithflow-theme="dark"] .appointment-confirm-actions .secondary {
+  background: var(--ff-surface-elevated);
+  border-color: var(--ff-border);
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .appointment-confirm-modal p,
+body[data-faithflow-theme="dark"] .appointment-decline-reason-block label {
+  color: var(--ff-text);
+}
+
+/* List/editor surfaces (settings, schemas, templates) */
+body[data-faithflow-theme="dark"] :is(
+  .settings-manager-list,
+  .settings-manager-editor,
+  .sacrament-schema-list,
+  .sacrament-schema-editor,
+  .progress-template-filter,
+  .special-programs-card-facts
+) {
+  background: var(--ff-container-soft);
+  border-color: var(--ff-border);
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] :is(.settings-manager-item, .sacrament-schema-item, .sacrament-schema-item-action, .sacrament-archive-link-button) {
+  background: var(--ff-container-elevated);
+  border-color: var(--ff-border);
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .sacrament-schema-item--archived {
+  background: var(--ff-container-soft);
+}
+
+body[data-faithflow-theme="dark"] :is(.settings-manager-item, .sacrament-schema-item).is-selected {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+body[data-faithflow-theme="dark"] :is(.sacrament-schema-item span, .progress-template-filter label, .admin-calendar-legend, .admin-calendar-legend span) {
+  color: var(--ff-text-muted);
+}
+
+body[data-faithflow-theme="dark"] .sacrament-schema-item-action--danger {
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+body[data-faithflow-theme="dark"] .special-programs-card-facts p {
+  border-left-color: var(--ff-border);
+}
+
+body[data-faithflow-theme="dark"] .special-programs-card-facts span {
+  color: color-mix(in srgb, var(--ff-secondary) 50%, var(--ff-text-muted) 50%);
+}
+
+body[data-faithflow-theme="dark"] .dashboard-main th {
+  color: var(--ff-text-muted);
+}
+
+body[data-faithflow-theme="dark"] .reports-print-footer span {
+  color: var(--ff-text-muted);
+}
+
+body[data-faithflow-theme="dark"] :is(.priest-detail-view-button, .priest-assigned-view-button):not(.is-active) span:not(.is-alert) {
+  color: var(--ff-primary-on-dark);
+}
+
+body[data-faithflow-theme="dark"] .priest-history-summary button {
+  --history-accent: var(--ff-primary-on-dark);
+}
+
+body[data-faithflow-theme="dark"] .priest-history-summary button.is-completed {
+  --history-accent: #86efac;
+}
+
+body[data-faithflow-theme="dark"] .priest-history-summary button.is-cancelled {
+  --history-accent: #fca5a5;
+}
+
+body[data-faithflow-theme="dark"] .admin-content-grid.is-read-only-dashboard-grid .admin-content-card.admin-special-programs-card {
+  border-color: var(--ff-primary);
+  border-left-color: var(--ff-primary);
+  background: var(--ff-primary) !important;
+  color: #fffdf7;
+  box-shadow: none;
+}
+
+body[data-faithflow-theme="dark"] .admin-content-grid.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header h3,
+body[data-faithflow-theme="dark"] .admin-content-grid.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header h3 > svg {
+  color: #fffdf7;
+}
+
+body[data-faithflow-theme="dark"] .admin-content-grid.is-read-only-dashboard-grid .admin-special-program-list .admin-special-program-item strong {
+  color: #5c1f1f;
+}
+
+body[data-faithflow-theme="dark"] .admin-content-grid.is-read-only-dashboard-grid .admin-special-program-list .admin-special-program-item span {
+  color: #6f3d2a;
+}
+
+body[data-faithflow-theme="dark"] .priest-selected-day-panel {
+  border-color: var(--ff-container-border);
+  background: var(--ff-container);
+}
+
+body[data-faithflow-theme="dark"] .priest-selected-day-header {
+  border-bottom-color: var(--ff-container-border);
+}
+
+body[data-faithflow-theme="dark"] .priest-selected-day-header h3 {
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .priest-selected-day-kicker {
+  color: var(--ff-primary-on-dark);
+}
+
+body[data-faithflow-theme="dark"] .priest-selected-day-count {
+  background: color-mix(in srgb, var(--ff-secondary) 22%, var(--ff-container) 78%);
+  color: var(--ff-primary-on-dark);
+}
+
+body[data-faithflow-theme="dark"] .priest-selected-day-empty:not(.is-day-off) {
+  border-color: var(--ff-container-border);
+  background: var(--ff-container-elevated);
+}
+
+body[data-faithflow-theme="dark"] .priest-selected-day-empty:not(.is-day-off) .priest-selected-day-empty-icon {
+  background: color-mix(in srgb, var(--ff-primary) 24%, var(--ff-container) 76%);
+  color: var(--ff-primary-on-dark);
+}
+
+/* Public about page */
+body[data-faithflow-theme="dark"] .about-page {
+  background: var(--ff-background);
+}
+
+body[data-faithflow-theme="dark"] .about-content h3 {
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] :is(.about-features h4, .about-feature-item h5) {
+  color: #93c5fd;
+}
+
+body[data-faithflow-theme="dark"] :is(.about-card h4, .about-description h4, .about-parish-activity-modal-subtitle) {
+  color: #93c5fd !important;
+}
+
+body[data-faithflow-theme="dark"] .about-recent-parish-activities {
+  background: var(--ff-container);
+  border-color: var(--ff-container-border);
+}
+
+/* Profile */
+body[data-faithflow-theme="dark"] :is(.profile-hero, .profile-field) {
+  background: var(--ff-container-elevated);
+  border-color: var(--ff-border);
+}
+
+body[data-faithflow-theme="dark"] :is(.profile-hero-info h3, .profile-field h3) {
+  color: var(--ff-primary-on-dark);
+}
+
+body[data-faithflow-theme="dark"] .profile-hero-info p {
+  color: var(--ff-text-muted);
+}
+
+body[data-faithflow-theme="dark"] .profile-field p {
+  color: var(--ff-text);
+}
+
+/* Certificate status tabs */
+body[data-faithflow-theme="dark"] .certificate-header-action:not(.is-active) {
+  background: var(--ff-surface-elevated);
+  border-color: var(--ff-border);
+}
+
+body[data-faithflow-theme="dark"] .certificate-header-action.is-pending:not(.is-active) {
+  color: #fcd34d;
+}
+
+body[data-faithflow-theme="dark"] .certificate-header-action.is-completed:not(.is-active) {
+  color: #86efac;
+}
+
+body[data-faithflow-theme="dark"] .certificate-header-action.is-trash:not(.is-active) {
+  color: #fca5a5;
+}
+
+body[data-faithflow-theme="dark"] .certificate-header-action.is-back {
+  color: var(--ff-primary-on-dark);
+}
+
+}

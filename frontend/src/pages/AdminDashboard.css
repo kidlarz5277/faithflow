@@ -1,0 +1,5260 @@
+.admin-hero {
+  border: 1px solid #e6dfcf;
+  border-radius: 12px;
+  background: var(--ff-banner-gradient);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.1);
+  padding: 18px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-hero.dashboard-welcome-header {
+  border-color: var(--ff-primary);
+  background: var(--ff-primary);
+  box-shadow: none;
+}
+
+.admin-top-notice {
+  position: fixed;
+  top: 78px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1800;
+  padding: 10px 18px;
+  border-radius: 999px;
+  border: 1px solid #86efac;
+  background: #f0fdf4;
+  color: #166534;
+  font-weight: 600;
+  font-size: 0.88rem;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
+  animation: adminNoticeDrop 220ms ease-out;
+}
+
+.admin-hero h2 {
+  margin: 0;
+  color: #fffdf7;
+  font-size: 1.45rem;
+}
+
+.admin-hero p {
+  margin: 6px 0 0;
+  color: #f8f0dd;
+  max-width: 700px;
+  font-size: 0.95rem;
+}
+
+.admin-office-status-row {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-office-time-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 244, 220, 0.5);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff3de;
+  font-size: 0.77rem;
+  font-weight: 600;
+  padding: 5px 10px;
+}
+
+.admin-office-time-chip strong {
+  color: #fffdf8;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.admin-office-state-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border: 1px solid transparent;
+}
+
+.admin-office-state-chip.is-open {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
+}
+
+.admin-office-state-chip.is-closed {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+.admin-office-state-chip.is-unavailable {
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff3de;
+  border-color: rgba(255, 244, 220, 0.5);
+}
+
+.admin-office-status-row small {
+  color: #fff3de;
+  font-size: 0.74rem;
+  font-weight: 500;
+}
+
+.admin-primary-action {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff;
+  color: var(--ff-primary);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-hero-actions {
+  display: grid;
+  gap: 8px;
+  min-width: 220px;
+}
+
+.admin-hero-actions .admin-primary-action {
+  width: 100%;
+  justify-content: center;
+}
+
+.admin-stats-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-stat-card {
+  border: 1px solid #e6dfcf;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-stat-card.is-clickable {
+  cursor: pointer;
+}
+
+.admin-stat-card.is-clickable:hover {
+  border-color: #ccb87a;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.1);
+}
+
+.admin-stat-icon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--admin-stat-accent, var(--ff-primary)) 20%, white 80%);
+  background: linear-gradient(
+    145deg,
+    color-mix(in srgb, var(--admin-stat-accent, var(--ff-primary)) 13%, white 87%) 0%,
+    color-mix(in srgb, var(--admin-stat-accent, var(--ff-primary)) 7%, white 93%) 100%
+  );
+  color: var(--admin-stat-accent, var(--ff-primary));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8), 0 2px 5px color-mix(in srgb, var(--admin-stat-accent, var(--ff-primary)) 12%, transparent 88%);
+}
+
+.admin-stat-icon.is-pending {
+  --admin-stat-accent: #b45309;
+}
+
+.admin-stat-icon.is-approved {
+  --admin-stat-accent: #15803d;
+}
+
+.admin-stat-icon.is-ongoing {
+  --admin-stat-accent: #2563eb;
+}
+
+.admin-stat-icon.is-certificate {
+  --admin-stat-accent: #7c3aed;
+}
+
+.admin-stat-label {
+  margin: 0;
+  color: #526072;
+  font-size: 0.8rem;
+}
+
+.admin-stat-card h3 {
+  margin: 2px 0 0;
+  color: #111827;
+  font-size: 1.2rem;
+}
+
+.admin-content-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  align-items: start;
+}
+
+.admin-left-column {
+  display: grid;
+  gap: 14px;
+}
+
+.admin-right-column {
+  display: grid;
+  gap: 14px;
+  align-content: start;
+}
+
+.admin-content-card {
+  border: 1px solid #e8e1d0;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #fdfcf8 100%);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+  padding: 16px;
+}
+
+.admin-verse-card {
+  position: relative;
+  overflow: hidden;
+  border-color: color-mix(in srgb, var(--ff-third) 14%, var(--ff-container-border) 86%);
+  border-left: 3px solid color-mix(in srgb, var(--ff-third) 34%, var(--ff-secondary) 66%);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--ff-third) 4%, var(--ff-surface) 96%) 0%,
+    color-mix(in srgb, var(--ff-secondary) 7%, var(--ff-surface) 93%) 100%
+  );
+}
+
+.admin-verse-content {
+  position: relative;
+  z-index: 1;
+  display: block;
+  padding-right: 56px;
+}
+
+.admin-verse-sacred-art {
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+  width: 56px;
+  height: 56px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 22%, transparent 78%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--ff-secondary) 13%, white 87%) 0%,
+    color-mix(in srgb, var(--ff-third) 5%, transparent 95%) 72%
+  );
+  color: color-mix(in srgb, var(--ff-third) 62%, var(--ff-secondary) 38%);
+  opacity: 0.72;
+}
+
+.admin-verse-cross {
+  filter: drop-shadow(0 1px 1px color-mix(in srgb, var(--ff-secondary) 26%, transparent 74%));
+}
+
+.admin-verse-sparkle {
+  position: absolute;
+  color: color-mix(in srgb, var(--ff-secondary) 72%, var(--ff-third) 28%);
+}
+
+.admin-verse-sparkle-left {
+  top: 5px;
+  left: 3px;
+}
+
+.admin-verse-sparkle-right {
+  right: 2px;
+  bottom: 8px;
+}
+
+.admin-verse-reading {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.admin-verse-quote-icon {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 24%, white 76%);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ff-secondary) 10%, white 90%);
+  color: color-mix(in srgb, var(--ff-primary) 58%, var(--ff-secondary) 42%);
+}
+
+.admin-verse-copy {
+  min-width: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.admin-verse-content p {
+  margin: 0;
+  color: color-mix(in srgb, var(--ff-primary) 58%, var(--ff-text) 42%);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.admin-verse-content span {
+  color: color-mix(in srgb, var(--ff-primary) 68%, var(--ff-secondary) 32%);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.admin-content-card.admin-announcements-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--ff-primary);
+  border: 1px solid var(--ff-primary);
+  box-shadow: none;
+  min-height: 240px;
+  color: #fffdf7;
+}
+
+.admin-announcements-card .admin-announcement-list {
+  flex: 1;
+  align-content: start;
+}
+
+.admin-content-card.admin-announcements-card .admin-content-header {
+  border-bottom-color: rgba(255, 253, 247, 0.28);
+}
+
+.admin-content-card.admin-announcements-card .admin-content-header h3,
+.admin-content-card.admin-announcements-card .admin-content-header h3 svg {
+  color: #fffdf7;
+}
+
+.admin-content-card.admin-announcements-card .admin-content-header button {
+  color: var(--ff-primary);
+  border-color: rgba(255, 253, 247, 0.55);
+  background: #fffdf7;
+}
+
+.admin-content-card.admin-announcements-card .admin-content-header button:hover {
+  color: color-mix(in srgb, var(--ff-primary) 86%, black 14%);
+  border-color: #ffffff;
+  background: #fff8e7;
+}
+
+.admin-announcement-list li,
+.admin-announcement-item,
+.is-read-only-dashboard-grid .admin-content-card.admin-special-programs-card .admin-special-program-list > li {
+  cursor: default;
+  border: 1px solid rgba(255, 239, 213, 0.62);
+  border-left: 1px solid rgba(255, 239, 213, 0.62);
+  background: linear-gradient(180deg, #fffefb 0%, #fff6eb 100%);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.12);
+}
+
+.admin-announcement-list strong,
+.is-read-only-dashboard-grid .admin-content-card.admin-special-programs-card .admin-special-program-list > li strong {
+  color: #5c1f1f;
+  font-size: 0.95rem;
+}
+
+.admin-announcement-list span,
+.is-read-only-dashboard-grid .admin-content-card.admin-special-programs-card .admin-special-program-list > li span {
+  color: #6f3d2a;
+  font-size: 0.84rem;
+}
+
+.admin-content-card.admin-special-programs-card {
+  min-height: 280px;
+  background: var(--ff-banner-gradient);
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 34%, transparent 66%);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+  color: #fffdf7;
+}
+
+.is-read-only-dashboard-grid .admin-content-card.admin-special-programs-card {
+  border: 1px solid var(--ff-primary);
+  border-left: 4px solid var(--ff-primary);
+  background: var(--ff-primary) !important;
+  box-shadow: none;
+  color: #fffdf7;
+}
+
+.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header {
+  border-bottom-color: rgba(255, 253, 247, 0.28);
+}
+
+.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header h3,
+.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header h3 > svg {
+  color: #fffdf7;
+  text-shadow: none;
+}
+
+.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header h3 .page-guide-trigger,
+.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header h3 .page-guide-trigger svg {
+  color: #fffdf7;
+  stroke: currentColor;
+}
+
+.admin-calendar-card {
+  min-height: 252px;
+}
+
+.admin-content-card.admin-special-programs-card .admin-content-header {
+  border-bottom-color: rgba(255, 219, 186, 0.28);
+}
+
+.admin-content-card.admin-special-programs-card .admin-content-header h3,
+.admin-content-card.admin-special-programs-card .admin-content-header h3 > svg {
+  color: #f8fbff;
+  text-shadow: 0 1px 1px rgba(2, 6, 23, 0.35);
+}
+
+.admin-content-card.admin-special-programs-card .admin-content-header button:not(.page-guide-trigger) {
+  color: #f8fbff;
+  border-color: color-mix(in srgb, var(--ff-secondary) 62%, white 38%);
+  background: color-mix(in srgb, var(--ff-third) 34%, white 66%);
+}
+
+.admin-content-card.admin-special-programs-card .admin-content-header button:not(.page-guide-trigger):hover {
+  color: color-mix(in srgb, var(--ff-primary) 86%, black 14%);
+  border-color: #ffffff;
+  background: color-mix(in srgb, var(--ff-secondary) 30%, white 70%);
+}
+
+.admin-content-card.admin-special-programs-card .admin-content-header h3 .page-guide-trigger {
+  width: 22px;
+  height: 22px;
+  margin-left: 2px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #fffdf7;
+  box-shadow: none;
+}
+
+.admin-content-card.admin-special-programs-card .admin-content-header h3 .page-guide-trigger svg {
+  width: 18px;
+  height: 18px;
+  color: #fffdf7;
+  stroke: #fffdf7;
+  stroke-width: 2;
+}
+
+.admin-content-card.admin-special-programs-card .admin-content-header h3 .page-guide-trigger:hover,
+.admin-content-card.admin-special-programs-card .admin-content-header h3 .page-guide-trigger:focus-visible {
+  background: rgba(255, 253, 247, 0.16);
+  color: #fffdf7;
+}
+
+.admin-content-card.admin-special-programs-card .admin-special-program-list .admin-special-program-item {
+  position: relative;
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 36%, white 64%);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ff-surface) 95%, var(--ff-secondary) 5%) 0%,
+    color-mix(in srgb, var(--ff-surface) 86%, var(--ff-secondary) 14%) 100%
+  );
+  box-shadow: 0 10px 20px color-mix(in srgb, var(--ff-primary) 16%, transparent 84%);
+  border-left: 4px solid color-mix(in srgb, var(--ff-secondary) 78%, var(--ff-primary) 22%);
+}
+
+.admin-content-card.admin-special-programs-card .admin-special-program-list .admin-special-program-item strong {
+  color: #5c1f1f;
+  font-size: 0.95rem;
+}
+
+.admin-content-card.admin-special-programs-card .admin-special-program-list .admin-special-program-item span {
+  color: #6f3d2a;
+  font-size: 0.84rem;
+}
+
+.admin-content-card.admin-special-programs-card .admin-special-program-list .admin-special-program-item.is-clickable::after {
+  content: "Apply";
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #7f1717;
+  background: #fff7e3;
+  border: 1px solid rgba(180, 83, 9, 0.45);
+}
+
+.admin-content-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #efe9da;
+}
+
+.admin-content-header h3 {
+  margin: 0;
+  color: var(--ff-primary);
+  font-size: 1.02rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-content-header button {
+  border: 1px solid #d9deea;
+  background: #ffffff;
+  color: var(--ff-primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.admin-content-header button:hover {
+  background: #f9fafc;
+  border-color: #c6cfdf;
+}
+
+.admin-content-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-add-icon-button {
+  border: 2px solid #b45309 !important;
+  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff !important;
+  color: #9a3412 !important;
+  box-shadow: 0 6px 14px rgba(127, 23, 23, 0.18);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+}
+
+.admin-add-icon-button svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.6;
+}
+
+.admin-add-icon-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 18px rgba(127, 23, 23, 0.24);
+  filter: none;
+}
+
+.admin-add-icon-button:focus-visible {
+  outline: 3px solid rgba(180, 83, 9, 0.28);
+  outline-offset: 2px;
+}
+
+.admin-calendar-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-today-button {
+  border: 1px solid #d8dec7 !important;
+  background: #f6fbeb !important;
+  color: #3f5c1d !important;
+  border-radius: 6px;
+  padding: 5px 9px !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+}
+
+.admin-month-label {
+  color: #111827;
+  font-size: 0.85rem;
+  margin: 0 2px;
+  min-width: 122px;
+  text-align: center;
+}
+
+.admin-icon-nav {
+  border: 1px solid #b8c2d1 !important;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #1f2937 !important;
+  background: #f8fafc !important;
+}
+
+.admin-icon-nav svg {
+  width: 24px;
+  height: 24px;
+  stroke-width: 2.6;
+}
+
+.admin-icon-nav:hover {
+  border-color: #8fa0b7 !important;
+  background: #eef2f7 !important;
+}
+
+.admin-print-month-button {
+  border: 1px solid #d9deea !important;
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border-radius: 8px;
+  padding: 5px 10px !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.admin-print-month-button:hover:not(:disabled) {
+  background: #f8fafc !important;
+  border-color: #b8c2d1 !important;
+}
+
+.admin-print-month-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.admin-compact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.admin-compact-list li {
+  border: 1px solid #eee7d8;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 11px 12px;
+  display: grid;
+  gap: 4px;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+}
+
+.admin-compact-list li[data-has-edit="true"] {
+  position: relative;
+  padding-right: 40px;
+}
+
+.admin-compact-list strong {
+  color: #1f2937;
+  font-size: 0.9rem;
+  line-height: 1.3;
+}
+
+.admin-compact-list span {
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.is-read-only-dashboard-grid .admin-content-card.admin-special-programs-card .admin-special-program-list > li {
+  border: 1px solid #e5e7eb;
+  background: #ffffff !important;
+  color: #111827;
+}
+
+.is-read-only-dashboard-grid .admin-content-card.admin-special-programs-card .admin-special-program-list > li > strong,
+.is-read-only-dashboard-grid .admin-content-card.admin-special-programs-card .admin-special-program-list > li > span {
+  color: #111827 !important;
+}
+
+.admin-parish-activities-card {
+  --admin-parish-activity-accent: var(--ff-primary);
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 20px;
+  background: var(--ff-container-elevated);
+  border: 1px solid color-mix(in srgb, var(--admin-parish-activity-accent) 76%, transparent 24%);
+  border-top: 3px solid var(--admin-parish-activity-accent);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--ff-primary) 10%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.88);
+  color: var(--ff-text);
+}
+
+.admin-parish-activities-card .admin-content-header {
+  background: transparent;
+  border: 0;
+  border-bottom: 0;
+  border-radius: 0;
+  padding: 2px 2px 12px;
+  margin-bottom: 14px;
+}
+
+.admin-parish-activities-card .admin-content-header h3,
+.admin-parish-activities-card .admin-content-header h3 svg {
+  color: var(--ff-text);
+}
+
+.admin-parish-activities-card .admin-content-header .admin-parish-activity-add-button {
+  min-height: 38px;
+  padding: 0 15px 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--ff-third) 42%, var(--ff-container-border) 58%);
+  border-radius: 11px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, var(--ff-third) 7%, var(--ff-container-elevated) 93%), var(--ff-container-elevated));
+  color: var(--ff-primary);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--ff-third) 10%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.78);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.admin-parish-activities-card .admin-content-header .admin-parish-activity-add-button svg {
+  color: var(--ff-third);
+}
+
+.admin-parish-activities-card .admin-content-header .admin-parish-activity-add-button:hover {
+  transform: translateY(-1px);
+  border-color: var(--ff-third);
+  background: color-mix(in srgb, var(--ff-third) 11%, var(--ff-container-elevated) 89%);
+  box-shadow: 0 7px 14px color-mix(in srgb, var(--ff-third) 15%, transparent);
+}
+
+.admin-parish-activities-card .admin-content-header .admin-parish-activity-add-button:active {
+  transform: translateY(0);
+}
+
+.admin-parish-activities-card .admin-content-header .admin-parish-activity-add-button:focus-visible {
+  outline: 2px solid var(--ff-third);
+  outline-offset: 3px;
+}
+
+.admin-parish-activities-card .admin-content-header h3 .page-guide-trigger {
+  width: 22px;
+  height: 22px;
+  margin-left: 2px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ff-primary);
+  box-shadow: none;
+}
+
+.admin-parish-activities-card .admin-content-header h3 .page-guide-trigger svg {
+  color: var(--ff-primary);
+  stroke: var(--ff-primary);
+}
+
+.admin-parish-activities-card .admin-content-header h3 .page-guide-trigger:hover {
+  background: color-mix(in srgb, var(--ff-secondary) 15%, transparent);
+}
+
+.admin-parish-activities-card .admin-selected-date-empty,
+.admin-parish-activities-card .admin-calendar-error {
+  color: var(--ff-text-muted);
+}
+
+.admin-parish-activities-card .admin-parish-activity-empty-card {
+  margin: 0;
+  border: 1px dashed #e2d8cc;
+  background: linear-gradient(180deg, #fffdfb 0%, #faf6f0 100%);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.admin-parish-activities-card .admin-parish-activity-empty-card .appointment-requests-empty-state-title {
+  color: #3f0f0f;
+}
+
+.admin-parish-activities-card .admin-parish-activity-empty-card .appointment-requests-empty-state-text {
+  color: #64748b;
+}
+
+.admin-parish-activities-card .admin-parish-activity-empty-card .appointment-requests-empty-state-icon {
+  color: #7f1717;
+  background: linear-gradient(145deg, rgba(127, 23, 23, 0.14) 0%, rgba(127, 23, 23, 0.05) 100%);
+  border: 1px solid rgba(127, 23, 23, 0.18);
+  box-shadow: 0 8px 20px rgba(127, 23, 23, 0.08);
+}
+
+.admin-parish-activity-list {
+  position: relative;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  min-height: 300px;
+}
+
+.admin-parish-activity-slider {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  box-shadow: none;
+}
+
+.admin-parish-activity-viewport {
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: 13px;
+  background: transparent;
+  box-shadow: none;
+}
+
+body .admin-parish-activity-slider .admin-parish-activity-arrow {
+  width: 30px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--ff-third);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: none;
+  appearance: none;
+  transition: color 140ms ease, transform 140ms ease, opacity 140ms ease;
+}
+
+body .admin-parish-activity-slider .admin-parish-activity-arrow:hover:not(:disabled) {
+  color: var(--ff-third);
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+body .admin-parish-activity-slider .admin-parish-activity-arrow[aria-label="Previous parish activity"]:hover:not(:disabled) {
+  transform: translateX(-2px);
+}
+
+body .admin-parish-activity-slider .admin-parish-activity-arrow[aria-label="Next parish activity"]:hover:not(:disabled) {
+  transform: translateX(2px);
+}
+
+.admin-parish-activity-arrow:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+}
+
+.admin-parish-activity-dots {
+  margin-top: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.admin-parish-activity-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: 0;
+  background: color-mix(in srgb, var(--ff-text-muted) 34%, transparent);
+  cursor: pointer;
+  padding: 0;
+}
+
+.admin-parish-activity-dot.is-active {
+  width: 20px;
+  background: var(--ff-third);
+  transform: scale(1.04);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ff-secondary) 44%, transparent 56%);
+}
+
+.admin-parish-activity-arrow:focus-visible,
+.admin-parish-activity-dot:focus-visible {
+  outline: 2px solid var(--ff-secondary);
+  outline-offset: 3px;
+}
+
+.admin-parish-activity-item {
+  grid-area: 1 / 1;
+  min-width: 0;
+  border: 1px solid color-mix(in srgb, var(--ff-third) 22%, transparent);
+  border-radius: 13px;
+  background: color-mix(in srgb, var(--ff-secondary) 18%, var(--ff-container-elevated) 82%);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  cursor: pointer;
+  z-index: 0;
+  transition: opacity 1.15s ease, visibility 0s linear 1.15s, box-shadow 180ms ease;
+}
+
+.admin-parish-activity-item.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  z-index: 1;
+  transition: opacity 1.15s ease, visibility 0s, box-shadow 180ms ease;
+}
+
+.admin-parish-activity-item:hover {
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.18);
+}
+
+.admin-parish-activity-item.is-active .admin-parish-activity-media-main,
+.admin-parish-activity-item.is-active .admin-parish-activity-media > video {
+  animation: parish-activity-fade-zoom 2.5s ease-out both;
+}
+
+.admin-parish-activity-item.is-active .admin-parish-activity-media-backdrop {
+  animation: parish-activity-backdrop-fade 2.5s ease-out both;
+}
+
+@keyframes parish-activity-fade-zoom {
+  from {
+    transform: scale(1.07);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes parish-activity-backdrop-fade {
+  from {
+    transform: scale(1.17);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-parish-activity-item,
+  .admin-parish-activity-item.is-active {
+    transition-duration: 0.01ms;
+  }
+
+  .admin-parish-activity-item.is-active .admin-parish-activity-media-main,
+  .admin-parish-activity-item.is-active .admin-parish-activity-media > video,
+  .admin-parish-activity-item.is-active .admin-parish-activity-media-backdrop {
+    animation: none;
+  }
+}
+
+.admin-parish-activity-media {
+  background:
+    radial-gradient(ellipse at 50% 25%, color-mix(in srgb, var(--ff-secondary) 26%, white 74%), transparent 68%),
+    linear-gradient(140deg, color-mix(in srgb, var(--ff-secondary) 21%, var(--ff-container-elevated) 79%), var(--ff-container-elevated));
+  position: relative;
+  min-height: 300px;
+}
+
+.admin-parish-activity-media img,
+.admin-parish-activity-media video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  max-height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-parish-activity-media-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: 16px 16px 96px;
+  color: rgba(248, 233, 196, 0.92);
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-align: center;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.admin-parish-activity-overlay {
+  position: relative;
+  z-index: 1;
+  min-height: 300px;
+  padding: 18px 20px 17px;
+  display: grid;
+  align-content: end;
+  gap: 4px;
+  background: linear-gradient(
+    180deg,
+    transparent 34%,
+    color-mix(in srgb, var(--ff-primary) 35%, transparent 65%) 67%,
+    color-mix(in srgb, var(--ff-primary) 90%, black 10%) 100%
+  );
+}
+
+.admin-parish-activities-card .admin-parish-activity-overlay .admin-selected-date-edit--on-media {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, var(--ff-third) 52%, white 48%);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ff-container-elevated) 92%, transparent);
+  color: var(--ff-primary);
+  box-shadow: 0 5px 14px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: transform 160ms ease, background-color 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.admin-parish-activities-card .admin-parish-activity-overlay .admin-selected-date-edit--on-media:hover {
+  transform: translateY(-2px);
+  border-color: var(--ff-third);
+  background: var(--ff-container-elevated);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.22);
+}
+
+.admin-parish-activities-card .admin-parish-activity-overlay .admin-selected-date-edit--on-media:focus-visible {
+  outline: 2px solid var(--ff-third);
+  outline-offset: 3px;
+}
+
+.admin-parish-activities-card .admin-parish-activity-overlay .admin-selected-date-edit--on-media svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2.2;
+}
+
+.admin-parish-activity-overlay strong {
+  color: #fffdf7;
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+
+.admin-parish-activity-overlay span {
+  color: color-mix(in srgb, var(--ff-secondary) 72%, #fffdf7 28%);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.admin-parish-activity-overlay p {
+  margin: 0;
+  color: #f8f0dd;
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.admin-parish-activity-summary {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-weight: 500;
+}
+
+.admin-parish-activity-readmore {
+  color: #fff8e7;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.admin-parish-activity-file-picker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 8px 10px;
+  border: 1px solid var(--ff-accent-border, #d8dee8);
+  border-radius: 10px;
+  background: var(--ff-surface, #ffffff);
+}
+
+.admin-parish-activity-file-picker-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  background: var(--ff-modal-button, var(--ff-primary));
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.admin-parish-activity-file-picker-name {
+  color: var(--ff-text, #1f2937);
+  font-size: 0.82rem;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-parish-activity-file-picker input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.admin-parish-activity-file-picker input[type="file"]:disabled {
+  cursor: wait;
+}
+
+.admin-parish-activity-form-preview img,
+.admin-parish-activity-form-preview video,
+.admin-parish-activity-media img,
+.admin-parish-activity-media video,
+.admin-parish-activity-details-cover img,
+.admin-parish-activity-details-cover video {
+  width: 100%;
+  height: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-parish-activity-media {
+  overflow: hidden;
+}
+
+.admin-parish-activity-media .admin-parish-activity-media-main,
+.admin-parish-activity-media .admin-parish-activity-media-backdrop,
+.admin-parish-activity-media > video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+}
+
+.admin-parish-activity-media .admin-parish-activity-media-main,
+.admin-parish-activity-media > video {
+  object-fit: contain;
+}
+
+.admin-parish-activity-media .admin-parish-activity-media-backdrop {
+  object-fit: cover;
+  filter: blur(18px) brightness(0.76) saturate(0.82);
+  opacity: 0.62;
+  transform: scale(1.1);
+}
+
+.admin-parish-activity-form-media-list {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-parish-activity-form-media-item {
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid #eadfca;
+  border-radius: 12px;
+  background: #fffdf8;
+}
+
+.admin-parish-activity-form-media-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-parish-activity-form-media-label {
+  display: grid;
+  gap: 4px;
+}
+
+.admin-parish-activity-form-media-label span {
+  color: var(--ff-primary);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.admin-parish-activity-form-media-label input,
+.admin-parish-activity-form-media-label textarea {
+  width: 100%;
+  border: 1px solid #e5d7bc;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #1f2937;
+  font: inherit;
+  padding: 8px 10px;
+}
+
+.admin-parish-activity-form-media-label textarea {
+  resize: vertical;
+  min-height: 64px;
+}
+
+.admin-parish-activity-form-preview {
+  position: relative;
+  border: 1px solid #e8dfcd;
+  border-radius: 10px;
+  overflow: hidden;
+  max-height: 180px;
+}
+
+.admin-parish-activity-form-media-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.78);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.28);
+}
+
+.admin-parish-activity-form-media-remove:hover:not(:disabled) {
+  background: rgba(127, 23, 23, 0.92);
+}
+
+.admin-parish-activity-form-media-remove:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
+.admin-parish-activity-media-hint {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.admin-parish-activity-media-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+
+.admin-parish-activity-media-gallery-item {
+  border: 1px solid #e8dfcd;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.admin-parish-activity-details-modal,
+.admin-parish-activity-details-modal.parish-activity-post {
+  width: min(100%, 900px);
+  padding: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 48%, #d9c9ab);
+  border-radius: 16px;
+  background: #fffdf8;
+  box-shadow: 0 22px 48px rgba(47, 18, 18, 0.28);
+}
+
+.parish-activity-post-header {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid #efe3cd;
+  background: #fffdf8;
+}
+
+.parish-activity-post-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--ff-primary) 92%, black 8%);
+  color: #f8e9c4;
+  border: 2px solid var(--ff-secondary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ff-secondary) 28%, transparent);
+}
+
+.parish-activity-post-identity {
+  min-width: 0;
+}
+
+.parish-activity-post-identity strong {
+  display: block;
+  color: var(--ff-primary);
+  font-size: 0.94rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.parish-activity-post-identity small {
+  color: #8a7350;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.parish-activity-post-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.parish-activity-post-actions button {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ff-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.parish-activity-post-actions button:hover {
+  background: color-mix(in srgb, var(--ff-secondary) 22%, white 78%);
+}
+
+.parish-activity-post-details {
+  padding: 0 16px 16px;
+}
+
+.parish-activity-post-details p {
+  margin: 0;
+  color: #4b4033;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.admin-parish-activity-details-cover {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #d9c7a5;
+  position: relative;
+}
+
+.admin-parish-activity-details-cover img {
+  width: 100%;
+  max-height: 430px;
+  object-fit: cover;
+  display: block;
+}
+
+.admin-parish-activity-details-cover-empty {
+  min-height: 220px;
+  max-height: 430px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(145deg, #173861 0%, #0f2743 100%);
+  color: #f8e9c4;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.admin-parish-activity-modal-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(180, 135, 60, 0.85);
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 253, 248, 0.86) 0%, rgba(249, 233, 203, 0.78) 100%);
+  color: var(--ff-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.08;
+  transition: opacity 140ms ease, transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.admin-parish-activity-details-cover:hover .admin-parish-activity-modal-arrow,
+.admin-parish-activity-modal-arrow:focus-visible {
+  opacity: 1;
+}
+
+.admin-parish-activity-modal-arrow:hover {
+  border-color: #8f1c1c;
+  background: linear-gradient(180deg, #fff9ef 0%, #f6dfb3 100%);
+  transform: translateY(calc(-50% - 1px));
+}
+
+.admin-parish-activity-modal-arrow.is-left {
+  left: 12px;
+}
+
+.admin-parish-activity-modal-arrow.is-right {
+  right: 12px;
+}
+
+@media (hover: none) {
+  .admin-parish-activity-modal-arrow {
+    opacity: 0.9;
+  }
+}
+
+.admin-parish-activity-modal-slide-indicator {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  background: rgba(15, 23, 42, 0.64);
+  color: #ffffff;
+  border: 1px solid rgba(244, 212, 140, 0.48);
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.admin-parish-activity-details-body {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.admin-parish-activity-details-body p {
+  margin: 0;
+  color: #334155;
+  line-height: 1.6;
+  font-size: 0.96rem;
+}
+
+.admin-parish-activity-details-subtitle {
+  color: #163a63 !important;
+  font-size: 1.04rem !important;
+  font-weight: 700;
+}
+
+.admin-parish-activity-details-date {
+  color: var(--ff-primary) !important;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.admin-parish-activity-slides-editor {
+  border: 1px solid #e2d3b5;
+  border-radius: 10px;
+  background: #fffdf8;
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.admin-parish-activity-slides-editor-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.admin-parish-activity-slides-editor-header strong {
+  color: #163a63;
+  font-size: 0.9rem;
+}
+
+.admin-parish-activity-slides-editor-header button,
+.admin-parish-activity-slide-editor-top button {
+  border: 1px solid color-mix(in srgb, var(--ff-third) 40%, var(--ff-border) 60%);
+  border-radius: 8px;
+  background: linear-gradient(180deg, var(--ff-surface) 0%, var(--ff-modal-accent-soft) 100%);
+  color: var(--ff-primary);
+  font-size: 0.77rem;
+  font-weight: 700;
+  padding: 5px 9px;
+  cursor: pointer;
+}
+
+.admin-parish-activity-slide-editor-card {
+  border: 1px solid #eadfc9;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+}
+
+.admin-parish-activity-slide-editor-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.admin-parish-activity-slide-editor-top h4 {
+  margin: 0;
+  color: #334155;
+  font-size: 0.85rem;
+}
+
+.admin-calendar-grid {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.admin-calendar-day {
+  text-align: center;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #374151;
+  padding: 4px 0;
+}
+
+.admin-calendar-date {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: #1f2937;
+  background: #ffffff;
+  cursor: pointer;
+  padding: 6px 6px 4px;
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+}
+
+.admin-calendar-date:hover {
+  transform: translateY(-1px);
+  border-color: #ccb87a;
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.08);
+}
+
+.admin-calendar-date.is-empty {
+  background: transparent;
+  border-color: transparent;
+}
+
+.admin-calendar-date.is-day-off {
+  background: #f5c3c3;
+}
+
+.admin-calendar-date.is-church {
+  background: #f4df96;
+}
+
+.admin-calendar-date.is-priest {
+  background: #b8e4bb;
+}
+
+.admin-calendar-date.is-activity {
+  background: #d7b08a;
+}
+
+.admin-calendar-date.is-appointment {
+  background: #8eb6ff;
+}
+
+.admin-calendar-date.is-special {
+  background: #c4b5fd;
+}
+
+.admin-calendar-date.is-selected {
+  border-color: var(--ff-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ff-primary) 25%, transparent 75%);
+}
+
+.admin-calendar-date.is-today {
+  border-color: #2f5d9f;
+}
+
+.admin-calendar-date-number {
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.admin-calendar-entry-count {
+  min-width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #000000;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.admin-calendar-legend {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 12px;
+  font-size: 0.74rem;
+  color: #4b5563;
+}
+
+.admin-dayoff-summary {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #374151;
+}
+
+.admin-dayoff-single {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border-radius: 999px;
+  border: 1px solid #d9d7cf;
+  background: #fff8e8;
+  color: #5c4b1e;
+  padding: 4px 8px;
+  font-size: 0.74rem;
+}
+
+.admin-dayoff-date-list {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.admin-dayoff-remove {
+  border: 0;
+  background: transparent;
+  color: var(--ff-primary);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  display: inline-block;
+  margin-right: 4px;
+}
+
+.legend-dot.is-day-off {
+  background: #f5c3c3;
+}
+
+.legend-dot.is-church {
+  background: #f4df96;
+}
+
+.legend-dot.is-priest {
+  background: #b8e4bb;
+}
+
+.legend-dot.is-activity {
+  background: #a87345;
+}
+
+.legend-dot.is-appointment {
+  background: #5b8def;
+}
+
+.legend-dot.is-special {
+  background: #c4b5fd;
+}
+
+.admin-selected-date-panel {
+  margin-top: 12px;
+  border-top: 1px solid #ece8dd;
+  padding-top: 10px;
+}
+
+.admin-selected-date-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.admin-selected-date-header strong {
+  color: #1f2937;
+  font-size: 0.84rem;
+}
+
+.admin-clear-date {
+  border: 1px solid #d4d7de;
+  background: #ffffff;
+  color: #4b5563;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.admin-selected-date-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.admin-selected-date-list li {
+  border: 1px solid #ebe5d6;
+  border-radius: 8px;
+  background: #fcfbf8;
+  padding: 8px;
+  display: grid;
+  gap: 2px;
+}
+
+.admin-selected-date-list li[data-has-edit="true"] {
+  position: relative;
+  padding-right: 38px;
+}
+
+.admin-selected-date-edit {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  border: 1px solid #c9d2df;
+  border-radius: 6px;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  color: #475569;
+  cursor: pointer;
+}
+
+.admin-selected-date-list li.is-priest-schedule {
+  border-color: #93c89a;
+  background: #eef9ef;
+}
+
+.admin-selected-date-list li.is-appointment-schedule {
+  border-color: #4d82f3;
+  background: #d7e6ff;
+}
+
+.admin-selected-date-list li.is-parish-event {
+  border-color: #e6cd74;
+  background: #fff9e8;
+}
+
+.admin-selected-date-list li.is-special-event {
+  border-color: #8b5cf6;
+  background: #f4efff;
+}
+
+.admin-selected-date-list li.is-day-off-schedule {
+  border-color: #e8a9a9;
+  background: #fdeaea;
+}
+
+.admin-selected-date-list strong {
+  color: #1f2937;
+  font-size: 0.84rem;
+}
+
+.admin-schedule-kind {
+  display: inline-flex;
+  width: fit-content;
+  margin-top: 2px;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.admin-schedule-kind.is-parish {
+  background: #ca8a04;
+  color: #ffffff;
+}
+
+.admin-schedule-kind.is-priest {
+  background: #15803d;
+  color: #ffffff;
+}
+
+.admin-schedule-kind.is-activity {
+  background: #0f766e;
+  color: #ffffff;
+}
+
+.admin-schedule-kind.is-appointment {
+  background: #1d4ed8;
+  color: #ffffff;
+}
+
+.admin-schedule-kind.is-special {
+  background: #4338ca;
+  color: #ffffff;
+}
+
+.admin-schedule-priest {
+  color: #1f2937 !important;
+  font-weight: 600;
+}
+
+.admin-selected-date-list span {
+  color: #6b7280;
+  font-size: 0.76rem;
+}
+
+.admin-selected-date-empty {
+  margin: 8px 0 0;
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.admin-calendar-editor-grid {
+  margin-top: 14px;
+  grid-template-columns: 1fr;
+}
+
+.admin-editor-hint {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.admin-calendar-scheduling {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-calendar-scheduling-copy {
+  margin: 0;
+  color: #475569;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+
+.admin-calendar-form {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-calendar-field-label {
+  display: grid;
+  gap: 6px;
+  text-align: left;
+}
+
+.admin-calendar-field-label span {
+  color: #374151;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.admin-calendar-field-label small {
+  color: #64748b;
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.admin-calendar-form input,
+.admin-calendar-form select,
+.admin-calendar-form textarea {
+  width: 100%;
+  border: 1px solid #d6dce5;
+  border-radius: 8px;
+  padding: 9px 10px;
+  font: inherit;
+  background: #fbfcfe;
+  color: #1f2937;
+}
+
+.admin-calendar-form input:focus,
+.admin-calendar-form select:focus,
+.admin-calendar-form textarea:focus {
+  outline: none;
+  border-color: #b38a43;
+  box-shadow: 0 0 0 3px rgba(211, 165, 74, 0.2);
+}
+
+.admin-parish-activity-expire-label {
+  color: #5c5346;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin: 0.15rem 0 -0.15rem;
+}
+
+.admin-parish-activity-date-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.admin-parish-activity-date-field input[type="text"] {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-parish-activity-date-field input[type="date"] {
+  width: 42px;
+  padding: 8px 6px;
+  flex: 0 0 42px;
+}
+
+.admin-parish-activity-date-field input[type="date"]::-webkit-datetime-edit {
+  display: none;
+}
+
+.admin-calendar-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.admin-calendar-form-row--special-slots {
+  grid-template-columns: 1fr 1fr;
+}
+
+.admin-special-program-actions {
+  margin-top: 6px;
+  display: flex;
+}
+
+.admin-special-program-action {
+  border: 1px solid #d6dce5;
+  background: #ffffff;
+  color: var(--ff-primary);
+  border-radius: 7px;
+  padding: 5px 10px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-special-program-action:hover {
+  border-color: #b38a43;
+  color: #5c1010;
+}
+
+.admin-special-program-card-button {
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.admin-special-program-card-button:hover {
+  border-color: #b38a43;
+  box-shadow: 0 10px 20px rgba(127, 23, 23, 0.22);
+  transform: translateY(-2px);
+}
+
+.admin-special-program-card-button:focus-visible {
+  outline: 2px solid #b45309;
+  outline-offset: 2px;
+}
+
+.admin-calendar-form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.admin-calendar-form-actions button {
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 12px;
+  background: var(--ff-primary);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-calendar-form-actions button.secondary {
+  background: #e5e7eb;
+  color: #1f2937;
+}
+
+.admin-calendar-form-actions button.danger {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.admin-calendar-form-actions button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.admin-calendar-error {
+  margin: 10px 0 0;
+  color: #b91c1c;
+  font-size: 0.84rem;
+}
+
+.admin-calendar-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2200;
+  background: rgba(2, 6, 23, 0.68);
+  display: grid;
+  place-items: start center;
+  overflow-y: auto;
+  padding: 20px 16px;
+}
+
+.admin-calendar-modal-overlay--centered {
+  place-items: center;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.admin-calendar-modal {
+  width: min(100%, 640px);
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  border-radius: 14px;
+  background: #fffcf7;
+  border: 1px solid #d9c9ab;
+  box-shadow: 0 32px 72px rgba(2, 6, 23, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.55) inset;
+  padding: 16px;
+}
+
+.admin-calendar-modal.admin-calendar-modal--activity {
+  overflow: visible;
+  width: min(100%, 460px);
+}
+
+.admin-calendar-modal--activity .parish-date-popover {
+  z-index: 30;
+}
+
+.admin-calendar-modal.admin-calendar-modal--schedule {
+  width: min(980px, 96vw);
+}
+
+.admin-calendar-modal.admin-date-schedules-modal {
+  width: min(760px, 92vw);
+  height: min(720px, calc(100vh - 40px));
+  max-height: min(720px, calc(100vh - 40px));
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  background: #fff8f1;
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 42%, #d9c9ab);
+}
+
+.admin-date-schedules-modal .admin-calendar-modal-header,
+.admin-date-schedules-hero {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 38px;
+  align-items: start;
+  gap: 12px;
+  margin-bottom: 0;
+  padding: 18px 20px 16px;
+  background: linear-gradient(
+    118deg,
+    color-mix(in srgb, var(--ff-primary) 94%, black 6%) 0%,
+    color-mix(in srgb, var(--ff-third) 38%, var(--ff-primary) 62%) 52%,
+    color-mix(in srgb, var(--ff-secondary) 78%, black 22%) 100%
+  );
+}
+
+.admin-date-schedules-modal,
+.admin-date-schedules-modal h3,
+.admin-date-schedules-modal p,
+.admin-date-schedules-modal button,
+.admin-date-schedules-modal span,
+.admin-date-schedules-modal strong,
+.priest-notes-section,
+.priest-notes-section h4,
+.priest-notes-section p,
+.priest-notes-section button,
+.priest-notes-section strong,
+.priest-notes-section span {
+  font-family: var(--ff-font-family, "Poppins", Arial, sans-serif);
+}
+
+.admin-date-schedules-modal .admin-calendar-modal-header h3,
+.admin-date-schedules-hero h3 {
+  grid-column: 1;
+  text-align: left;
+  margin: 2px 0 0;
+  color: #fffdf7;
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.2;
+}
+
+.admin-date-schedules-kicker {
+  margin: 0;
+  color: #f8e7b4;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-date-schedules-hero-date {
+  margin: 6px 0 0;
+  color: #fff3de;
+  font-size: 0.92rem;
+}
+
+.admin-date-schedules-modal .admin-date-schedules-close {
+  grid-column: 2;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 244, 220, 0.35);
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff8e7;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.admin-date-schedules-modal .admin-date-schedules-close:hover {
+  color: #fffdf7;
+  border-color: rgba(255, 244, 220, 0.7);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.admin-date-schedules-slider {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 8px;
+  flex: 1;
+  min-height: 0;
+  padding: 14px 12px 16px;
+}
+
+.admin-date-schedules-viewport {
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.admin-date-schedules-track {
+  display: flex;
+  width: 300%;
+  height: 100%;
+  transform: translateX(-33.333%);
+  will-change: transform;
+}
+
+.admin-date-schedules-track.is-animating {
+  transition: transform 280ms ease;
+}
+
+.admin-date-schedules-track.is-next {
+  transform: translateX(-66.666%);
+}
+
+.admin-date-schedules-track.is-prev {
+  transform: translateX(0);
+}
+
+.admin-date-schedules-slide {
+  width: 33.333%;
+  flex: 0 0 33.333%;
+  min-width: 0;
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.admin-date-schedules-arrow {
+  width: 38px;
+  height: 38px;
+  align-self: center;
+  border-radius: 999px;
+  border: 1px solid #e8dcc8;
+  background: #fffdf7;
+  color: var(--ff-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.1);
+  flex-shrink: 0;
+}
+
+.admin-date-schedules-arrow:hover:not(:disabled) {
+  border-color: #d9c9ab;
+  color: color-mix(in srgb, var(--ff-primary) 86%, black 14%);
+  background: #fff8e7;
+  transform: translateY(-1px);
+}
+
+.admin-date-schedules-arrow:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.admin-date-schedules-modal .admin-date-schedules-empty {
+  min-height: 100%;
+  height: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.admin-date-schedules-modal .admin-date-schedules-empty + .admin-selected-date-list {
+  margin-top: 12px;
+}
+
+.admin-date-schedules-modal .admin-date-schedules-empty--day-off {
+  border-color: #e8a9a9;
+  background: linear-gradient(180deg, #fffdfb 0%, #fdeaea 100%);
+}
+
+.admin-date-schedules-modal .admin-date-schedules-empty--day-off .appointment-requests-empty-state-icon {
+  color: #991b1b;
+  background: linear-gradient(145deg, rgba(153, 27, 27, 0.16) 0%, rgba(153, 27, 27, 0.05) 100%);
+  border-color: rgba(153, 27, 27, 0.2);
+  box-shadow: 0 8px 20px rgba(153, 27, 27, 0.1);
+}
+
+.admin-date-schedules-empty-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #374151;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.admin-date-schedules-empty-action:hover {
+  background: #fff7f7;
+  border-color: #e8a9a9;
+  color: #991b1b;
+}
+
+.calendar-day-agenda {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 100%;
+}
+
+.calendar-day-agenda-subhead {
+  margin: 0;
+  color: color-mix(in srgb, var(--ff-primary) 72%, #6b4a2b);
+  font-size: 0.82rem;
+}
+
+.calendar-day-agenda-subhead strong {
+  color: var(--ff-primary);
+}
+
+.calendar-day-agenda-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.calendar-day-agenda-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.calendar-day-agenda-chip.is-total {
+  background: color-mix(in srgb, var(--ff-primary) 12%, #fff8f1);
+  color: var(--ff-primary);
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 22%, #eadfca);
+}
+
+.calendar-day-agenda-chip.is-appointment {
+  background: #dbe7ff;
+  color: #1d4ed8;
+}
+
+.calendar-day-agenda-chip.is-priest {
+  background: #e4f6e7;
+  color: #15803d;
+}
+
+.calendar-day-agenda-chip.is-activity {
+  background: #ddf5f1;
+  color: #0f766e;
+}
+
+.calendar-day-agenda-chip.is-parish {
+  background: #fff4cc;
+  color: #92650a;
+}
+
+.calendar-day-agenda-chip.is-special {
+  background: #eee7ff;
+  color: #5b21b6;
+}
+
+.calendar-day-agenda-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.calendar-day-agenda-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 78px 40px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  border: 1px solid #eadfca;
+  border-left-width: 5px;
+  border-radius: 14px;
+  background: #fffdf8;
+  padding: 12px 42px 12px 12px;
+  box-shadow: 0 8px 18px rgba(80, 38, 18, 0.05);
+}
+
+.calendar-day-agenda-card.is-priest-schedule {
+  border-left-color: #15803d;
+  background: linear-gradient(180deg, #f5fff6 0%, #fffdf8 72%);
+}
+
+.calendar-day-agenda-card.is-appointment-schedule {
+  border-left-color: #1d4ed8;
+  background: linear-gradient(180deg, #f4f8ff 0%, #fffdf8 72%);
+}
+
+.calendar-day-agenda-card.is-parish-event {
+  border-left-color: #c5a424;
+  background: linear-gradient(180deg, #fff9e6 0%, #fffdf8 72%);
+}
+
+.calendar-day-agenda-card.is-special-event {
+  border-left-color: #6d28d9;
+  background: linear-gradient(180deg, #f7f3ff 0%, #fffdf8 72%);
+}
+
+.calendar-day-agenda-time {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 2px;
+}
+
+.calendar-day-agenda-time span {
+  color: var(--ff-primary);
+  font-size: 0.82rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.calendar-day-agenda-time small {
+  color: #7a6a52;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.calendar-day-agenda-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--ff-secondary) 16%, #fff8e7);
+  color: var(--ff-primary);
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 28%, #eadfca);
+}
+
+.calendar-day-agenda-card.is-appointment-schedule .calendar-day-agenda-icon {
+  background: #e8f0ff;
+  color: #1d4ed8;
+  border-color: #c7d8ff;
+}
+
+.calendar-day-agenda-card.is-priest-schedule .calendar-day-agenda-icon {
+  background: #e7f8ea;
+  color: #15803d;
+  border-color: #bfe5c6;
+}
+
+.calendar-day-agenda-card.is-priest-activity {
+  border-left-color: #0f766e;
+  background: linear-gradient(180deg, #f2fcfa 0%, #fffdf8 72%);
+}
+
+.calendar-day-agenda-card.is-priest-activity .calendar-day-agenda-icon {
+  background: #ddf5f1;
+  color: #0f766e;
+  border-color: #b5e6dd;
+}
+
+.priest-activity-time-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.priest-activity-time-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.priest-activity-time-inputs input[type="time"] {
+  width: 100%;
+}
+
+.priest-activity-time-error {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid #f3c2c2;
+  border-radius: 8px;
+  background: #fff4f4;
+  color: #9b1c1c;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.priest-activity-blocked {
+  display: grid;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid #b5e6dd;
+  border-radius: 10px;
+  background: #f2fcfa;
+}
+
+.priest-activity-blocked-label {
+  color: #0f766e;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.priest-activity-blocked ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.priest-activity-blocked li {
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: #0f766e;
+  color: #ffffff;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.priest-activity-blocked p {
+  margin: 0;
+  color: #475569;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 560px) {
+  .priest-activity-time-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.calendar-day-agenda-card.is-special-event .calendar-day-agenda-icon {
+  background: #f1ebff;
+  color: #6d28d9;
+  border-color: #d8ccff;
+}
+
+.calendar-day-agenda-body {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.calendar-day-agenda-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+}
+
+.calendar-day-agenda-top strong {
+  color: #1f2937;
+  font-size: 0.98rem;
+}
+
+.calendar-day-agenda-meta {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #5b5246;
+  font-size: 0.78rem;
+}
+
+.calendar-day-agenda-meta svg {
+  flex-shrink: 0;
+  color: color-mix(in srgb, var(--ff-primary) 55%, #8a7a62);
+}
+
+.calendar-day-agenda-notes {
+  margin: 2px 0 0;
+  color: #6b5b43;
+  font-size: 0.76rem;
+  font-style: italic;
+}
+
+.admin-date-schedules-modal .calendar-day-agenda-empty {
+  min-height: 0;
+}
+
+.calendar-day-agenda-empty {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 18px;
+  border-radius: 16px;
+  border: 1px dashed color-mix(in srgb, var(--ff-secondary) 40%, #d9c9ab);
+  background: linear-gradient(180deg, #fffdf8 0%, #fff4e2 100%);
+}
+
+.calendar-day-agenda-empty.is-priest-empty {
+  width: 100%;
+  min-height: 180px;
+  justify-content: center;
+  border-style: solid;
+  border-color: color-mix(in srgb, var(--ff-primary) 24%, #d9c9ab);
+  background: color-mix(in srgb, var(--ff-primary) 4%, #fffdf8 96%);
+}
+
+.calendar-day-agenda-empty.is-priest-empty .calendar-day-agenda-empty-icon {
+  background: color-mix(in srgb, var(--ff-primary) 10%, white 90%);
+  border-color: color-mix(in srgb, var(--ff-primary) 22%, white 78%);
+}
+
+.calendar-day-agenda-empty.is-day-off {
+  border-style: solid;
+  border-color: #e8a9a9;
+  background: linear-gradient(180deg, #fffdfb 0%, #fdeaea 100%);
+}
+
+.calendar-day-agenda-empty-icon {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ff-primary);
+  background: color-mix(in srgb, var(--ff-secondary) 16%, #fff8e7);
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 28%, #eadfca);
+}
+
+.calendar-day-agenda-empty.is-day-off .calendar-day-agenda-empty-icon {
+  color: #991b1b;
+  background: #fde8e8;
+  border-color: #f0c2c2;
+}
+
+.calendar-day-agenda-empty h4 {
+  margin: 0 0 4px;
+  color: var(--ff-primary);
+  font-size: 1.05rem;
+}
+
+.calendar-day-agenda-empty p {
+  margin: 0;
+  color: #6b5b43;
+  font-size: 0.86rem;
+}
+
+.calendar-day-agenda-empty-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  border: 1px solid #e8a9a9;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #991b1b;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 7px 11px;
+  cursor: pointer;
+}
+
+.calendar-day-agenda-empty-action:hover {
+  background: #fff7f7;
+}
+
+.calendar-day-agenda-card .admin-selected-date-edit {
+  top: 10px;
+  right: 10px;
+}
+
+.calendar-day-agenda-card .admin-selected-date-edit.is-remove {
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  color: var(--ff-primary);
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 28%, white);
+  background: color-mix(in srgb, var(--ff-primary) 8%, white);
+  box-shadow: 0 4px 10px color-mix(in srgb, var(--ff-primary) 12%, transparent);
+}
+
+.calendar-day-agenda-card .admin-selected-date-edit.is-remove:hover {
+  color: #fff;
+  background: var(--ff-primary);
+  border-color: var(--ff-primary);
+}
+
+.admin-delete-confirm-modal.is-calendar-only {
+  width: min(100%, 420px);
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 18px;
+  text-align: left;
+  background: #fffdf9;
+  box-shadow: 0 28px 60px rgba(20, 8, 8, 0.32);
+}
+
+.admin-delete-confirm-modal.is-calendar-only::before {
+  content: none;
+}
+
+.admin-calendar-remove-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  background: linear-gradient(90deg, var(--ff-primary), color-mix(in srgb, var(--ff-primary) 72%, #2a0c0c));
+  color: #fffdf8;
+}
+
+.admin-calendar-remove-mark {
+  width: 40px;
+  height: 40px;
+  margin: 0;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  color: var(--ff-primary);
+  background: #fffdf8;
+  box-shadow: none;
+}
+
+.admin-calendar-remove-header p {
+  margin: 0;
+  color: color-mix(in srgb, var(--ff-secondary) 80%, white);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-delete-confirm-modal.is-calendar-only h3 {
+  margin: 2px 0 0;
+  color: #fffdf8;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.admin-calendar-remove-body {
+  padding: 16px 18px 0;
+}
+
+.admin-calendar-remove-name {
+  display: block;
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--ff-primary);
+  background: color-mix(in srgb, var(--ff-secondary) 22%, white);
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 50%, white);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.admin-calendar-remove-copy {
+  margin: 12px 0 0;
+  color: #57534e;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.admin-calendar-remove-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0;
+  padding: 16px 18px 18px;
+}
+
+.admin-calendar-remove-actions button {
+  border: 0;
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-calendar-remove-actions button.secondary {
+  background: #f3efe6;
+  color: #44403c;
+}
+
+.admin-calendar-remove-actions button.secondary:hover {
+  background: #e7e0d2;
+}
+
+.admin-calendar-remove-actions button.danger {
+  background: var(--ff-primary);
+  color: #fff;
+}
+
+.admin-calendar-remove-actions button.danger:hover {
+  filter: brightness(1.08);
+}
+
+.admin-calendar-remove-actions button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.admin-calendar-remove-actions button {
+  border: 0;
+  border-radius: 12px;
+  min-height: 44px;
+  padding: 10px 14px;
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-calendar-remove-actions button.secondary {
+  background: #f3efe6;
+  color: #44403c;
+}
+
+.admin-calendar-remove-actions button.secondary:hover {
+  background: #e7e0d2;
+}
+
+.admin-calendar-remove-actions button.danger {
+  background: var(--ff-primary);
+  color: #fff;
+}
+
+.admin-calendar-remove-actions button.danger:hover {
+  filter: brightness(1.08);
+}
+
+.admin-calendar-remove-actions button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.special-program-once-overlay {
+  z-index: 2400;
+}
+
+.special-program-once-modal {
+  width: min(100%, 420px);
+  padding: 0 0 22px;
+  overflow: hidden;
+  border-radius: 20px;
+  text-align: center;
+  background: #fffdf9;
+  box-shadow: 0 28px 60px rgba(20, 8, 8, 0.32);
+}
+
+.special-program-once-modal::before {
+  content: "";
+  display: block;
+  height: 6px;
+  background: linear-gradient(90deg, var(--ff-primary), var(--ff-secondary));
+}
+
+.special-program-once-mark {
+  width: 58px;
+  height: 58px;
+  margin: 22px auto 12px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  color: var(--ff-primary);
+  background: color-mix(in srgb, var(--ff-secondary) 28%, white);
+}
+
+.special-program-once-modal h3 {
+  margin: 0;
+  color: #1c1917;
+  font-size: 1.25rem;
+}
+
+.special-program-once-name {
+  display: inline-block;
+  margin: 12px 22px 0;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: var(--ff-primary);
+  background: color-mix(in srgb, var(--ff-secondary) 28%, white);
+  font-weight: 700;
+}
+
+.special-program-once-copy {
+  margin: 14px 28px 0;
+  color: #57534e;
+  font-size: 0.94rem;
+  line-height: 1.5;
+}
+
+.special-program-once-ok {
+  margin-top: 18px;
+  min-width: 140px;
+  min-height: 42px;
+  border: 0;
+  border-radius: 12px;
+  background: var(--ff-primary);
+  color: #fff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.admin-delete-confirm-modal {
+  width: min(100%, 460px);
+  padding: 20px;
+  border: 1px solid #fecaca;
+  box-shadow: 0 20px 40px rgba(127, 23, 23, 0.2);
+}
+
+.admin-delete-confirm-modal.is-success {
+  border: 1px solid #bbf7d0;
+  box-shadow: 0 20px 40px rgba(21, 128, 61, 0.18);
+}
+
+.admin-delete-confirm-modal.is-success .admin-calendar-modal-header h3 {
+  color: #166534;
+}
+
+.admin-delete-confirm-modal.is-success .admin-delete-confirm-body p:last-child {
+  color: #374151;
+  font-size: 0.94rem;
+}
+
+.admin-delete-confirm-modal .admin-calendar-modal-header {
+  margin-bottom: 10px;
+}
+
+.admin-delete-confirm-modal .admin-calendar-modal-header h3 {
+  color: #991b1b;
+}
+
+.admin-delete-confirm-body {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.admin-delete-confirm-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
+.admin-delete-confirm-icon.is-success {
+  color: #166534;
+  background: #dcfce7;
+  border-color: #bbf7d0;
+}
+
+.admin-delete-confirm-body p {
+  margin: 0;
+  color: #374151;
+  font-size: 0.94rem;
+}
+
+.admin-delete-confirm-body p:last-child {
+  color: #991b1b;
+  font-size: 0.84rem;
+}
+
+.admin-print-month-filter {
+  width: 100%;
+  display: grid;
+  gap: 6px;
+  margin-top: 4px;
+  text-align: left;
+}
+
+.admin-print-month-filter label {
+  color: #374151;
+  font-size: 0.84rem;
+  font-weight: 600;
+}
+
+.admin-print-month-filter select {
+  width: 100%;
+  border: 1px solid #d6dce5;
+  border-radius: 8px;
+  padding: 9px 10px;
+  font: inherit;
+  background: #fbfcfe;
+  color: #1f2937;
+}
+
+.admin-print-month-filter select:focus {
+  outline: none;
+  border-color: #b38a43;
+  box-shadow: 0 0 0 3px rgba(211, 165, 74, 0.2);
+}
+
+.admin-delete-confirm-modal .admin-calendar-form-actions {
+  justify-content: center;
+}
+
+.admin-calendar-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #fffcf7;
+}
+
+.admin-calendar-modal-header h3 {
+  margin: 0;
+  color: var(--ff-primary);
+  font-size: 1.1rem;
+}
+
+.admin-calendar-modal-header button {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #4b5563;
+  padding: 6px 10px;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.admin-calendar-modal-header .admin-calendar-modal-close {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.admin-calendar-modal-header .admin-calendar-modal-close:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+  color: var(--ff-primary);
+}
+
+.admin-calendar-modal-header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-appointment-modal .admin-appointment-close-button {
+  border: 1px solid var(--ff-primary);
+  background: var(--ff-primary);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(var(--ff-primary-rgb), 0.24);
+  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.admin-appointment-modal .admin-appointment-close-button:hover {
+  background: var(--ff-button-primary-hover);
+  border-color: var(--ff-button-primary-hover);
+  box-shadow: 0 8px 14px rgba(var(--ff-primary-rgb), 0.3);
+  transform: translateY(-1px);
+}
+
+.admin-appointment-modal .admin-appointment-close-button:focus-visible {
+  outline: 3px solid rgba(var(--ff-primary-rgb), 0.28);
+  outline-offset: 2px;
+}
+
+.admin-sacraments-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-appointment-flow-modal {
+  width: min(100%, 920px);
+  min-height: 0;
+  max-height: calc(100vh - 40px);
+  padding: 0;
+  overflow: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.admin-appointment-flow-modal.is-type-step {
+  width: min(100%, 820px);
+  min-height: 0;
+}
+
+.admin-appointment-flow-modal.is-marriage-docs-step {
+  width: min(100%, 980px);
+}
+
+.admin-appointment-flow-modal .admin-calendar-modal-header {
+  margin: 0;
+  padding: 15px 20px;
+  position: sticky;
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-calendar-modal-header {
+  background: var(--ff-modal-header);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-calendar-modal-header h3,
+.admin-appointment-flow-modal.is-details-step .admin-calendar-modal-header h3,
+.admin-appointment-flow-modal.is-marriage-docs-step .admin-calendar-modal-header h3,
+.admin-appointment-flow-modal.is-review-step .admin-calendar-modal-header h3 {
+  width: 100%;
+  text-align: center;
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-calendar-modal-header h3 {
+  color: #ffffff;
+  font-size: 2rem;
+  letter-spacing: 0.01em;
+}
+
+.admin-appointment-flow-modal.is-details-step .admin-calendar-modal-header,
+.admin-appointment-flow-modal.is-marriage-docs-step .admin-calendar-modal-header {
+  background: var(--ff-modal-header-blend);
+  border-bottom: 1px solid color-mix(in srgb, var(--ff-secondary) 42%, white 58%);
+}
+
+.admin-appointment-flow-modal.is-details-step .admin-calendar-modal-header h3,
+.admin-appointment-flow-modal.is-marriage-docs-step .admin-calendar-modal-header h3 {
+  color: #fff8ec;
+  font-size: 1.66rem;
+}
+
+.admin-appointment-flow-modal.is-review-step .admin-calendar-modal-header {
+  background: var(--ff-modal-header);
+  border-bottom: 1px solid color-mix(in srgb, var(--ff-secondary) 38%, white 62%);
+}
+
+.admin-appointment-flow-modal.is-review-step .admin-calendar-modal-header h3 {
+  color: #f5fff7;
+  font-size: 1.66rem;
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-calendar-modal-header .admin-appointment-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  background: transparent;
+  z-index: 5;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none;
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-calendar-modal-header .admin-appointment-close-button:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #ffffff;
+  transform: none;
+}
+
+.admin-appointment-flow-modal.is-details-step .admin-calendar-modal-header .admin-appointment-close-button,
+.admin-appointment-flow-modal.is-marriage-docs-step .admin-calendar-modal-header .admin-appointment-close-button,
+.admin-appointment-flow-modal.is-review-step .admin-calendar-modal-header .admin-appointment-close-button {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-weight: 700;
+  box-shadow: none;
+}
+
+.admin-appointment-flow-modal.is-details-step .admin-calendar-modal-header .admin-appointment-close-button,
+.admin-appointment-flow-modal.is-marriage-docs-step .admin-calendar-modal-header .admin-appointment-close-button,
+.admin-appointment-flow-modal.is-review-step .admin-calendar-modal-header .admin-appointment-close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.admin-appointment-flow-modal.is-details-step .admin-calendar-modal-header .admin-appointment-close-button:hover,
+.admin-appointment-flow-modal.is-marriage-docs-step .admin-calendar-modal-header .admin-appointment-close-button:hover,
+.admin-appointment-flow-modal.is-review-step .admin-calendar-modal-header .admin-appointment-close-button:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.9);
+  transform: none;
+}
+
+.admin-appointment-back-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.admin-appointment-flow-modal.is-details-step .admin-appointment-back-button,
+.admin-appointment-flow-modal.is-marriage-docs-step .admin-appointment-back-button,
+.admin-appointment-flow-modal.is-review-step .admin-appointment-back-button {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.admin-appointment-flow-modal.is-details-step .admin-appointment-back-button:hover,
+.admin-appointment-flow-modal.is-marriage-docs-step .admin-appointment-back-button:hover,
+.admin-appointment-flow-modal.is-review-step .admin-appointment-back-button:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-sacraments-grid {
+  padding: 16px;
+  gap: 14px;
+  background: #ffffff;
+}
+
+.admin-sacrament-schema-shortcut-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 12px 16px 0;
+}
+
+.admin-sacrament-schema-shortcut-button {
+  border: 1px solid var(--ff-primary);
+  border-radius: 999px;
+  background: var(--ff-modal-button);
+  color: var(--ff-modal-on-header);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  padding: 7px 14px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.admin-sacrament-schema-shortcut-button:hover {
+  filter: brightness(1.05);
+  border-color: var(--ff-button-primary-hover);
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 22px;
+  min-height: 170px;
+  place-items: stretch;
+  padding: 16px 18px;
+  align-content: space-between;
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card::before,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card::before {
+  width: 110px;
+  height: 110px;
+  top: -28px;
+  right: -22px;
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card::after {
+  width: 72px;
+  height: 72px;
+  top: 12px;
+  right: 58px;
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.admin-sacrament-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.admin-certificate-fee-badge {
+  position: relative;
+  z-index: 2;
+  margin-left: auto;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.admin-sacrament-icon-badge {
+  position: relative;
+  z-index: 2;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(155deg, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.16) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.58);
+  color: #ffffff;
+  box-shadow: 0 8px 16px rgba(2, 6, 23, 0.22);
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease, border-color 180ms ease;
+  animation: sacramentBadgeFloat 2.8s ease-in-out infinite;
+}
+
+/* Reduce Windows/Chrome modal flicker from layered blur + animation repaints. */
+.admin-calendar-modal-overlay--centered {
+  backdrop-filter: none;
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-icon-badge {
+  animation: none;
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-icon-badge {
+  transition: none;
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card:hover .admin-sacrament-icon-badge {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 12px 20px rgba(2, 6, 23, 0.26);
+}
+
+.admin-sacrament-icon-badge::before,
+.admin-sacrament-icon-badge::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  pointer-events: none;
+}
+
+.admin-sacrament-icon-badge::before {
+  inset: -1px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  opacity: 0.9;
+}
+
+.admin-sacrament-icon-badge::after {
+  top: 8px;
+  left: 8px;
+  width: 12px;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.36);
+  filter: blur(0.2px);
+}
+
+.admin-sacrament-icon-badge svg {
+  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.25));
+}
+
+.admin-sacrament-icon-badge.is-marriage {
+  background: linear-gradient(150deg, rgba(255, 202, 222, 0.95) 0%, rgba(247, 126, 173, 0.52) 100%);
+  border-color: rgba(255, 224, 237, 0.95);
+  color: #fff7fb;
+  box-shadow: 0 10px 18px rgba(214, 67, 108, 0.44);
+}
+
+.admin-sacrament-icon-badge.is-baptism {
+  background: linear-gradient(150deg, rgba(191, 234, 255, 0.95) 0%, rgba(77, 168, 244, 0.52) 100%);
+  border-color: rgba(225, 244, 255, 0.95);
+  color: #f3fbff;
+  box-shadow: 0 10px 18px rgba(42, 132, 214, 0.42);
+}
+
+.admin-sacrament-icon-badge.is-funeral-mass {
+  background: linear-gradient(150deg, rgba(215, 224, 238, 0.95) 0%, rgba(121, 137, 166, 0.52) 100%);
+  border-color: rgba(230, 237, 247, 0.92);
+  color: #f8fbff;
+  box-shadow: 0 10px 18px rgba(57, 65, 79, 0.45);
+}
+
+.admin-sacrament-icon-badge.is-blessing {
+  background: linear-gradient(150deg, rgba(205, 255, 223, 0.95) 0%, rgba(56, 205, 122, 0.52) 100%);
+  border-color: rgba(220, 255, 233, 0.95);
+  color: #f5fff8;
+  box-shadow: 0 10px 18px rgba(18, 138, 74, 0.42);
+}
+
+.admin-sacrament-icon-badge.is-generic {
+  background: linear-gradient(150deg, rgba(247, 224, 177, 0.95) 0%, rgba(240, 163, 58, 0.48) 100%);
+  border-color: rgba(255, 236, 198, 0.95);
+  color: #fff9ee;
+  box-shadow: 0 10px 18px rgba(173, 115, 33, 0.4);
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card h4 {
+  position: relative;
+  z-index: 2;
+  color: #ffffff;
+  text-align: left;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Appointment-type cards follow the active Website Design theme. */
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card.is-marriage,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card.is-baptism,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card.is-funeral-mass,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card.is-blessing,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card.is-generic,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card.is-theme-current,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card.is-theme-maroon,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card.is-theme-yellow,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-card.is-theme-purple {
+  --sacrament-border: var(--ff-modal-card-border);
+  --sacrament-bg-top: var(--ff-primary);
+  --sacrament-bg-bottom: color-mix(in srgb, var(--ff-primary) 68%, black 32%);
+  --sacrament-accent: #ffffff;
+  --sacrament-tag: var(--ff-primary);
+  --sacrament-badge-border: rgba(255, 255, 255, 0.52);
+  --sacrament-badge-bg: rgba(255, 255, 255, 0.2);
+  --sacrament-badge-text: #ffffff;
+  --sacrament-footer-border: rgba(255, 255, 255, 0.28);
+  --sacrament-hover-border: var(--ff-modal-card-hover);
+  --sacrament-hover-shadow: rgba(var(--ff-primary-rgb), 0.3);
+}
+
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-icon-badge,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-icon-badge.is-marriage,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-icon-badge.is-baptism,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-icon-badge.is-funeral-mass,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-icon-badge.is-blessing,
+.admin-appointment-flow-modal.is-type-step .admin-sacrament-icon-badge.is-generic {
+  background: linear-gradient(
+    150deg,
+    color-mix(in srgb, white 78%, var(--ff-primary) 22%) 0%,
+    color-mix(in srgb, var(--ff-primary) 52%, transparent 48%) 100%
+  );
+  border-color: rgba(255, 255, 255, 0.9);
+  color: #fff7f7;
+  box-shadow: 0 10px 18px rgba(var(--ff-primary-rgb), 0.45);
+}
+
+.admin-appointment-details-form {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: radial-gradient(circle at top right, rgba(197, 164, 36, 0.12) 0%, rgba(255, 255, 255, 0) 52%), #fffdf8;
+  min-height: 0;
+}
+
+.admin-marriage-docs-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px 20px 16px;
+  background: radial-gradient(circle at 18% 0%, rgba(127, 23, 23, 0.06) 0%, transparent 42%),
+    radial-gradient(circle at 92% 8%, rgba(197, 164, 36, 0.14) 0%, transparent 48%), #faf7f0;
+  min-height: 0;
+}
+
+.admin-marriage-docs-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-bottom: 2px;
+}
+
+.admin-marriage-docs-badge {
+  align-self: flex-start;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 14px;
+  border-radius: 999px;
+  color: var(--ff-primary);
+  background: linear-gradient(180deg, #fff 0%, var(--ff-modal-accent-soft) 100%);
+  border: 1px solid rgba(var(--ff-primary-rgb), 0.22);
+  box-shadow: 0 2px 8px rgba(var(--ff-primary-rgb), 0.08);
+}
+
+.admin-marriage-docs-lead {
+  margin: 0;
+  max-width: 58ch;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+.admin-marriage-docs-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 14px;
+  align-items: stretch;
+  flex: 1;
+  min-height: 0;
+}
+
+.admin-marriage-docs-card {
+  border-radius: 14px;
+  padding: 14px 16px 16px;
+  background: #ffffff;
+  border: 1px solid #e8e0d4;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.admin-marriage-docs-card--documents {
+  border-top: 4px solid var(--ff-primary);
+}
+
+.admin-marriage-docs-card--steps {
+  border-top: 4px solid #1b6e4f;
+  background: linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
+}
+
+.admin-marriage-docs-card-head {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.admin-marriage-docs-card-icon-wrap {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ff-primary);
+  background: linear-gradient(145deg, rgba(var(--ff-primary-rgb), 0.12) 0%, rgba(var(--ff-primary-rgb), 0.04) 100%);
+  border: 1px solid rgba(127, 23, 23, 0.15);
+}
+
+.admin-marriage-docs-card-icon-wrap--steps {
+  color: #166534;
+  background: linear-gradient(145deg, rgba(27, 110, 79, 0.14) 0%, rgba(27, 110, 79, 0.04) 100%);
+  border-color: rgba(27, 110, 79, 0.2);
+}
+
+.admin-marriage-docs-card-titles h4 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #3f0f0f;
+  letter-spacing: 0.01em;
+}
+
+.admin-marriage-docs-card--steps .admin-marriage-docs-card-titles h4 {
+  color: #14532d;
+}
+
+.admin-marriage-docs-note {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #6b4c2a;
+  line-height: 1.35;
+}
+
+.admin-marriage-docs-note--muted {
+  font-weight: 600;
+  color: #4d7c59;
+}
+
+.admin-marriage-docs-item-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.admin-marriage-docs-item-grid--steps {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.admin-marriage-docs-item-grid li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  padding: 9px 10px;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #334155;
+  background: #f8f6f1;
+  border: 1px solid #ebe4d8;
+}
+
+.admin-marriage-docs-card--steps .admin-marriage-docs-item-grid li {
+  background: #f0faf4;
+  border-color: #d4eadd;
+}
+
+.admin-marriage-docs-item-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--ff-third);
+  opacity: 0.9;
+}
+
+.admin-marriage-docs-card--steps .admin-marriage-docs-item-icon {
+  color: #1b6e4f;
+}
+
+.admin-marriage-docs-footer {
+  margin-top: auto;
+  padding-top: 4px;
+  border-top: 1px solid rgba(127, 23, 23, 0.12);
+}
+
+.admin-marriage-docs-footer .admin-appointment-flow-actions {
+  justify-content: flex-end;
+}
+
+.admin-funeral-mass-docs-single {
+  max-width: 560px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.admin-marriage-docs-item-grid--funeral-mass {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 720px) {
+  .admin-marriage-docs-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-marriage-docs-item-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-appointment-flow-modal.is-marriage-docs-step {
+    width: min(100%, 920px);
+  }
+
+  .admin-marriage-docs-item-grid--funeral-mass {
+    grid-template-columns: 1fr;
+  }
+}
+
+.certificate-request-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 180px;
+  margin: 4px 0 8px;
+  padding: 28px 18px 24px;
+  border-radius: 14px;
+  border: 1px dashed #e2d8cc;
+  background: linear-gradient(180deg, #fffdfb 0%, #faf6f0 100%);
+}
+
+.certificate-request-empty-icon {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  color: #7f1717;
+  background: linear-gradient(145deg, rgba(127, 23, 23, 0.14) 0%, rgba(127, 23, 23, 0.05) 100%);
+  border: 1px solid rgba(127, 23, 23, 0.18);
+}
+
+.certificate-request-empty-state h4 {
+  margin: 0 0 6px;
+  color: #3f2a1d;
+  font-size: 1.05rem;
+}
+
+.certificate-request-empty-state p {
+  margin: 0;
+  max-width: 280px;
+  color: #6b5a4a;
+  font-size: 0.9rem;
+}
+
+.certificate-request-empty-action {
+  margin-top: 16px;
+  border: 1px solid var(--ff-primary);
+  border-radius: 10px;
+  background: var(--ff-modal-button);
+  color: #fff;
+  box-shadow: 0 8px 16px rgba(var(--ff-primary-rgb), 0.24);
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.88rem;
+  line-height: 1;
+  min-height: 42px;
+  min-width: 120px;
+  padding: 0 18px;
+  cursor: pointer;
+}
+
+.certificate-request-empty-action:hover {
+  filter: brightness(1.03);
+}
+
+.certificate-request-empty-action:focus-visible {
+  outline: 2px solid rgba(197, 164, 36, 0.55);
+  outline-offset: 2px;
+}
+
+.admin-appointment-selected-type {
+  margin: 0;
+  color: #334155;
+}
+
+.admin-appointment-selected-type strong {
+  color: var(--ff-primary);
+}
+
+.admin-appointment-account-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #e8dcc2;
+  border-radius: 10px;
+  background: #fffaf0;
+  color: #5b4b1f;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 8px 10px;
+}
+
+.admin-appointment-account-toggle input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--ff-primary);
+}
+
+.admin-appointment-phone-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  border: 1px solid #e8dcc2;
+  border-radius: 10px;
+  background: #fffaf0;
+  color: #5b4b1f;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.admin-appointment-field .admin-appointment-phone-toggle input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  min-height: 16px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  flex: 0 0 auto;
+  accent-color: var(--ff-primary);
+  cursor: pointer;
+}
+
+.admin-appointment-phone-toggle-text {
+  margin: 0;
+  font-style: normal;
+  color: inherit;
+  text-transform: none;
+  letter-spacing: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.admin-appointment-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.admin-appointment-field {
+  display: grid;
+  gap: 6px;
+  border: 1px solid #eadfca;
+  border-radius: 12px;
+  padding: 10px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.04);
+}
+
+.admin-appointment-field span {
+  color: #6b7280;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.admin-appointment-field input,
+.admin-appointment-field select,
+.admin-appointment-field textarea {
+  width: 100%;
+  border: 1px solid #d9d2bf;
+  border-radius: 8px;
+  background: #fff;
+  color: #2f3c4d;
+  font: inherit;
+  min-height: 42px;
+  padding: 0 11px;
+  box-sizing: border-box;
+}
+
+.admin-appointment-field input:focus,
+.admin-appointment-field select:focus,
+.admin-appointment-field textarea:focus {
+  outline: 2px solid #c5a424;
+  outline-offset: 1px;
+}
+
+.admin-appointment-field textarea {
+  min-height: 88px;
+  padding: 10px 11px;
+  resize: vertical;
+}
+
+.admin-appointment-note-field {
+  margin-top: 10px;
+}
+
+.admin-appointment-field input.invalid-phone {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+.admin-appointment-field input.invalid-phone:focus {
+  border-color: #dc2626;
+  outline: 2px solid rgba(220, 38, 38, 0.35);
+  outline-offset: 1px;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+}
+
+.certificate-request-modal .admin-appointment-details-form {
+  background:
+    radial-gradient(circle at 10% -20%, rgba(var(--ff-primary-rgb), 0.14) 0%, rgba(255, 255, 255, 0) 46%),
+    radial-gradient(circle at 100% -5%, rgba(var(--ff-secondary-rgb), 0.2) 0%, rgba(255, 255, 255, 0) 42%),
+    var(--ff-modal-accent-soft);
+}
+
+.certificate-request-modal .admin-calendar-modal-header {
+  background: var(--ff-modal-header-blend);
+  border-bottom: 1px solid color-mix(in srgb, var(--ff-secondary) 42%, white 58%);
+}
+
+.certificate-request-modal.is-type-step .admin-calendar-modal-header .admin-appointment-back-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+  border: 2px solid #ffffff;
+  background: transparent;
+  color: #ffffff;
+  box-shadow: none;
+  z-index: 5;
+}
+
+.certificate-request-modal.is-type-step .admin-calendar-modal-header .admin-appointment-back-button:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: #ffffff;
+}
+
+.certificate-request-modal .admin-calendar-modal-header h3 {
+  color: #fff8ec;
+  font-size: 1.66rem;
+  width: 100%;
+  text-align: center;
+}
+
+.certificate-request-modal .admin-appointment-close-button,
+.certificate-request-modal .admin-appointment-back-button {
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.certificate-request-modal .admin-appointment-close-button:hover,
+.certificate-request-modal .admin-appointment-back-button:hover {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.9);
+}
+
+.certificate-request-modal .admin-appointment-review {
+  background:
+    radial-gradient(circle at 10% -20%, rgba(var(--ff-primary-rgb), 0.14) 0%, rgba(255, 255, 255, 0) 46%),
+    radial-gradient(circle at 100% -5%, rgba(var(--ff-secondary-rgb), 0.2) 0%, rgba(255, 255, 255, 0) 42%),
+    var(--ff-modal-accent-soft);
+}
+
+.certificate-request-modal .admin-appointment-review-grid {
+  border: 1px solid var(--ff-accent-border);
+  box-shadow: 0 8px 16px rgba(var(--ff-primary-rgb), 0.1);
+}
+
+.certificate-request-modal .admin-appointment-review-summary {
+  border: 1px solid rgba(var(--ff-primary-rgb), 0.2);
+  background: linear-gradient(180deg, var(--ff-surface) 0%, var(--ff-modal-accent-soft) 100%);
+}
+
+.certificate-request-modal .admin-appointment-review-summary span {
+  color: var(--ff-primary);
+}
+
+.certificate-request-modal .admin-appointment-review-summary strong {
+  color: var(--ff-primary);
+}
+
+.certificate-request-modal .admin-appointment-flow-actions .primary {
+  background: var(--ff-modal-button);
+  border-color: var(--ff-primary);
+}
+
+.certificate-request-modal .certificate-request-readonly {
+  background: #f4f1e8;
+  border-color: #d7ccb1;
+  color: #475569;
+  font-weight: 600;
+  cursor: not-allowed;
+}
+
+.certificate-request-modal .certificate-request-readonly:focus {
+  outline: 2px solid #cbb98c;
+}
+
+.admin-appointment-file-picker {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-appointment-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.admin-appointment-file-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 8px;
+  border: 1px solid var(--ff-primary);
+  background: var(--ff-modal-button);
+  color: #fffdf5;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 0 14px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.admin-appointment-file-trigger:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 6px 14px rgba(111, 19, 19, 0.24);
+}
+
+.admin-appointment-file-trigger:active {
+  transform: translateY(1px);
+}
+
+.admin-appointment-file-input:focus-visible + .admin-appointment-file-trigger {
+  outline: 2px solid #c5a424;
+  outline-offset: 2px;
+}
+
+.admin-appointment-file-name {
+  min-height: 42px;
+  border: 1px solid #d9d2bf;
+  border-radius: 8px;
+  background: #fff;
+  color: #64748b;
+  font-size: 0.84rem;
+  line-height: 1.3;
+  padding: 0 11px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.admin-appointment-file-name.is-selected {
+  color: #1e293b;
+  border-color: #bfd9c4;
+  background: #f5fff8;
+}
+
+.admin-appointment-file-hint {
+  display: none;
+}
+
+.admin-appointment-fields-grid.is-marriage-layout .appointment-field-requestorName,
+.admin-appointment-fields-grid.is-funeral-layout .appointment-field-deceasedAddress {
+  grid-column: 1 / -1;
+}
+
+.admin-appointment-fields-grid.is-marriage-layout .appointment-field-brideName,
+.admin-appointment-fields-grid.is-marriage-layout .appointment-field-brideAge,
+.admin-appointment-fields-grid.is-marriage-layout .appointment-field-bridePhoneNumber,
+.admin-appointment-fields-grid.is-marriage-layout .appointment-field-brideBirthCertificateFile,
+.admin-appointment-fields-grid.is-marriage-layout .appointment-field-brideAddress {
+  border-left: 4px solid #f6a2b6;
+  background: linear-gradient(180deg, #ffffff 0%, #fff7fa 100%);
+}
+
+.admin-appointment-fields-grid.is-marriage-layout .appointment-field-groomName,
+.admin-appointment-fields-grid.is-marriage-layout .appointment-field-groomAge,
+.admin-appointment-fields-grid.is-marriage-layout .appointment-field-groomPhoneNumber,
+.admin-appointment-fields-grid.is-marriage-layout .appointment-field-groomBirthCertificateFile,
+.admin-appointment-fields-grid.is-marriage-layout .appointment-field-groomAddress {
+  border-left: 4px solid #9ec5f8;
+  background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+}
+
+.admin-appointment-list-field {
+  grid-column: 1 / -1;
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 16%, #eadfca);
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fffdf9;
+  box-shadow: 0 8px 18px rgba(80, 38, 18, 0.05);
+}
+
+.admin-appointment-list-field > span {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 12px 16px;
+  background: linear-gradient(90deg, var(--ff-primary), color-mix(in srgb, var(--ff-primary) 72%, #3a1010));
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-appointment-list-field > span::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  margin-right: 10px;
+  border-radius: 999px;
+  background: var(--ff-secondary);
+}
+
+.admin-appointment-list-field {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+}
+
+.admin-appointment-list-field > span {
+  grid-column: 1;
+  grid-row: 1;
+  border-bottom: 0;
+}
+
+.admin-appointment-list-field .list-input {
+  display: contents;
+}
+
+.admin-appointment-list-field .list-input-header {
+  grid-column: 2;
+  grid-row: 1;
+  padding-right: 14px;
+}
+
+.admin-appointment-list-field .list-entry-list {
+  grid-column: 1 / -1;
+  padding: 0 14px 14px;
+}
+
+.admin-appointment-list-field.is-ninong,
+.admin-appointment-list-field.is-ninang {
+  border: 2px solid #d9c9ab;
+  background: #fff;
+}
+
+.admin-appointment-list-field.is-ninong > span,
+.admin-appointment-list-field.is-ninang > span {
+  background: #fff;
+}
+
+.admin-appointment-list-field.is-ninong > span {
+  color: #2f5f9e;
+}
+
+.admin-appointment-list-field.is-ninong > span::before {
+  background: #2f5f9e;
+}
+
+.admin-appointment-list-field.is-ninong .list-add-button,
+.admin-appointment-list-field.is-ninang .list-add-button {
+  background: #fff;
+  box-shadow: none;
+}
+
+.admin-appointment-list-field.is-ninong .list-add-button {
+  color: #2f5f9e;
+  border: 1px solid #d5e2f2;
+}
+
+.admin-appointment-list-field.is-ninong .list-add-button:hover,
+.admin-appointment-list-field.is-ninang .list-add-button:hover {
+  filter: none;
+}
+
+.admin-appointment-list-field.is-ninong .list-add-button:hover {
+  background: #f7faff;
+}
+
+.admin-appointment-list-field.is-ninong .list-entry-row,
+.admin-appointment-list-field.is-ninang .list-entry-row {
+  border-color: #eeeae3;
+  background: #fff;
+}
+
+.admin-appointment-list-field.is-ninong .list-entry-index {
+  background: #eef4fb;
+  color: #2f5f9e;
+}
+
+.admin-appointment-list-field.is-ninang > span {
+  color: #b85a7a;
+}
+
+.admin-appointment-list-field.is-ninang > span::before {
+  background: #b85a7a;
+}
+
+.admin-appointment-list-field.is-ninang .list-add-button {
+  color: #b85a7a;
+  border: 1px solid #f0d5df;
+}
+
+.admin-appointment-list-field.is-ninang .list-add-button:hover {
+  background: #fff8fa;
+}
+
+.admin-appointment-list-field.is-ninang .list-entry-index {
+  background: #fdf0f4;
+  color: #b85a7a;
+}
+
+.admin-appointment-review-value.is-multiline {
+  white-space: pre-line;
+}
+
+.admin-appointment-review {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: radial-gradient(circle at top right, rgba(31, 109, 58, 0.1) 0%, rgba(255, 255, 255, 0) 50%), #f8fffa;
+  min-height: 0;
+}
+
+.admin-appointment-review-grid {
+  border: 1px solid #cbe6d1;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+  box-shadow: 0 8px 16px rgba(31, 109, 58, 0.08);
+}
+
+.admin-appointment-review-summary {
+  border: 1px solid #c9e6d1;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #f3fff6 0%, #e8f9ee 100%);
+  padding: 10px 12px;
+  display: grid;
+  gap: 2px;
+}
+
+.admin-appointment-review-summary span {
+  color: #14532d;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.admin-appointment-review-summary strong {
+  color: #166534;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.admin-appointment-review-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.admin-appointment-review-item {
+  border: 1px solid #e1e7ef;
+  border-radius: 10px;
+  background: #fcfdff;
+  padding: 10px 11px;
+  display: grid;
+  gap: 4px;
+}
+
+.admin-appointment-review-label {
+  color: #475569;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.admin-appointment-review-value {
+  color: #0f172a;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.admin-appointment-flow-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.admin-appointment-flow-actions button {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.88rem;
+  line-height: 1;
+  min-height: 42px;
+  min-width: 120px;
+  padding: 0 18px;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease, background-color 140ms ease;
+}
+
+.admin-appointment-flow-actions .secondary {
+  border-color: #d3dae5;
+  background: linear-gradient(180deg, #ffffff 0%, #f6f8fc 100%);
+  color: #374151;
+  box-shadow: 0 6px 12px rgba(148, 163, 184, 0.16);
+}
+
+.admin-appointment-flow-actions .primary {
+  background: var(--ff-modal-button);
+  border-color: var(--ff-primary);
+  color: #fff;
+  box-shadow: 0 8px 16px rgba(var(--ff-primary-rgb), 0.24);
+}
+
+.admin-appointment-flow-modal.is-review-step .admin-appointment-flow-actions .primary {
+  background: var(--ff-modal-button);
+  border-color: var(--ff-primary);
+}
+
+.admin-appointment-flow-actions button:hover {
+  transform: translateY(-1px);
+}
+
+.admin-appointment-flow-actions .secondary:hover {
+  border-color: #b8c5d9;
+  background: #f1f5fb;
+}
+
+.admin-appointment-flow-actions .primary:hover {
+  filter: brightness(1.03);
+}
+
+.admin-appointment-flow-actions button:active {
+  transform: translateY(0);
+}
+
+.admin-appointment-flow-actions button:focus-visible {
+  outline: 2px solid rgba(197, 164, 36, 0.55);
+  outline-offset: 2px;
+}
+
+.admin-appointment-flow-actions .primary:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.admin-sacrament-card {
+  --sacrament-border: #e8dec9;
+  --sacrament-bg-top: #fffdf7;
+  --sacrament-bg-bottom: #fff8ea;
+  --sacrament-accent: #7f1717;
+  --sacrament-tag: #9a6b18;
+  --sacrament-badge-border: #d9c89e;
+  --sacrament-badge-bg: #fffaf0;
+  --sacrament-badge-text: #7f1717;
+  --sacrament-footer-border: #f0e5cf;
+  --sacrament-hover-border: #cfa44b;
+  --sacrament-hover-shadow: rgba(15, 23, 42, 0.1);
+  border: 1px solid var(--sacrament-border);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--sacrament-bg-top) 0%, var(--sacrament-bg-bottom) 100%);
+  min-height: 108px;
+  padding: 18px 14px;
+  display: grid;
+  gap: 0;
+  place-items: center;
+  box-shadow: 0 8px 14px rgba(15, 23, 42, 0.06);
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+}
+
+.admin-sacrament-card:hover {
+  transform: translateY(-1px);
+  border-color: var(--sacrament-hover-border);
+  box-shadow: 0 12px 18px var(--sacrament-hover-shadow);
+}
+
+.admin-sacrament-card h4 {
+  margin: 0;
+  color: var(--sacrament-accent);
+  font-size: 1.08rem;
+  text-align: center;
+}
+
+.admin-sacrament-card.is-marriage {
+  --sacrament-border: #f8aebf;
+  --sacrament-bg-top: #ea767f;
+  --sacrament-bg-bottom: #ef5a70;
+  --sacrament-accent: #ffffff;
+  --sacrament-tag: #b33a78;
+  --sacrament-badge-border: #efc1d6;
+  --sacrament-badge-bg: #fff2f8;
+  --sacrament-badge-text: #ffffff;
+  --sacrament-footer-border: #f5d3e2;
+  --sacrament-hover-border: #f08fa6;
+  --sacrament-hover-shadow: rgba(239, 90, 112, 0.28);
+}
+
+.admin-sacrament-card.is-baptism {
+  --sacrament-border: #92c2f0;
+  --sacrament-bg-top: #54a8ea;
+  --sacrament-bg-bottom: #2e8ad9;
+  --sacrament-accent: #ffffff;
+  --sacrament-tag: #2f76c4;
+  --sacrament-badge-border: #bedcff;
+  --sacrament-badge-bg: #eff7ff;
+  --sacrament-badge-text: #ffffff;
+  --sacrament-footer-border: #d2e7ff;
+  --sacrament-hover-border: #79b8ec;
+  --sacrament-hover-shadow: rgba(46, 138, 217, 0.28);
+}
+
+.admin-sacrament-card.is-funeral-mass {
+  --sacrament-border: #a2a7ad;
+  --sacrament-bg-top: #60656d;
+  --sacrament-bg-bottom: #4d535c;
+  --sacrament-accent: #ffffff;
+  --sacrament-tag: #6b7280;
+  --sacrament-badge-border: #cfd5de;
+  --sacrament-badge-bg: #f5f7fa;
+  --sacrament-badge-text: #ffffff;
+  --sacrament-footer-border: #dce2ea;
+  --sacrament-hover-border: #b3b9c2;
+  --sacrament-hover-shadow: rgba(77, 83, 92, 0.3);
+}
+
+.admin-sacrament-card.is-blessing {
+  --sacrament-border: #68d591;
+  --sacrament-bg-top: #1eb95d;
+  --sacrament-bg-bottom: #11984a;
+  --sacrament-accent: #ffffff;
+  --sacrament-tag: #a87414;
+  --sacrament-badge-border: #ecdca3;
+  --sacrament-badge-bg: #fff9e8;
+  --sacrament-badge-text: #ffffff;
+  --sacrament-footer-border: #f0e2b6;
+  --sacrament-hover-border: #89dda8;
+  --sacrament-hover-shadow: rgba(17, 152, 74, 0.3);
+}
+
+.admin-sacrament-card.is-generic {
+  --sacrament-border: #d6dae1;
+  --sacrament-bg-top: #fbfcfe;
+  --sacrament-bg-bottom: #f2f5f9;
+  --sacrament-accent: #334155;
+  --sacrament-tag: #64748b;
+  --sacrament-badge-border: #dbe2ea;
+  --sacrament-badge-bg: #f8fafc;
+  --sacrament-badge-text: #334155;
+  --sacrament-footer-border: #e5ebf2;
+  --sacrament-hover-border: #94a3b8;
+  --sacrament-hover-shadow: rgba(51, 65, 85, 0.15);
+}
+
+.admin-sacrament-card.is-theme-current,
+.admin-sacrament-card.is-theme-maroon {
+  --sacrament-border: var(--ff-modal-card-border);
+  --sacrament-bg-top: var(--ff-primary);
+  --sacrament-bg-bottom: color-mix(in srgb, var(--ff-primary) 68%, black 32%);
+  --sacrament-accent: #ffffff;
+  --sacrament-tag: var(--ff-primary);
+  --sacrament-badge-border: rgba(255, 255, 255, 0.52);
+  --sacrament-badge-bg: rgba(255, 255, 255, 0.2);
+  --sacrament-badge-text: #ffffff;
+  --sacrament-footer-border: rgba(255, 255, 255, 0.28);
+  --sacrament-hover-border: var(--ff-modal-card-hover);
+  --sacrament-hover-shadow: rgba(var(--ff-primary-rgb), 0.3);
+}
+
+.admin-sacrament-card.is-theme-yellow {
+  --sacrament-border: #d8b54d;
+  --sacrament-bg-top: #f3c84f;
+  --sacrament-bg-bottom: #d9aa2d;
+  --sacrament-accent: #3f2a00;
+  --sacrament-tag: #8a660f;
+  --sacrament-badge-border: rgba(63, 42, 0, 0.3);
+  --sacrament-badge-bg: rgba(255, 250, 224, 0.45);
+  --sacrament-badge-text: #3f2a00;
+  --sacrament-footer-border: rgba(63, 42, 0, 0.2);
+  --sacrament-hover-border: #c6992f;
+  --sacrament-hover-shadow: rgba(171, 125, 15, 0.28);
+}
+
+.admin-sacrament-card.is-theme-purple {
+  --sacrament-border: #8d6dc8;
+  --sacrament-bg-top: #8b5fd3;
+  --sacrament-bg-bottom: #6c3cb8;
+  --sacrament-accent: #ffffff;
+  --sacrament-tag: #5b2ea3;
+  --sacrament-badge-border: rgba(255, 255, 255, 0.5);
+  --sacrament-badge-bg: rgba(255, 255, 255, 0.2);
+  --sacrament-badge-text: #ffffff;
+  --sacrament-footer-border: rgba(255, 255, 255, 0.25);
+  --sacrament-hover-border: #a88ae0;
+  --sacrament-hover-shadow: rgba(108, 60, 184, 0.3);
+}
+
+.admin-schedule-list li {
+  position: relative;
+  padding-right: 78px;
+}
+
+.admin-entry-edit {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: 1px solid #c9d2df;
+  background: #ffffff;
+  color: #475569;
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.admin-priest-select-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: center;
+}
+
+.admin-add-priest-toggle {
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ff-primary);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.admin-inline-priest-form {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+}
+
+.admin-inline-priest-form input {
+  width: 100%;
+  border: 1px solid #d6dce5;
+  border-radius: 8px;
+  padding: 9px 10px;
+  font: inherit;
+  background: #fbfcfe;
+  color: #1f2937;
+}
+
+.admin-inline-priest-form button {
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 12px;
+  background: var(--ff-primary);
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-inline-priest-form button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.admin-inline-priest-feedback {
+  margin: 6px 0 0;
+  color: #4b5563;
+  font-size: 0.78rem;
+}
+
+@keyframes adminNoticeDrop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -16px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes sacramentBadgeFloat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+
+@media (max-width: 1120px) {
+  .admin-stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .admin-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .admin-hero {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-hero-actions {
+    width: 100%;
+  }
+
+  .admin-office-status-row {
+    width: 100%;
+  }
+
+  .admin-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-calendar-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-priest-select-row,
+  .admin-inline-priest-form {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sacraments-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-appointment-fields-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-parish-activity-media,
+  .admin-parish-activity-media img,
+  .admin-parish-activity-overlay {
+    min-height: 250px;
+    max-height: 250px;
+  }
+
+  .admin-parish-activity-slider {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .admin-parish-activity-arrow {
+    display: none;
+  }
+
+  .admin-appointment-review-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-calendar-modal-overlay {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 10px;
+  }
+
+  .admin-calendar-modal,
+  .admin-appointment-flow-modal,
+  .admin-appointment-flow-modal.is-type-step,
+  .admin-appointment-flow-modal.is-marriage-docs-step {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    max-height: calc(100dvh - 20px);
+    justify-self: center;
+  }
+
+  .admin-appointment-flow-modal .admin-calendar-modal-header {
+    z-index: 6;
+    min-height: 58px;
+    padding: 12px 56px;
+    background-color: var(--ff-primary);
+  }
+
+  .admin-appointment-flow-modal .admin-calendar-modal-header h3,
+  .admin-appointment-flow-modal.is-type-step .admin-calendar-modal-header h3,
+  .admin-appointment-flow-modal.is-details-step .admin-calendar-modal-header h3,
+  .admin-appointment-flow-modal.is-marriage-docs-step .admin-calendar-modal-header h3,
+  .admin-appointment-flow-modal.is-review-step .admin-calendar-modal-header h3 {
+    font-size: 1.2rem;
+    line-height: 1.25;
+  }
+
+  .admin-appointment-flow-modal .admin-calendar-modal-header .admin-appointment-close-button,
+  .admin-appointment-flow-modal.is-type-step .admin-calendar-modal-header .admin-appointment-close-button,
+  .admin-appointment-back-button {
+    top: 50%;
+    width: 38px;
+    height: 38px;
+    transform: translateY(-50%);
+  }
+
+  .admin-appointment-flow-modal.is-type-step .admin-calendar-modal-header .admin-appointment-close-button:hover {
+    transform: translateY(-50%);
+  }
+
+  .admin-sacrament-schema-shortcut-row {
+    justify-content: stretch;
+    padding: 12px 12px 0;
+  }
+
+  .admin-sacrament-schema-shortcut-button {
+    width: 100%;
+  }
+
+  .admin-appointment-flow-modal.is-type-step .admin-sacraments-grid {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .admin-appointment-flow-modal.is-type-step .admin-sacrament-card {
+    min-height: 112px;
+    border-radius: 16px;
+    padding: 14px 16px;
+  }
+
+  .admin-appointment-flow-modal.is-type-step .admin-sacrament-card h4 {
+    font-size: 1.3rem;
+  }
+
+  .admin-appointment-flow-modal.is-type-step .admin-sacrament-icon-badge {
+    width: 40px;
+    height: 40px;
+  }
+
+  .admin-calendar-modal.admin-date-schedules-modal {
+    width: min(100%, 96vw);
+    height: min(86vh, calc(100vh - 16px));
+    max-height: min(86vh, calc(100vh - 16px));
+    padding: 0;
+  }
+
+  .admin-date-schedules-slider {
+    grid-template-columns: 28px minmax(0, 1fr) 28px;
+    padding: 12px 8px 14px;
+  }
+
+  .calendar-day-agenda-card {
+    grid-template-columns: 40px minmax(0, 1fr);
+    padding-right: 38px;
+  }
+
+  .calendar-day-agenda-time {
+    grid-column: 1 / -1;
+    flex-direction: row;
+    gap: 8px;
+    align-items: baseline;
+  }
+}
+
+.admin-calendar-modal.admin-calendar-modal--schedule {
+  overflow: hidden auto;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, #c6a567 52%, var(--ff-container-border) 48%);
+  border-radius: 18px;
+  background: var(--ff-surface);
+  box-shadow: 0 28px 72px rgba(8, 24, 42, 0.32), 0 0 0 1px rgba(255, 255, 255, 0.55) inset;
+}
+
+.admin-calendar-modal--schedule .admin-calendar-modal-header {
+  min-height: 62px;
+  margin: 0;
+  padding: 14px 20px;
+  border-bottom: 1px solid color-mix(in srgb, #c6a567 34%, transparent 66%);
+  background: linear-gradient(115deg, #102b46 0%, #173b5a 100%);
+}
+
+.admin-calendar-modal--schedule .admin-calendar-modal-header h3 {
+  color: #fffdf7;
+  font-size: 1.05rem;
+  font-weight: 750;
+  letter-spacing: 0.01em;
+}
+
+.admin-calendar-modal--schedule .admin-calendar-modal-header .admin-calendar-modal-close {
+  border-color: rgba(255, 255, 255, 0.34);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fffdf7;
+}
+
+.admin-calendar-modal--schedule .admin-calendar-modal-header .admin-calendar-modal-close:hover {
+  border-color: #e5c785;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.admin-calendar-modal--schedule .admin-calendar-form {
+  gap: 12px;
+  padding: 18px 20px 20px;
+}
+
+.admin-calendar-modal--schedule .admin-calendar-form input,
+.admin-calendar-modal--schedule .admin-calendar-form select,
+.admin-calendar-modal--schedule .admin-calendar-form textarea {
+  border-color: color-mix(in srgb, #102b46 16%, var(--ff-container-border) 84%);
+  border-radius: 10px;
+  background: var(--ff-surface-elevated);
+  color: var(--ff-text);
+}
+
+.admin-calendar-modal--schedule .admin-calendar-form input:focus,
+.admin-calendar-modal--schedule .admin-calendar-form select:focus,
+.admin-calendar-modal--schedule .admin-calendar-form textarea:focus {
+  border-color: #b89554;
+  box-shadow: 0 0 0 3px rgba(184, 149, 84, 0.18);
+}
+
+.admin-calendar-modal--schedule .admin-calendar-scheduling-copy {
+  padding: 10px 12px;
+  border-left: 3px solid #c6a567;
+  border-radius: 0 9px 9px 0;
+  background: color-mix(in srgb, #c6a567 9%, var(--ff-surface) 91%);
+  color: var(--ff-text-muted);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.admin-calendar-modal--schedule .progress-schedule-split-layout {
+  gap: 12px;
+}
+
+.admin-calendar-modal--schedule .progress-schedule-split-panel {
+  gap: 9px;
+  border-color: color-mix(in srgb, #102b46 13%, var(--ff-container-border) 87%);
+  border-radius: 13px;
+  background: var(--ff-surface-elevated);
+  padding: 13px;
+}
+
+.admin-calendar-modal--schedule .progress-schedule-split-panel h4 {
+  color: #173b5a;
+  font-size: 0.86rem;
+}
+
+.admin-calendar-modal--schedule .progress-priest-calendar-month strong {
+  color: var(--ff-text);
+}
+
+.admin-calendar-modal--schedule .progress-schedule-slot-empty,
+.admin-calendar-modal--schedule .progress-schedule-date-empty {
+  border-radius: 9px;
+}
+
+.admin-calendar-modal--schedule .admin-calendar-form-actions {
+  padding-top: 2px;
+}
+
+.admin-calendar-modal--schedule .admin-calendar-form-actions button:not(.secondary):not(.danger) {
+  background: #102b46;
+  box-shadow: 0 4px 10px rgba(16, 43, 70, 0.18);
+}
+
+.admin-calendar-modal--schedule .admin-calendar-form-actions button:not(.secondary):not(.danger):hover {
+  background: #173b5a;
+}
+
+.admin-calendar-modal--schedule .admin-calendar-form-actions button.secondary {
+  border: 1px solid var(--ff-container-border);
+  background: var(--ff-surface-elevated);
+  color: var(--ff-text);
+}
+
+@media (max-width: 680px) {
+  .admin-calendar-modal.admin-calendar-modal--schedule {
+    width: 100%;
+    max-height: calc(100dvh - 20px);
+  }
+
+  .admin-calendar-modal--schedule .admin-calendar-modal-form,
+  .admin-calendar-modal--schedule .admin-calendar-form {
+    padding: 14px;
+  }
+}
+
+.admin-calendar-date.is-half-day {
+  background-image: linear-gradient(180deg, transparent 50%, #f5c3c3 50%);
+}
+
+.legend-dot.is-half-day {
+  background: linear-gradient(180deg, #ffffff 50%, #f5c3c3 50%);
+  border: 1px solid #e8a9a9;
+}
+
+.calendar-day-agenda-empty.is-half-day {
+  border-style: solid;
+  border-color: #e8a9a9;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 50%, #fdeaea 100%);
+  margin-bottom: 12px;
+}
+
+.admin-calendar-card {
+  padding: 18px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ff-third) 12%, var(--ff-container-border) 88%);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--ff-secondary) 7%, transparent 93%), transparent 34%),
+    linear-gradient(160deg, var(--ff-surface) 0%, color-mix(in srgb, var(--ff-surface) 92%, var(--ff-container) 8%) 100%);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.09), 0 2px 6px rgba(15, 23, 42, 0.035);
+}
+
+.admin-calendar-card .admin-content-header {
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom-color: color-mix(in srgb, var(--ff-third) 12%, var(--ff-container-border) 88%);
+}
+
+.admin-calendar-card .admin-content-header h3 {
+  color: var(--ff-text);
+  font-size: 1.04rem;
+  font-weight: 780;
+  letter-spacing: -0.025em;
+}
+
+.admin-calendar-card .admin-content-header h3 svg {
+  width: 34px;
+  height: 34px;
+  padding: 8px;
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 24%, transparent 76%);
+  border-radius: 11px;
+  background: color-mix(in srgb, var(--ff-secondary) 10%, var(--ff-surface) 90%);
+  color: color-mix(in srgb, var(--ff-third) 74%, var(--ff-text) 26%);
+}
+
+.admin-calendar-card .admin-calendar-controls {
+  gap: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.admin-calendar-card .admin-today-button,
+.admin-calendar-card .admin-icon-nav,
+.admin-calendar-card .admin-add-icon-button {
+  min-width: 36px;
+  min-height: 36px;
+  border: 0 !important;
+  border-radius: 8px;
+  background: transparent !important;
+  color: var(--ff-text) !important;
+  box-shadow: none;
+  transition: border-color 140ms ease, background-color 140ms ease, box-shadow 140ms ease, color 140ms ease;
+}
+
+.admin-calendar-card .admin-today-button {
+  padding: 0 12px !important;
+  color: #173b5a !important;
+  font-size: 0.72rem !important;
+  font-weight: 750 !important;
+}
+
+.admin-calendar-card .admin-icon-nav {
+  width: 36px;
+  height: 36px;
+  color: #173b5a !important;
+}
+
+.admin-calendar-card .admin-icon-nav svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.admin-calendar-card .admin-add-icon-button {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #173b5a !important;
+  border-radius: 10px;
+  background: #173b5a !important;
+  color: #fff !important;
+  box-shadow: 0 3px 8px rgba(16, 43, 70, 0.2);
+}
+
+.admin-calendar-card .admin-add-icon-button svg {
+  width: 17px;
+  height: 17px;
+  stroke-width: 2.25;
+}
+
+.admin-calendar-card .admin-today-button:hover,
+.admin-calendar-card .admin-icon-nav:hover {
+  background: color-mix(in srgb, var(--ff-secondary) 12%, transparent 88%) !important;
+  color: #102b46 !important;
+}
+
+.admin-calendar-card .admin-add-icon-button:hover {
+  border-color: #c6a567 !important;
+  background: #244b6c !important;
+  color: #fff !important;
+  box-shadow: 0 5px 11px rgba(16, 43, 70, 0.24);
+}
+
+.admin-calendar-card .admin-today-button:focus-visible,
+.admin-calendar-card .admin-icon-nav:focus-visible,
+.admin-calendar-card .admin-add-icon-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, #c6a567 44%, transparent 56%);
+  outline-offset: 2px;
+}
+
+.admin-calendar-card .admin-month-label {
+  min-width: 132px;
+  margin: 0 3px;
+  color: var(--ff-text);
+  font-size: 0.9rem;
+  font-weight: 780;
+  letter-spacing: -0.02em;
+}
+
+.admin-calendar-card .admin-calendar-grid {
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.admin-calendar-card .admin-calendar-day {
+  padding: 7px 0 8px;
+  color: var(--ff-text-muted);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-calendar-card .admin-calendar-date {
+  position: relative;
+  min-height: 58px;
+  padding: 7px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--ff-third) 10%, var(--ff-container-border) 90%);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ff-surface) 96%, var(--ff-third) 4%);
+  color: var(--ff-text);
+  box-shadow: 0 2px 5px rgba(15, 23, 42, 0.035);
+  transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease, filter 140ms ease;
+}
+
+.admin-calendar-card .admin-calendar-date:hover:not(.is-empty) {
+  z-index: 1;
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--ff-third) 32%, var(--ff-container-border) 68%);
+  box-shadow: 0 8px 16px rgba(15, 23, 42, 0.1);
+  filter: saturate(1.05);
+}
+
+.admin-calendar-card .admin-calendar-date.is-empty {
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
+}
+
+.admin-calendar-card .admin-calendar-date.is-day-off {
+  border-left: 3px solid #d65b67;
+  border-color: #df9298;
+  background: #f1aeb4;
+}
+
+.admin-calendar-card .admin-calendar-date.is-church {
+  border-left: 3px solid #c18a13;
+  border-color: #d7b24a;
+  background: linear-gradient(145deg, #fff0b8 0%, #f5d16f 100%);
+}
+
+.admin-calendar-card .admin-calendar-date.is-priest {
+  border-left: 3px solid #37894a;
+  border-color: #80c78d;
+  background: linear-gradient(145deg, #d9f5dc 0%, #9cdda7 100%);
+}
+
+.admin-calendar-card .admin-calendar-date.is-activity {
+  border-left: 3px solid #89572f;
+  border-color: #bd9168;
+  background: linear-gradient(145deg, #ead3bb 0%, #d2ad87 100%);
+}
+
+.admin-calendar-card .admin-calendar-date.is-appointment {
+  border-left: 3px solid #315fc2;
+  border-color: #82a6ed;
+  background: linear-gradient(145deg, #d7e5ff 0%, #9bb9f7 100%);
+}
+
+.admin-calendar-card .admin-calendar-date.is-special {
+  border-left: 3px solid #7550b8;
+  border-color: #ae94e4;
+  background: linear-gradient(145deg, #e8ddff 0%, #c3adf3 100%);
+}
+
+.admin-calendar-card .admin-calendar-date.is-half-day {
+  border-color: #df9298;
+  background-image: linear-gradient(180deg, transparent 50%, #f1aeb4 50%);
+}
+
+.admin-calendar-card .admin-calendar-date.is-selected {
+  z-index: 2;
+  border-color: var(--ff-third);
+  outline: 2px solid color-mix(in srgb, var(--ff-third) 18%, transparent 82%);
+  outline-offset: 1px;
+  box-shadow: 0 5px 14px color-mix(in srgb, var(--ff-third) 15%, transparent 85%);
+}
+
+.admin-calendar-card .admin-calendar-date.is-today:not(.is-selected) {
+  border-color: color-mix(in srgb, var(--ff-secondary) 76%, #a87927 24%);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ff-secondary) 48%, transparent 52%);
+}
+
+.admin-calendar-card .admin-calendar-date-number {
+  font-size: 0.78rem;
+  font-weight: 780;
+}
+
+.admin-calendar-card .admin-calendar-entry-count {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: #173b5a;
+  color: #fff;
+  font-size: 0.66rem;
+  box-shadow: 0 2px 5px rgba(16, 43, 70, 0.2);
+}
+
+.admin-calendar-card .admin-calendar-legend {
+  justify-content: center;
+  gap: 8px 14px;
+  margin-top: 14px;
+  padding-top: 11px;
+  border-top: 1px solid color-mix(in srgb, var(--ff-third) 9%, var(--ff-container-border) 91%);
+  color: var(--ff-text-muted);
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+.admin-calendar-card .legend-dot {
+  width: 9px;
+  height: 9px;
+  margin-right: 1px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 3px;
+}
+
+.admin-calendar-card .legend-dot.is-day-off {
+  background: #f1aeb4;
+}
+
+.admin-calendar-card .legend-dot.is-church {
+  background: #edc348;
+}
+
+.admin-calendar-card .legend-dot.is-priest {
+  background: #71bf7e;
+}
+
+.admin-calendar-card .legend-dot.is-activity {
+  background: #a87345;
+}
+
+.admin-calendar-card .legend-dot.is-appointment {
+  background: #5e8ce8;
+}
+
+.admin-calendar-card .legend-dot.is-special {
+  background: #9c7add;
+}
+
+.admin-calendar-card .legend-dot.is-half-day {
+  border-color: #d65b67;
+  background: linear-gradient(180deg, #fff 50%, #f1aeb4 50%);
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-card {
+  border-color: var(--ff-container-border);
+  background: linear-gradient(160deg, var(--ff-surface) 0%, var(--ff-container) 100%);
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-card .admin-calendar-controls {
+  border-color: var(--ff-container-border);
+  background: var(--ff-surface-elevated);
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-card .admin-calendar-date:not(.is-empty, .is-day-off, .is-church, .is-priest, .is-activity, .is-appointment, .is-special) {
+  border-color: var(--ff-container-border);
+  background: var(--ff-surface-elevated);
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-card .admin-calendar-date:is(.is-day-off, .is-church, .is-priest, .is-activity, .is-appointment, .is-special) {
+  border-color: color-mix(in srgb, var(--ff-text) 20%, var(--ff-container-border) 80%);
+  color: #1f2937;
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-card .admin-calendar-date.is-selected {
+  border-color: var(--ff-primary-on-dark);
+  outline-color: color-mix(in srgb, var(--ff-primary-on-dark) 28%, transparent 72%);
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-card .admin-calendar-date.is-today:not(.is-selected) {
+  border-color: #d6bb79;
+}
+
+body[data-faithflow-theme="dark"] .admin-calendar-card .admin-calendar-legend {
+  border-top-color: var(--ff-container-border);
+}
+
+@media (max-width: 760px) {
+  .admin-calendar-card {
+    padding: 14px;
+  }
+
+  .admin-calendar-card .admin-content-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-calendar-card .admin-calendar-controls {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .admin-calendar-card .admin-calendar-grid {
+    gap: 4px;
+  }
+
+  .admin-calendar-card .admin-calendar-date {
+    min-height: 50px;
+    padding: 5px;
+    border-radius: 9px;
+  }
+
+  .admin-calendar-card .admin-calendar-legend {
+    gap: 8px 10px;
+  }
+}
+
+.calendar-day-agenda-empty.is-half-day .calendar-day-agenda-empty-icon {
+  color: #991b1b;
+  background: linear-gradient(180deg, #ffffff 50%, #fde8e8 50%);
+  border-color: #f0c2c2;
+}
+
+.admin-half-day-fields {
+  display: grid;
+  gap: 10px;
+}
+
+.admin-half-day-times {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.admin-half-day-hint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ff-text-muted, #6b7280);
+}
+
+@media (max-width: 480px) {
+  .admin-half-day-times {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

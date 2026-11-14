@@ -1,0 +1,1521 @@
+.sacrament-schema-hero {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.admin-top-notice {
+  animation: sacramentNoticeDrop 220ms ease-out;
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 999px;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.15);
+  color: #166534;
+  font-size: 0.88rem;
+  font-weight: 600;
+  left: 50%;
+  padding: 10px 18px;
+  position: fixed;
+  top: 78px;
+  transform: translateX(-50%);
+  z-index: 1800;
+}
+
+.admin-top-notice.is-error {
+  background: #fff1f2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+.sacrament-schema-layout {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 280px minmax(0, 1fr);
+  margin-top: 16px;
+}
+
+.sacrament-schema-layout.sacrament-form-manager-layout {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: flex-start;
+  overflow-x: hidden;
+}
+
+.sacrament-form-manager-list {
+  animation: sacramentFormListEnter 480ms ease-out;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  margin-left: max(0px, calc(50% - 360px));
+  min-width: 0;
+  padding: 0;
+  transition:
+    margin-left 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 480ms cubic-bezier(0.22, 1, 0.36, 1),
+    padding 480ms ease;
+  width: min(720px, 100%);
+}
+
+.sacrament-form-manager-layout.is-editor-open .sacrament-form-manager-list {
+  margin-left: 0;
+  padding: 0;
+  width: 320px;
+}
+
+.sacrament-form-manager-layout.is-editor-open .sacrament-schema-list-header {
+  align-items: stretch;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: center;
+  padding: 0.95rem 0.9rem 0.85rem;
+  text-align: center;
+}
+
+.sacrament-form-manager-layout.is-editor-open .sacrament-schema-list-header-actions {
+  gap: 0.65rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.sacrament-form-manager-layout.is-list-only .sacrament-schema-item {
+  min-height: 72px;
+  padding: 0.85rem 1rem;
+}
+
+.sacrament-form-manager-editor {
+  animation: sacramentFormEditorSlide 480ms cubic-bezier(0.22, 1, 0.36, 1);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.sacrament-schema-layout--empty {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.sacrament-schema-list {
+  background: #ffffff;
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 12%, #e7e5e4);
+  border-radius: 1.15rem;
+  box-shadow: 0 18px 40px rgba(42, 18, 18, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+body .dashboard-panel .sacrament-schema-list-header h3 {
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.3;
+  margin: 0;
+  text-align: center;
+}
+
+.sacrament-schema-list-header {
+  align-items: center;
+  background: linear-gradient(115deg, var(--ff-primary) 0%, color-mix(in srgb, var(--ff-primary) 72%, #1c1917) 100%);
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.95rem 1.1rem;
+}
+
+.sacrament-schema-list-header-actions {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.85rem;
+}
+
+.sacrament-archive-link-button {
+  align-items: center;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  gap: 0.4rem;
+  letter-spacing: 0;
+  margin-right: 0;
+  min-height: 34px;
+  padding: 0.3rem 0.7rem;
+  position: relative;
+}
+
+.sacrament-archive-link-badge {
+  background: var(--ff-secondary, #c5a424);
+  border-radius: 999px;
+  box-shadow: 0 0 0 2px var(--ff-primary);
+  color: #1c1917;
+  font-size: 0.65rem;
+  font-weight: 700;
+  height: 18px;
+  line-height: 18px;
+  min-width: 18px;
+  padding: 0 5px;
+  position: static;
+  text-align: center;
+}
+
+.sacrament-archive-link-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.sacrament-archive-link-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.sacrament-add-icon-button {
+  align-items: center;
+  background: #ffffff;
+  border: 0;
+  border-radius: 8px;
+  box-shadow: none;
+  color: var(--ff-primary);
+  cursor: pointer;
+  display: inline-flex;
+  height: 34px;
+  justify-content: center;
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+  width: 34px;
+}
+
+.sacrament-add-icon-button svg {
+  height: 20px;
+  stroke-width: 2.6;
+  width: 20px;
+}
+
+.sacrament-add-icon-button:hover {
+  box-shadow: 0 10px 18px rgba(127, 23, 23, 0.24);
+  filter: none;
+  transform: translateY(-1px);
+}
+
+.sacrament-add-icon-button:focus-visible {
+  outline: 3px solid rgba(180, 83, 9, 0.28);
+  outline-offset: 2px;
+}
+
+.sacrament-schema-add-type {
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.7rem;
+}
+
+.sacrament-schema-add-type label {
+  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  gap: 0.3rem;
+}
+
+.sacrament-schema-add-type input {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+}
+
+.sacrament-schema-add-type select,
+.sacrament-schema-add-type textarea {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font: inherit;
+  padding: 0.45rem 0.6rem;
+}
+
+.sacrament-schema-add-type textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+
+.sacrament-schema-add-type-modal {
+  width: min(520px, 100%);
+}
+
+.sacrament-add-field-modal {
+  width: min(560px, 100%);
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+
+.sacrament-colored-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: var(--ff-modal-header, var(--ff-primary));
+  padding: 14px 16px;
+}
+
+.sacrament-colored-modal-header h4 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.15rem;
+}
+
+.sacrament-colored-modal-close {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: transparent;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.sacrament-colored-modal-close:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.sacrament-add-field-modal .sacrament-schema-add-type {
+  margin: 16px 16px 0;
+}
+
+.sacrament-colored-modal-note {
+  margin: 0;
+  color: #475569;
+  font-size: 0.86rem;
+}
+
+.sacrament-colored-modal-actions {
+  margin: 14px 16px 16px;
+}
+
+.sacrament-add-field-error {
+  color: #b91c1c;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.sacrament-add-field-option-row {
+  align-items: center;
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 1fr auto;
+}
+
+.sacrament-add-field-option-btn {
+  align-items: center;
+  background: var(--ff-primary);
+  border: 1px solid var(--ff-primary);
+  border-radius: 0.5rem;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 700;
+  justify-content: center;
+  min-width: 58px;
+  padding: 0.42rem 0.7rem;
+}
+
+.sacrament-add-field-option-btn:hover {
+  background: #991b1b;
+  border-color: #991b1b;
+}
+
+.sacrament-add-field-option-list {
+  align-items: center;
+  border: 1px dashed #cbd5e1;
+  border-radius: 0.55rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-height: 42px;
+  padding: 0.42rem 0.5rem;
+}
+
+.sacrament-add-field-option-chip {
+  align-items: center;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 999px;
+  color: #0f172a;
+  display: inline-flex;
+  font-size: 0.75rem;
+  gap: 0.25rem;
+  padding: 0.12rem 0.35rem 0.12rem 0.5rem;
+}
+
+.sacrament-add-field-option-remove {
+  align-items: center;
+  background: transparent;
+  border: none;
+  color: #b91c1c;
+  cursor: pointer;
+  display: inline-flex;
+  height: 18px;
+  justify-content: center;
+  padding: 0;
+  width: 18px;
+}
+
+.sacrament-add-field-option-empty {
+  color: #64748b;
+  font-size: 0.75rem;
+}
+
+.sacrament-schema-add-type-modal .template-delete-modal-body {
+  justify-items: flex-start;
+  text-align: left;
+}
+
+.sacrament-schema-list ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  list-style: none;
+  margin: 0;
+  padding: 1rem 1.05rem 1.15rem;
+}
+
+.sacrament-schema-item {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #ece7e1;
+  border-radius: 0.9rem;
+  box-shadow: 0 8px 18px rgba(42, 18, 18, 0.04);
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  gap: 0.75rem;
+  justify-content: space-between;
+  min-height: 68px;
+  padding: 0.7rem 0.85rem 0.7rem 1rem;
+  position: relative;
+  transition: min-height 420ms ease, padding 420ms ease, border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  width: 100%;
+}
+
+.sacrament-schema-item::before {
+  background: var(--ff-secondary, #c5a424);
+  border-radius: 999px;
+  content: "";
+  height: 28px;
+  width: 4px;
+}
+
+.sacrament-schema-item:hover {
+  border-color: color-mix(in srgb, var(--ff-primary) 28%, #e7e5e4);
+  box-shadow: 0 12px 22px rgba(42, 18, 18, 0.08);
+  transform: translateY(-1px);
+}
+
+.sacrament-schema-item.is-selected {
+  border-color: var(--ff-primary);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ff-primary) 18%, transparent);
+}
+
+.sacrament-schema-item-main {
+  align-items: flex-start;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+  text-align: left;
+}
+
+.sacrament-schema-item-main strong {
+  color: #1c1917;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.sacrament-schema-item:focus-visible {
+  outline: 2px solid #c5a424;
+  outline-offset: 1px;
+}
+
+.sacrament-schema-item span {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.sacrament-schema-item-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sacrament-schema-item-action {
+  align-items: center;
+  background: #fff;
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 22%, #e7e5e4);
+  border-radius: 8px;
+  color: var(--ff-primary);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  gap: 0.3rem;
+  letter-spacing: 0;
+  padding: 0.32rem 0.65rem;
+}
+
+.sacrament-schema-item-action:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ff-primary) 8%, white);
+}
+
+.sacrament-schema-item-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.sacrament-schema-item-action--danger {
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.sacrament-schema-archive-section {
+  border-top: 1px solid #e2e8f0;
+  margin-top: 0.35rem;
+  padding-top: 0.65rem;
+}
+
+.sacrament-schema-archive-section h4 {
+  color: #475569;
+  font-size: 0.8rem;
+  margin: 0 0 0.5rem;
+}
+
+.sacrament-schema-empty-hint {
+  color: #64748b;
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.sacrament-schema-item--archived {
+  background: #f8fafc;
+  border-style: dashed;
+  opacity: 0.9;
+}
+
+.sacrament-schema-editor {
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.sacrament-schema-editor-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  background: color-mix(in srgb, var(--ff-primary) 6%, white 94%);
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 14%, white 86%);
+  border-radius: 0.85rem;
+  padding: 0.75rem 0.85rem;
+}
+
+.sacrament-theme-btn {
+  align-items: center;
+  border-radius: 0.7rem;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  gap: 0.35rem;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0.45rem 0.9rem;
+  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.sacrament-theme-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.sacrament-theme-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.sacrament-theme-btn--primary {
+  background: var(--ff-button-primary, var(--ff-primary));
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 70%, black 30%);
+  box-shadow: 0 8px 16px color-mix(in srgb, var(--ff-primary) 22%, transparent);
+  color: #ffffff;
+}
+
+.sacrament-theme-btn--primary:hover:not(:disabled) {
+  background: var(--ff-button-primary-hover, var(--ff-primary));
+}
+
+.sacrament-theme-btn--quiet {
+  background: #ffffff;
+  border: 1px solid color-mix(in srgb, var(--ff-third) 45%, white 55%);
+  color: var(--ff-third);
+}
+
+.sacrament-theme-btn--quiet:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ff-third) 8%, white 92%);
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--ff-third) 16%, transparent);
+}
+
+.sacrament-questions-heading {
+  border-bottom: 1px solid color-mix(in srgb, var(--ff-primary) 12%, white 88%);
+  padding-bottom: 0.35rem;
+}
+
+.sacrament-schema-editor-actions {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.55rem;
+}
+
+.sacrament-schema-editor h3,
+.sacrament-schema-editor h4 {
+  margin: 0;
+}
+
+.sacrament-schema-editor-title {
+  align-items: center;
+  color: #7f1717;
+  display: inline-flex;
+  font-size: 1rem;
+  font-weight: 700;
+  gap: 0.4rem;
+}
+
+.sacrament-schema-edit-icon-button {
+  align-items: center;
+  background: #ffffff;
+  border: 2px solid #b45309;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(127, 23, 23, 0.16);
+  color: #9a3412;
+  cursor: pointer;
+  display: inline-flex;
+  height: 24px;
+  justify-content: center;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+  width: 24px;
+}
+
+.sacrament-schema-edit-icon-button:hover {
+  box-shadow: 0 8px 14px rgba(127, 23, 23, 0.2);
+  transform: translateY(-1px);
+}
+
+.sacrament-schema-edit-icon-button:focus-visible {
+  outline: 3px solid rgba(180, 83, 9, 0.28);
+  outline-offset: 2px;
+}
+
+.sacrament-schema-requirements-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sacrament-schema-requirement-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.sacrament-schema-requirement-input-row {
+  align-items: center;
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: 1fr auto;
+}
+
+.sacrament-schema-requirement-input-row .progress-template-btn {
+  align-self: stretch;
+}
+
+.sacrament-schema-requirements-grid label,
+.sacrament-schema-field-grid label,
+.sacrament-schema-editor .template-form-grid label {
+  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  gap: 0.35rem;
+}
+
+.sacrament-schema-requirements-grid textarea,
+.sacrament-schema-editor input,
+.sacrament-schema-editor select,
+.sacrament-schema-editor textarea {
+  border: 1px solid #cbd5e1;
+  border-radius: 0.6rem;
+  font: inherit;
+  padding: 0.55rem 0.7rem;
+}
+
+.sacrament-schema-editor textarea {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.sacrament-schema-preview {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 0.9rem;
+}
+
+.sacrament-schema-preview-header {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  justify-content: space-between;
+}
+
+.sacrament-schema-preview-header h4 {
+  margin: 0;
+}
+
+.sacrament-schema-preview-badge {
+  background: #fff;
+  border: 1px solid #fed7aa;
+  border-radius: 999px;
+  color: #7c2d12;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+}
+
+.sacrament-schema-preview-lead {
+  color: #7c2d12;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.sacrament-schema-preview-columns {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sacrament-schema-preview-card {
+  background: #fffef8;
+  border: 1px solid #fcd34d;
+  border-radius: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding: 0.7rem;
+}
+
+.sacrament-schema-preview-card--steps {
+  background: #f0fdf4;
+  border-color: #86efac;
+}
+
+.sacrament-schema-preview-card-head {
+  align-items: center;
+  display: flex;
+  gap: 0.55rem;
+}
+
+.sacrament-schema-preview-card-head h5 {
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.sacrament-schema-preview-card-head p {
+  color: #64748b;
+  font-size: 0.73rem;
+  margin: 0.1rem 0 0;
+}
+
+.sacrament-schema-preview-card-icon {
+  align-items: center;
+  background: #fef3c7;
+  border-radius: 999px;
+  color: #b45309;
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  width: 28px;
+}
+
+.sacrament-schema-preview-card-icon--steps {
+  background: #dcfce7;
+  color: #047857;
+}
+
+.sacrament-schema-preview-list {
+  display: grid;
+  gap: 0.4rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sacrament-schema-preview-list li {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #fcd34d;
+  border-radius: 0.55rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.35rem 0.5rem;
+}
+
+.sacrament-schema-preview-list--steps li {
+  border-color: #a7f3d0;
+}
+
+.sacrament-schema-preview-list-main {
+  align-items: center;
+  color: #1e293b;
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.sacrament-schema-preview-list-main svg {
+  color: #0f766e;
+}
+
+.sacrament-schema-preview-remove {
+  align-items: center;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 0.45rem;
+  color: #be123c;
+  cursor: pointer;
+  display: inline-flex;
+  height: 22px;
+  justify-content: center;
+  width: 22px;
+}
+
+.sacrament-schema-preview-remove:hover {
+  background: #ffe4e6;
+}
+
+.sacrament-schema-preview-remove:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.sacrament-schema-preview-empty {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.sacrament-schema-preview-input-row {
+  margin-top: 0.15rem;
+}
+
+.sacrament-schema-preview-inputs {
+  display: grid;
+  gap: 0.65rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 0.2rem;
+}
+
+.sacrament-schema-quick-add-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.7rem;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.5rem;
+}
+
+.sacrament-schema-quick-add-title {
+  color: #334155;
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.sacrament-schema-preview-input-row input {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.55rem;
+  font-size: 0.82rem;
+  padding: 0.42rem 0.55rem;
+}
+
+.sacrament-schema-preview-input-row input:focus-visible {
+  border-color: #b45309;
+  outline: 2px solid rgba(180, 83, 9, 0.2);
+  outline-offset: 0;
+}
+
+.sacrament-schema-quick-add-btn {
+  align-items: center;
+  background: var(--ff-primary);
+  border: 1px solid var(--ff-primary);
+  border-radius: 0.55rem;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  justify-content: center;
+  min-width: 50px;
+  padding: 0.42rem 0.7rem;
+  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+}
+
+.sacrament-schema-quick-add-btn:hover {
+  background: #991b1b;
+  border-color: #991b1b;
+  box-shadow: 0 8px 14px rgba(127, 23, 23, 0.2);
+  transform: translateY(-1px);
+}
+
+.sacrament-schema-quick-add-btn:focus-visible {
+  outline: 3px solid rgba(127, 23, 23, 0.28);
+  outline-offset: 2px;
+}
+
+.sacrament-schema-quick-add-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+  transform: none;
+}
+
+.sacrament-requirements-modal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  max-height: min(90vh, 860px);
+  overflow-y: auto;
+  width: min(980px, 100%);
+}
+
+.sacrament-requirements-modal-heading {
+  justify-items: flex-start;
+  text-align: left;
+}
+
+.sacrament-requirements-modal-topbar {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.5rem;
+  justify-content: space-between;
+}
+
+.sacrament-requirements-modal-close {
+  align-items: center;
+  background: var(--ff-primary);
+  border: 1px solid var(--ff-primary);
+  border-radius: 0.55rem;
+  box-shadow: 0 4px 10px rgba(var(--ff-primary-rgb), 0.24);
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-flex;
+  flex: 0 0 auto;
+  height: 34px;
+  justify-content: center;
+  margin-top: 0.15rem;
+  transition: background-color 120ms ease, border-color 120ms ease, box-shadow 120ms ease, transform 120ms ease;
+  width: 34px;
+}
+
+.sacrament-requirements-modal-close:hover {
+  background: var(--ff-button-primary-hover);
+  border-color: var(--ff-button-primary-hover);
+  box-shadow: 0 8px 14px rgba(var(--ff-primary-rgb), 0.3);
+  transform: translateY(-1px);
+}
+
+.sacrament-requirements-modal-close:focus-visible {
+  outline: 3px solid rgba(127, 23, 23, 0.28);
+  outline-offset: 2px;
+}
+
+.sacrament-requirements-modal-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.sacrament-schema-field-save-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sacrament-schema-fields-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.template-delete-modal-overlay {
+  z-index: 4000;
+}
+
+.sacrament-delete-password {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-top: 12px;
+  text-align: left;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--ff-primary);
+}
+
+.sacrament-delete-password input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid rgba(15, 23, 42, 0.16);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+  font-weight: 500;
+}
+
+.sacrament-edit-field-required {
+  margin: 10px 0 0;
+}
+
+.sacrament-add-field-required {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--ff-primary);
+}
+
+.sacrament-add-field-required input {
+  margin-top: 2px;
+}
+
+.sacrament-delete-password-error {
+  margin: 8px 0 0;
+  color: #b42318;
+  font-size: 0.82rem;
+}
+
+.sacrament-schema-hint {
+  color: #64748b;
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.sacrament-schema-field-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding: 0.8rem;
+}
+
+.sacrament-schema-field-card-header {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.sacrament-schema-field-card-title h5 {
+  color: #7f1717;
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.sacrament-schema-field-card-title span {
+  color: #64748b;
+  font-size: 0.75rem;
+}
+
+.sacrament-schema-field-card-actions {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
+.sacrament-schema-card-edit-toggle {
+  align-items: center;
+  background: #ffffff;
+  border: 1px dashed #94a3b8;
+  border-radius: 0.5rem;
+  color: #334155;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.74rem;
+  font-weight: 700;
+  gap: 0.2rem;
+  padding: 0.25rem 0.45rem;
+}
+
+.sacrament-schema-card-edit-toggle:hover {
+  background: #f8fafc;
+}
+
+.sacrament-schema-row-action {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  color: #334155;
+  cursor: pointer;
+  display: inline-flex;
+  height: 28px;
+  justify-content: center;
+  transition: background-color 120ms ease, border-color 120ms ease, transform 120ms ease;
+  width: 28px;
+}
+
+.sacrament-schema-row-action:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  transform: translateY(-1px);
+}
+
+.sacrament-schema-row-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.sacrament-schema-row-action--danger {
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.sacrament-schema-field-grid--compact {
+  grid-template-columns: 2fr 1fr;
+}
+
+.sacrament-schema-field-grid {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.sacrament-schema-field-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.sacrament-schema-field-actions--inline {
+  justify-content: flex-start;
+}
+
+.sacrament-schema-field-summary,
+.sacrament-schema-generated-field-meta {
+  color: #334155;
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.78rem;
+  gap: 0.6rem 1rem;
+}
+
+.sacrament-schema-field-summary code,
+.sacrament-schema-generated-field-meta code {
+  background: #e2e8f0;
+  border-radius: 0.3rem;
+  color: #0f172a;
+  font-family: inherit;
+  font-size: 0.74rem;
+  padding: 0.12rem 0.35rem;
+}
+
+.sacrament-schema-advanced-toggle {
+  align-items: center;
+  background: #ffffff;
+  border: 1px dashed #94a3b8;
+  border-radius: 0.5rem;
+  color: #334155;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.77rem;
+  font-weight: 600;
+  gap: 0.25rem;
+  padding: 0.3rem 0.55rem;
+}
+
+.sacrament-schema-advanced-toggle:hover {
+  background: #f8fafc;
+}
+
+.sacrament-schema-advanced-settings {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.7rem;
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.65rem;
+}
+
+.sacrament-schema-options-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sacrament-schema-options-block textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+.sacrament-schema-list-settings {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.75rem;
+}
+
+.sacrament-schema-list-settings label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sacrament-schema-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 220px;
+  padding: 26px 18px 22px;
+  margin: 1rem 1.05rem 1.15rem;
+  border-radius: 14px;
+  border: 1px dashed #e2d8cc;
+  background: linear-gradient(180deg, #fffdfb 0%, #faf6f0 100%);
+}
+
+.sacrament-schema-empty-icon {
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  color: #7f1717;
+  background: linear-gradient(145deg, rgba(127, 23, 23, 0.14) 0%, rgba(127, 23, 23, 0.05) 100%);
+  border: 1px solid rgba(127, 23, 23, 0.18);
+  box-shadow: 0 8px 20px rgba(127, 23, 23, 0.08);
+}
+
+.sacrament-schema-empty-state h4 {
+  margin: 0 0 7px;
+  font-size: 1.03rem;
+  font-weight: 800;
+  color: #3f0f0f;
+  letter-spacing: 0.01em;
+}
+
+.sacrament-schema-empty-state p {
+  margin: 0;
+  max-width: 20rem;
+  font-size: 0.9rem;
+  line-height: 1.52;
+  color: #64748b;
+}
+
+.sacrament-schema-empty-state .progress-template-btn {
+  margin-top: 14px;
+}
+
+.sacrament-schema-editor-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 220px;
+  padding: 36px 24px 28px;
+  margin: 8px 0 0;
+  border-radius: 14px;
+  border: 1px dashed #e2d8cc;
+  background: linear-gradient(180deg, #fffdfb 0%, #faf6f0 100%);
+}
+
+.sacrament-schema-editor-empty-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  color: #7f1717;
+  background: linear-gradient(145deg, rgba(127, 23, 23, 0.14) 0%, rgba(127, 23, 23, 0.05) 100%);
+  border: 1px solid rgba(127, 23, 23, 0.18);
+  box-shadow: 0 8px 20px rgba(127, 23, 23, 0.08);
+}
+
+.sacrament-schema-editor-empty-title {
+  margin: 0 0 8px;
+  font-size: 1.12rem;
+  font-weight: 800;
+  color: #3f0f0f;
+  letter-spacing: 0.01em;
+}
+
+.sacrament-schema-editor-empty-text {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #64748b;
+}
+
+.sacrament-schema-single-empty-state {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 220px;
+  padding: 36px 24px 28px;
+  margin: 8px 0 0;
+  border-radius: 14px;
+  border: 1px dashed #e2d8cc;
+  background: linear-gradient(180deg, #fffdfb 0%, #faf6f0 100%);
+}
+
+.sacrament-schema-single-empty-state .progress-template-btn {
+  margin-top: 14px;
+}
+
+@media (max-width: 1100px) {
+  .sacrament-schema-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sacrament-schema-layout.sacrament-form-manager-layout,
+  .sacrament-schema-layout.sacrament-form-manager-layout.is-list-only,
+  .sacrament-schema-layout.sacrament-form-manager-layout.is-editor-open {
+    flex-direction: column;
+  }
+
+  .sacrament-form-manager-list,
+  .sacrament-form-manager-layout.is-editor-open .sacrament-form-manager-list {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 680px;
+    width: 100%;
+  }
+
+  .sacrament-schema-requirements-grid,
+  .sacrament-schema-field-grid,
+  .sacrament-schema-preview-columns,
+  .sacrament-schema-preview-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sacrament-fees-section {
+  display: grid;
+  gap: 0.6rem;
+  padding: 0.85rem;
+  border: 1px solid var(--ff-container-border, #e2e8f0);
+  border-radius: 0.8rem;
+  background: #ffffff;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
+}
+
+.sacrament-fees-head h4 {
+  margin: 0;
+  color: var(--ff-primary);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.sacrament-fees-head p {
+  margin: 0.15rem 0 0;
+  color: var(--ff-text-muted, #64748b);
+  font-size: 0.78rem;
+}
+
+.sacrament-fees-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem 0.75rem;
+}
+
+.sacrament-fees-inputs > small,
+.sacrament-fees-inputs > .sacrament-fee-error {
+  grid-column: 1 / -1;
+}
+
+.sacrament-fees-inputs > small {
+  color: var(--ff-text-muted, #64748b);
+  font-size: 0.72rem;
+}
+
+.sacrament-fee-field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.sacrament-fee-field > span {
+  color: #334155;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.sacrament-fee-input {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d6dde8;
+  border-radius: 0.55rem;
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.sacrament-fee-input:focus-within {
+  border-color: var(--ff-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ff-primary) 14%, transparent 86%);
+}
+
+.sacrament-fee-input em {
+  padding: 0 0.6rem;
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  background: color-mix(in srgb, var(--ff-primary) 8%, #ffffff);
+  color: var(--ff-primary);
+  font-style: normal;
+  font-weight: 700;
+  border-right: 1px solid #d6dde8;
+}
+
+.sacrament-fee-input input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  padding: 0.55rem 0.65rem;
+  font: inherit;
+  font-size: 0.88rem;
+  background: transparent;
+  color: var(--ff-text, #1f2937);
+}
+
+.sacrament-fee-error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.sacrament-schema-preview .payment-preview {
+  margin: 0.85rem 0 0;
+}
+
+.sacrament-fees-preview-empty {
+  margin: 0.85rem 0 0;
+  padding: 0.8rem;
+  border-radius: 0.55rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: var(--ff-text-muted, #64748b);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 760px) {
+  .sacrament-fees-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sacrament-form-manager-list,
+  .sacrament-form-manager-editor,
+  .sacrament-schema-item {
+    animation: none;
+    transition: none;
+  }
+}
+
+@keyframes sacramentNoticeDrop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -16px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes sacramentFormListEnter {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes sacramentFormEditorSlide {
+  from {
+    opacity: 0;
+    transform: translateX(80px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.certificate-type-fee-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.certificate-type-fee-row label {
+  font-weight: 600;
+  color: #7f1717;
+}
+
+.certificate-type-fee-row input {
+  width: 140px;
+  padding: 8px 10px;
+  border: 1px solid #d9c89e;
+  border-radius: 10px;
+  font: inherit;
+}

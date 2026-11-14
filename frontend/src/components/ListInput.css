@@ -1,0 +1,144 @@
+.list-input {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 0.95rem;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.list-input-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.list-input-hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #6b5b5d;
+}
+
+.list-add-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 0;
+  background: var(--ff-primary, #8f1d1d);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.48rem 0.95rem;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--ff-primary, #8f1d1d) 24%, transparent);
+}
+
+.list-add-button:hover {
+  filter: brightness(1.08);
+}
+
+.list-entry-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.list-entry-row {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr auto;
+  gap: 0.65rem;
+  align-items: end;
+  padding: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--ff-secondary, #c5a424) 35%, #eadfca);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.list-entry-index {
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ff-secondary, #c5a424) 35%, white);
+  color: var(--ff-primary, #8f1d1d);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+}
+
+.list-entry-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.list-entry-field span {
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #8a7678;
+}
+
+.list-entry-field input {
+  width: 100%;
+  border: 1px solid rgba(122, 28, 42, 0.18);
+  border-radius: 8px;
+  padding: 0.55rem 0.65rem;
+  font-size: 0.9rem;
+}
+
+.list-entry-field input.invalid-phone {
+  border-color: #c0392b;
+}
+
+.list-entry-field input.is-duplicate-name {
+  border-color: #c0392b;
+  background: color-mix(in srgb, #c0392b 6%, #ffffff);
+  box-shadow: 0 0 0 2px color-mix(in srgb, #c0392b 15%, transparent);
+}
+
+.list-entry-error {
+  color: #b91c1c;
+  font-size: 0.74rem;
+  font-weight: 600;
+}
+
+.list-remove-button,
+.list-remove-spacer {
+  width: 2rem;
+  height: 2rem;
+  margin-bottom: 0.15rem;
+}
+
+.list-remove-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: rgba(192, 57, 43, 0.12);
+  color: #a93226;
+  cursor: pointer;
+}
+
+.list-remove-button:hover {
+  background: rgba(192, 57, 43, 0.2);
+}
+
+@media (max-width: 900px) {
+  .list-entry-row {
+    grid-template-columns: auto 1fr auto;
+  }
+
+  .list-entry-field:last-of-type {
+    grid-column: 2 / 3;
+  }
+}

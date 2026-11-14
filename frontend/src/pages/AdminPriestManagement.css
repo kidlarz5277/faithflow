@@ -1,0 +1,2668 @@
+.priest-management-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.priest-hero-content {
+  min-width: 0;
+}
+
+.priest-management-hero .priest-hero-content h2 {
+  margin: 0;
+  color: #fffdf7;
+}
+
+.priest-management-hero .priest-hero-content p {
+  margin: 6px 0 0;
+  max-width: 640px;
+  color: #f8f0dd;
+  font-size: 0.92rem;
+}
+
+.priest-hero-add-button {
+  border: 0;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--ff-primary);
+  font: inherit;
+  font-weight: 700;
+  padding: 10px 14px;
+  min-height: 42px;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.12);
+  transition: background-color 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+}
+
+.priest-management-hero .view-mode-hero-actions {
+  margin-left: auto;
+}
+
+.priest-hero-back-button {
+  min-width: 132px;
+  justify-content: center;
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+.priest-hero-add-button:hover {
+  background: #fff8e7;
+  transform: translateY(-1px);
+}
+
+.priest-hero-add-button:focus-visible {
+  outline: 2px solid var(--ff-secondary);
+  outline-offset: 1px;
+}
+
+.priest-stats-grid {
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.main-priest-badge {
+  margin-top: 12px;
+  width: fit-content;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  padding: 7px 13px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fffdf7;
+  font-size: 0.81rem;
+  font-weight: 600;
+}
+
+.main-priest-badge span {
+  font-weight: 700;
+  margin-right: 4px;
+}
+
+.priest-stat-card {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 17px;
+  border-radius: 16px;
+  border: 1px solid #f0e2c2;
+  background: radial-gradient(circle at top right, #fff7e6 0%, #fffef9 46%, #ffffff 100%);
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
+}
+
+.priest-stat-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff4d8;
+  border: 1px solid #f0d49a;
+  color: #7f1717;
+}
+
+.priest-stat-label {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.76rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.priest-stat-card h3 {
+  margin: 4px 0 0;
+  color: #7f1717;
+  font-size: 1.28rem;
+}
+
+.priest-management-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.priest-management-card {
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #efe1c5;
+  background: linear-gradient(180deg, #ffffff 0%, #fffef8 100%);
+}
+
+.priest-management-header h3 {
+  margin: 0;
+  color: #7f1717;
+}
+
+.priest-section-note {
+  margin: 6px 0 0;
+  color: #64748b;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.priest-add-form {
+  margin-top: 14px;
+  display: grid;
+  gap: 10px;
+}
+
+.priest-add-form label {
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.priest-add-form input,
+.priest-add-form select {
+  width: 100%;
+  border: 1px solid #dccfb2;
+  border-radius: 10px;
+  background: #fff;
+  color: #2f3c4d;
+  font: inherit;
+  padding: 11px 12px;
+}
+
+.priest-add-form input:focus,
+.priest-add-form select:focus,
+.priest-search-wrap input:focus,
+.priest-edit-name-wrap input:focus,
+.priest-edit-name-wrap select:focus {
+  outline: 2px solid rgba(127, 23, 23, 0.16);
+  border-color: #be9b57;
+}
+
+.priest-add-form button {
+  margin-top: 6px;
+  width: fit-content;
+  border: 1px solid var(--ff-primary);
+  background: var(--ff-modal-button);
+  color: var(--ff-modal-on-header);
+  border-radius: 10px;
+  padding: 9px 13px;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.priest-add-form button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 16px rgba(127, 23, 23, 0.24);
+}
+
+.priest-add-form button:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+.priest-feedback-message {
+  margin: 12px 0 0;
+  color: #1e3a8a;
+  font-size: 0.83rem;
+  font-weight: 600;
+  border-radius: 10px;
+  background: #eef5ff;
+  border: 1px solid #d9e8ff;
+  padding: 9px 10px;
+}
+
+.priest-feedback-message.is-warning {
+  color: #7f1717;
+  background: #fff4ea;
+  border-color: #f0d2b0;
+}
+
+.priest-field-hint {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+.priest-credentials-result {
+  margin-top: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.priest-credentials-list {
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #e6dfcf;
+  border-radius: 10px;
+  background: #fff;
+  display: grid;
+  gap: 8px;
+}
+
+.priest-credentials-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.priest-credentials-row dt {
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.priest-credentials-row dd {
+  margin: 0;
+  color: #2f3c4d;
+  font-weight: 700;
+  word-break: break-word;
+  text-align: right;
+}
+
+.priest-temp-password {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px dashed #be9b57;
+  background: #fff8e7;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.priest-temp-password span {
+  display: block;
+  color: #7f1717;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.priest-temp-password code {
+  display: block;
+  margin-top: 4px;
+  color: #7f1717;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  user-select: all;
+}
+
+.priest-copy-password-button {
+  flex: 0 0 auto;
+  border: 1px solid #be9b57;
+  background: #fff;
+  color: #7f1717;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.priest-copy-password-button:hover {
+  background: #fffdf8;
+}
+
+.priest-credentials-result .priest-modal-actions {
+  margin-top: 0;
+}
+
+.priest-credentials-result .priest-modal-actions button {
+  margin-top: 0;
+  width: fit-content;
+  border: 1px solid var(--ff-primary);
+  background: var(--ff-modal-button);
+  color: var(--ff-modal-on-header);
+  border-radius: 10px;
+  padding: 9px 13px;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.priest-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.58);
+  display: grid;
+  place-items: center;
+  z-index: 1200;
+  padding: 16px;
+  backdrop-filter: blur(3px);
+}
+
+.priest-modal-card {
+  width: min(620px, 100%);
+  border: 1px solid #e6dfcf;
+  border-radius: 14px;
+  background: #fffdf8;
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.22);
+  padding: 18px;
+}
+
+.priest-modal-card .priest-management-header {
+  margin-bottom: 10px;
+}
+
+.priest-schedule-detail-modal {
+  width: min(640px, 100%);
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 16px;
+  background: var(--ff-surface);
+  box-shadow: 0 28px 56px var(--ff-modal-shadow);
+}
+
+.priest-schedule-detail-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 14px;
+  background: var(--ff-primary);
+  border-bottom: 1px solid color-mix(in srgb, var(--ff-primary) 55%, black 45%);
+}
+
+.priest-schedule-detail-modal .priest-schedule-detail-kicker {
+  margin: 0 0 4px;
+  color: #f6e7b2;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.priest-schedule-detail-modal .priest-schedule-detail-header h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.priest-schedule-detail-header p {
+  margin: 4px 0 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.82rem;
+}
+
+.priest-schedule-detail-header-side {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.priest-schedule-detail-header .priest-schedule-status,
+.priest-schedule-detail-header .priest-schedule-status.is-upcoming,
+.priest-schedule-detail-header .priest-schedule-status.is-today,
+.priest-schedule-detail-header .priest-schedule-status.is-past,
+.priest-schedule-detail-header .priest-schedule-status.is-unknown {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: var(--ff-primary);
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.priest-schedule-detail-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.priest-schedule-detail-close:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.priest-schedule-detail-grid,
+.priest-schedule-appointments-section {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+.priest-schedule-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding-top: 14px;
+  overflow: auto;
+}
+
+.priest-schedule-detail-grid p {
+  margin: 0;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--ff-surface) 0%, var(--ff-modal-accent-soft) 100%);
+  padding: 9px 10px;
+  color: var(--ff-text);
+  font-size: 0.84rem;
+  font-weight: 650;
+  display: grid;
+  gap: 2px;
+}
+
+.priest-schedule-detail-grid p span {
+  color: var(--ff-text-muted);
+  text-transform: uppercase;
+  font-size: 0.67rem;
+  letter-spacing: 0.04em;
+  font-weight: 700;
+}
+
+.priest-schedule-detail-grid p.is-full {
+  grid-column: 1 / -1;
+}
+
+.priest-schedule-appointments-section {
+  border-top: 0;
+  padding-top: 12px;
+  padding-bottom: 8px;
+  display: grid;
+  gap: 8px;
+  overflow: auto;
+}
+
+.priest-schedule-appointments-section h4 {
+  margin: 0;
+  color: var(--ff-primary);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.priest-schedule-appointment-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.priest-schedule-appointment-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 8px;
+  display: grid;
+  gap: 7px;
+}
+
+.priest-schedule-appointment-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.priest-schedule-appointment-top strong {
+  color: #0f172a;
+  font-size: 0.84rem;
+}
+
+.priest-schedule-appointment-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.priest-schedule-appointment-meta p {
+  margin: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  padding: 7px 8px;
+  color: #334155;
+  font-size: 0.78rem;
+  display: grid;
+  gap: 2px;
+}
+
+.priest-schedule-appointment-meta p span {
+  color: #6b7280;
+  text-transform: uppercase;
+  font-size: 0.62rem;
+  letter-spacing: 0.03em;
+  font-weight: 700;
+}
+
+.priest-schedule-appointment-meta p.is-full {
+  grid-column: 1 / -1;
+}
+
+.priest-schedule-credential-block {
+  border: 1px dashed #e2e8f0;
+  border-radius: 8px;
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+}
+
+.priest-schedule-credential-block h5 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 0.8rem;
+}
+
+.priest-schedule-credential-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.priest-schedule-credential-grid p {
+  margin: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #fff;
+  padding: 7px 8px;
+  color: #334155;
+  font-size: 0.76rem;
+  display: grid;
+  gap: 2px;
+}
+
+.priest-schedule-credential-grid p span {
+  color: #6b7280;
+  text-transform: uppercase;
+  font-size: 0.61rem;
+  letter-spacing: 0.03em;
+  font-weight: 700;
+}
+
+.priest-schedule-edit-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding: 16px 18px 4px;
+}
+
+.priest-schedule-edit-form label:first-child {
+  grid-column: 1 / -1;
+}
+
+.priest-schedule-edit-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.priest-schedule-edit-form label span {
+  color: #6b7280;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.priest-schedule-edit-form input {
+  border: 1px solid var(--ff-container-border);
+  border-radius: 10px;
+  background: #fff;
+  color: #1f2937;
+  font: inherit;
+  padding: 10px 12px;
+}
+
+.priest-schedule-edit-form .priest-feedback-message {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.priest-schedule-detail-grid.is-hidden-while-editing,
+.priest-schedule-appointments-section.is-hidden-while-editing {
+  display: none;
+}
+
+.priest-schedule-detail-modal .priest-account-submit {
+  min-height: 38px;
+  padding: 8px 16px;
+}
+
+.priest-schedule-detail-modal .priest-modal-actions {
+  margin-top: 0;
+  padding: 12px 18px 14px;
+  border-top: 1px solid var(--ff-container-border);
+  background: linear-gradient(180deg, var(--ff-surface) 0%, var(--ff-modal-accent-soft) 100%);
+}
+
+.priest-schedule-detail-modal .priest-modal-cancel-button {
+  border: 1px solid var(--ff-container-border);
+  border-radius: 999px;
+  background: var(--ff-surface);
+  color: var(--ff-text);
+  padding: 8px 16px;
+}
+
+.priest-account-modal {
+  width: min(560px, calc(100vw - 32px));
+  border-radius: 12px;
+}
+
+.priest-account-modal .priest-schedule-detail-header {
+  align-items: center;
+  min-height: 90px;
+  padding: 18px 20px 18px 24px;
+  background: var(--ff-modal-header);
+  border-bottom: 1px solid color-mix(in srgb, var(--ff-secondary) 42%, white 58%);
+}
+
+.priest-account-modal .priest-schedule-detail-kicker {
+  color: color-mix(in srgb, var(--ff-modal-on-header) 72%, var(--ff-secondary) 28%);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+}
+
+.priest-account-modal .priest-schedule-detail-header h3 {
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+.priest-account-modal .priest-schedule-detail-header p {
+  margin-top: 5px;
+  font-size: 0.8rem;
+  line-height: 1.35;
+}
+
+.priest-account-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.priest-account-modal-body {
+  padding: 18px 20px 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 14px;
+  overflow: auto;
+}
+
+.priest-account-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.priest-account-field.is-wide,
+.priest-account-hint,
+.priest-account-modal-body .priest-feedback-message,
+.priest-account-modal-body .priest-credentials-list,
+.priest-account-modal-body .priest-temp-password {
+  grid-column: 1 / -1;
+}
+
+.priest-account-modal-body .priest-feedback-message {
+  margin: 0;
+}
+
+.priest-account-modal .priest-schedule-detail-close {
+  flex: 0 0 auto;
+}
+
+.priest-account-field label {
+  color: var(--ff-text-muted, #6b7280);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.priest-account-field input,
+.priest-account-field select {
+  width: 100%;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 10px;
+  background: var(--ff-surface);
+  color: var(--ff-text);
+  font: inherit;
+  padding: 11px 12px;
+}
+
+.priest-account-field input:focus,
+.priest-account-field select:focus {
+  outline: 2px solid rgba(127, 23, 23, 0.16);
+  border-color: #be9b57;
+}
+
+.priest-account-hint {
+  margin: 0;
+  color: var(--ff-text-muted, #64748b);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.priest-password-reset-panel {
+  grid-column: 1 / -1;
+  display: grid;
+  gap: 8px;
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 24%, var(--ff-container-border) 76%);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ff-primary) 4%, var(--ff-surface) 96%);
+  padding: 12px;
+}
+
+.priest-password-reset-panel h4 {
+  margin: 0;
+  color: var(--ff-primary);
+  font-size: 0.9rem;
+}
+
+.priest-password-reset-panel p {
+  margin: 4px 0 0;
+  color: var(--ff-text-muted, #64748b);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.priest-password-reset-panel label {
+  color: var(--ff-text-muted, #6b7280);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.priest-password-reset-panel select {
+  width: 100%;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 10px;
+  background: var(--ff-surface);
+  color: var(--ff-text);
+  font: inherit;
+  padding: 10px 12px;
+}
+
+.priest-password-reset-panel .priest-feedback-message {
+  margin: 0;
+}
+
+.priest-password-reset-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px;
+}
+
+.priest-password-reset-overlay {
+  z-index: 1210;
+}
+
+.priest-password-reset-confirm-card {
+  width: min(460px, 100%);
+  padding: 0;
+  overflow: hidden;
+}
+
+.priest-password-reset-confirm-card .priest-schedule-detail-header {
+  margin: 0;
+}
+
+.priest-password-reset-confirm-body {
+  display: grid;
+  gap: 8px;
+  padding: 18px 20px 8px;
+  color: var(--ff-text-muted, #64748b);
+  font-size: 0.84rem;
+  line-height: 1.45;
+}
+
+.priest-password-reset-confirm-body p {
+  margin: 0;
+}
+
+.priest-password-reset-confirm-body > strong {
+  color: var(--ff-primary);
+  overflow-wrap: anywhere;
+}
+
+.priest-password-reset-confirm-card .priest-modal-actions {
+  padding: 12px 20px 16px;
+}
+
+.priest-password-reset-confirm-card .priest-modal-actions button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.priest-account-modal .priest-credentials-list {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  gap: 8px;
+}
+
+.priest-account-modal .priest-credentials-row {
+  margin: 0;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 12px;
+  background: linear-gradient(180deg, var(--ff-surface) 0%, var(--ff-modal-accent-soft) 100%);
+  padding: 9px 12px;
+}
+
+.priest-account-modal .priest-modal-actions {
+  margin-top: 0;
+  padding: 12px 20px 16px;
+}
+
+.priest-account-submit {
+  margin: 0;
+  width: fit-content;
+  border: 1px solid var(--ff-primary);
+  background: var(--ff-modal-button);
+  color: var(--ff-modal-on-header);
+  border-radius: 10px;
+  padding: 9px 14px;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.priest-account-submit:hover:not(:disabled) {
+  filter: brightness(1.06);
+}
+
+.priest-account-submit:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+@media (max-width: 560px) {
+  .priest-account-modal-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.priest-modal-actions {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.priest-modal-cancel-button {
+  border: 1px solid #d1d5db;
+  background: #fff;
+  color: #374151;
+  border-radius: 10px;
+  padding: 9px 13px;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.priest-modal-cancel-button:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+.priest-confirm-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  display: grid;
+  place-items: center;
+  z-index: 1200;
+  padding: 16px;
+}
+
+.priest-confirm-modal {
+  width: min(460px, 100%);
+  border: 1px solid #e6dfcf;
+  border-radius: 14px;
+  background: #fffdf8;
+  box-shadow: 0 18px 34px rgba(15, 23, 42, 0.22);
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.priest-confirm-modal-body {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.priest-confirm-modal-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #991b1b;
+}
+
+.priest-confirm-modal h4 {
+  margin: 0;
+  color: var(--ff-primary);
+}
+
+.priest-confirm-modal p {
+  margin: 0;
+  color: #374151;
+  line-height: 1.45;
+}
+
+.priest-confirm-modal-actions {
+  margin-top: 6px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.priest-confirm-btn {
+  border-radius: 10px;
+  border: 1px solid #d9c49d;
+  background: #ffffff;
+  color: #7f1717;
+  font: inherit;
+  font-weight: 800;
+  font-size: 0.86rem;
+  min-height: 40px;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.priest-confirm-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.priest-confirm-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.priest-confirm-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.priest-confirm-btn.secondary:hover:not(:disabled) {
+  background: #fff6e6;
+  border-color: #c89a3c;
+}
+
+.priest-confirm-btn.danger {
+  border-color: #fca5a5;
+  background: #fff1f2;
+  color: #991b1b;
+}
+
+.priest-confirm-btn.danger:hover:not(:disabled) {
+  background: #ffe4e6;
+}
+
+.priest-search-wrap {
+  margin-top: 14px;
+  border: 1px solid #d9d2bf;
+  border-radius: 11px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+}
+
+.priest-search-wrap svg {
+  color: #7b8aa0;
+}
+
+.priest-search-wrap input {
+  border: 0;
+  background: transparent;
+  width: 100%;
+  min-height: 41px;
+  font: inherit;
+  color: #2f3c4d;
+  outline: none;
+}
+
+.priest-directory-meta {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.priest-directory-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+.priest-directory-card {
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  background: #f8fafc;
+  padding: 10px;
+  text-align: left;
+  box-shadow: none;
+  display: grid;
+  gap: 8px;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.priest-directory-card:hover {
+  transform: translateY(-1px);
+  border-color: #d1d5db;
+  box-shadow: 0 8px 14px rgba(15, 23, 42, 0.06);
+}
+
+.priest-directory-card.is-active {
+  border-color: #c89a3c;
+  background: #f8fafc;
+  box-shadow: 0 0 0 2px rgba(200, 154, 60, 0.12);
+}
+
+.priest-directory-card.is-inactive {
+  border-style: dashed;
+  opacity: 0.85;
+}
+
+.priest-directory-card-main {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  display: grid;
+  gap: 8px;
+}
+
+.priest-directory-card-actions {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.priest-directory-card h4 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 0.98rem;
+}
+
+.priest-directory-card-meta {
+  margin: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 8px 9px;
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.priest-list {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0 2px 0 0;
+  display: grid;
+  gap: 9px;
+  max-height: 360px;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+
+.priest-list-item {
+  width: 100%;
+  border: 1px solid #ebdfc2;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #fffdfa 0%, #fff8ed 100%);
+  color: #111827;
+  padding: 12px;
+  text-align: left;
+  cursor: pointer;
+  display: grid;
+  gap: 6px;
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.priest-list-item:hover {
+  transform: translateY(-1px);
+  border-color: #d8be80;
+  box-shadow: 0 8px 14px rgba(15, 23, 42, 0.08);
+}
+
+.priest-list-item strong {
+  color: #7f1717;
+}
+
+.priest-list-item span {
+  color: #4b5563;
+  font-size: 0.82rem;
+}
+
+.priest-list-item.is-active {
+  border-color: #c89a3c;
+  background: linear-gradient(180deg, #fff9ef 0%, #ffecc8 100%);
+  box-shadow: 0 12px 18px rgba(127, 23, 23, 0.12);
+}
+
+.priest-list-tags,
+.priest-profile-tags {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.priest-selected-meta-tags {
+  margin-bottom: 0;
+}
+
+.priest-type-chip,
+.priest-order-chip {
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.priest-type-chip.is-diocesan {
+  border: 1px solid #c7d2fe;
+  background: #eef2ff;
+  color: #3730a3;
+}
+
+.priest-type-chip.is-religious {
+  border: 1px solid #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.priest-order-chip {
+  border: 1px solid #f3d6a1;
+  background: #fff7e6;
+  color: #92400e;
+}
+
+.priest-status-chip {
+  border-radius: 999px;
+  padding: 3px 9px;
+  font-size: 0.69rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.priest-status-chip.is-active {
+  border: 1px solid #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.priest-status-chip.is-inactive {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.priest-details-panel {
+  margin-top: 16px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 16px;
+  border-top: 4px solid color-mix(in srgb, var(--ff-primary) 72%, var(--ff-secondary) 28%);
+  background: linear-gradient(180deg, var(--ff-container-elevated) 0%, var(--ff-container-priests) 100%);
+  box-shadow: 0 10px 24px var(--ff-container-shadow);
+  padding: 16px 18px;
+}
+
+.priest-details-panel > .priest-management-header {
+  border: 1px solid var(--ff-container-border);
+  border-radius: 1rem;
+  background: linear-gradient(180deg, var(--ff-container-elevated) 0%, var(--ff-container-priests) 100%);
+  padding: 1rem;
+  box-shadow: 0 8px 18px var(--ff-container-shadow);
+}
+
+.priest-details-panel > .priest-management-header h3 {
+  margin: 0;
+  color: var(--ff-primary);
+}
+
+.priest-details-panel > .priest-management-header .priest-section-note {
+  margin: 6px 0 0;
+  color: #475569;
+}
+
+.priest-details-shell {
+  margin-top: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.priest-directory {
+  display: grid;
+  gap: 20px;
+}
+
+.priest-directory-header,
+.priest-directory-group h4 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.priest-directory-header {
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--ff-container-border);
+}
+
+.priest-directory-header h3 {
+  margin: 0;
+  color: var(--ff-primary);
+}
+
+.priest-directory-header p {
+  margin: 5px 0 0;
+  color: var(--ff-text-muted);
+  font-size: 0.86rem;
+}
+
+.priest-directory-header > span,
+.priest-directory-group h4 span {
+  border-radius: 999px;
+  padding: 4px 10px;
+  background: color-mix(in srgb, var(--ff-primary) 9%, white 91%);
+  color: var(--ff-primary);
+  font-size: 0.75rem;
+  font-weight: 800;
+}
+
+.priest-directory-group {
+  display: grid;
+  gap: 10px;
+}
+
+.priest-directory-group h4 {
+  margin: 0;
+  color: var(--ff-text);
+  font-size: 0.9rem;
+}
+
+.priest-directory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+}
+
+.priest-directory-card {
+  min-width: 0;
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 16px;
+  background: var(--ff-surface);
+  color: var(--ff-text);
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--ff-primary) 6%, transparent 94%);
+  transition: border-color 140ms ease, background-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
+}
+
+.priest-directory-card:hover,
+.priest-directory-card:focus-visible {
+  border-color: color-mix(in srgb, var(--ff-primary) 52%, var(--ff-container-border));
+  background: color-mix(in srgb, var(--ff-primary) 4%, var(--ff-surface) 96%);
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--ff-primary) 11%, transparent 89%);
+  transform: translateY(-2px);
+}
+
+.priest-directory-card:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--ff-primary) 45%, transparent);
+  outline-offset: 2px;
+}
+
+.priest-directory-card img {
+  width: 56px;
+  height: 56px;
+  flex: 0 0 56px;
+  border: 2px solid color-mix(in srgb, var(--ff-secondary) 46%, var(--ff-container-border) 54%);
+  border-radius: 50%;
+  background: var(--ff-container);
+  object-fit: cover;
+}
+
+.priest-directory-card-copy {
+  min-width: 0;
+  flex: 1;
+  display: grid;
+  gap: 5px;
+}
+
+.priest-directory-card-copy strong {
+  overflow: hidden;
+  color: var(--ff-text);
+  font-size: 0.96rem;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.priest-directory-card-copy small {
+  color: var(--ff-text-muted);
+  font-size: 0.78rem;
+}
+
+.priest-directory-card-status {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.priest-directory-card-status.is-active {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.priest-directory-card-status.is-inactive {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.priest-directory-card.is-inactive {
+  opacity: 0.82;
+}
+
+.priest-directory-side {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.priest-profile-card,
+.priest-schedule-panel {
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+  box-shadow: none;
+}
+
+.priest-profile-card {
+  background: transparent;
+  position: static;
+}
+
+.priest-schedule-panel {
+  background: transparent;
+  max-height: none;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+}
+
+.priest-schedule-panel-full {
+  width: 100%;
+}
+
+.priest-edit-name-wrap-inline {
+  margin-bottom: 12px;
+}
+
+.priest-schedule-scroll-body {
+  overflow-y: auto;
+  scrollbar-width: thin;
+  min-height: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.priest-profile-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.priest-selected-profile-shell {
+  margin-bottom: 12px;
+  display: grid;
+  grid-template-columns: minmax(320px, 1.6fr) minmax(220px, 1fr);
+  gap: 10px;
+  align-items: stretch;
+}
+
+.priest-selected-profile-card {
+  padding: 14px 16px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--ff-surface) 0%, var(--ff-modal-accent-soft) 100%);
+  box-shadow: 0 8px 16px var(--ff-container-shadow);
+}
+
+.priest-selected-profile-top {
+  margin-bottom: 8px;
+  align-items: center;
+}
+
+.priest-selected-profile-identity {
+  min-width: 0;
+  flex: 1;
+}
+
+.priest-selected-profile-name-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.priest-selected-profile-name-row h4 {
+  margin: 0;
+}
+
+.priest-selected-profile-identity .priest-status-chip {
+  margin-top: 8px;
+}
+
+.priest-selected-profile-card .priest-detail-actions {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.priest-profile-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #7f1717;
+  border: 1px solid #d7bc84;
+  background: linear-gradient(180deg, #fff8e8 0%, #fbe6bc 100%);
+}
+
+.priest-profile-photo {
+  width: 72px;
+  height: 72px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 2px solid color-mix(in srgb, var(--ff-secondary) 70%, #d7bc84);
+  background: #fffdf7;
+  box-shadow: 0 8px 16px var(--ff-container-shadow);
+  display: block;
+  position: relative;
+  z-index: 0;
+}
+
+.priest-profile-photo-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.priest-profile-switch-icon {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  z-index: 3;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ff-primary);
+  background: linear-gradient(180deg, #fffaf0 0%, #f3dfb4 100%);
+  border: 1.5px solid color-mix(in srgb, var(--ff-secondary) 72%, #d7bc84);
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.16);
+  pointer-events: none;
+}
+
+.priest-profile-photo-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 2px transparent;
+  transition: box-shadow 140ms ease, background-color 140ms ease;
+  pointer-events: none;
+}
+
+.priest-profile-photo-button:hover .priest-profile-switch-icon,
+.priest-profile-photo-button.is-open .priest-profile-switch-icon {
+  background: linear-gradient(180deg, #fff8e7 0%, #eac97a 100%);
+}
+
+.priest-profile-photo-button:hover::after,
+.priest-profile-photo-button.is-open::after {
+  background: rgba(127, 23, 23, 0.08);
+  box-shadow: inset 0 0 0 3px color-mix(in srgb, var(--ff-secondary) 78%, #d7bc84);
+}
+
+.priest-profile-photo-button:focus-visible {
+  outline: 3px solid rgba(127, 23, 23, 0.35);
+  outline-offset: 2px;
+}
+
+.priest-picker-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.28);
+  z-index: 1150;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.priest-picker-panel {
+  width: min(392px, 100%);
+  height: 100%;
+  background: #fff;
+  box-shadow: -16px 0 40px rgba(15, 23, 42, 0.2);
+  padding: 20px 16px 24px;
+  overflow-y: auto;
+  animation: priest-picker-slide-in 180ms ease;
+}
+
+@keyframes priest-picker-slide-in {
+  from {
+    transform: translateX(18px);
+    opacity: 0.72;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.priest-picker-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+.priest-picker-header h3 {
+  margin: 0;
+  color: #202124;
+  font-size: 1.05rem;
+}
+
+.priest-picker-header p {
+  margin: 4px 0 0;
+  color: #5f6368;
+  font-size: 0.82rem;
+}
+
+.priest-picker-close {
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #3c4043;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.priest-picker-close:hover {
+  background: #f1f3f4;
+}
+
+.priest-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.priest-picker-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  min-height: 112px;
+  padding: 14px 8px 10px;
+  border: 0;
+  border-radius: 16px;
+  background: transparent;
+  color: #202124;
+  cursor: pointer;
+  font: inherit;
+}
+
+.priest-picker-item:hover,
+.priest-picker-item.is-selected {
+  background: #f1f3f4;
+}
+
+.priest-picker-item.is-selected {
+  box-shadow: inset 0 0 0 2px color-mix(in srgb, var(--ff-secondary) 70%, #d7bc84);
+}
+
+.priest-picker-item img {
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  object-fit: cover;
+  background: #fffdf7;
+  border: 1px solid #e8eaed;
+}
+
+.priest-picker-item span {
+  font-size: 0.74rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  max-width: 100%;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.priest-picker-item em {
+  font-style: normal;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #9b1c1c;
+}
+
+.priest-picker-item.is-inactive {
+  opacity: 0.72;
+}
+
+.priest-profile-top .priest-selected-profile-name-row h4 {
+  margin: 0;
+  color: var(--ff-primary);
+  font-size: 1.12rem;
+}
+
+.priest-profile-top p {
+  margin: 3px 0 6px;
+  color: var(--ff-text-muted);
+  font-size: 0.83rem;
+}
+
+.priest-detail-grid {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.priest-detail-grid p {
+  margin: 0;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 10px;
+  color: #334155;
+  font-size: 0.85rem;
+  display: grid;
+  gap: 2px;
+}
+
+.priest-detail-grid p span {
+  color: #6b7280;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+}
+
+.priest-details-panel h4 {
+  margin: 0 0 10px;
+  color: #1e293b;
+  font-size: 1rem;
+}
+
+.priest-edit-button {
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 58%, var(--ff-border) 42%);
+  background: linear-gradient(180deg, #fffaf0 0%, #f7e7c6 100%);
+  color: var(--ff-primary);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.priest-edit-name-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.priest-edit-name-wrap input,
+.priest-edit-name-wrap select {
+  min-width: 190px;
+  border: 1px solid #d9d2bf;
+  border-radius: 10px;
+  background: #fff;
+  color: #2f3c4d;
+  font: inherit;
+  padding: 8px 10px;
+}
+
+.priest-edit-save,
+.priest-edit-cancel {
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 0.81rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.priest-edit-save {
+  border-color: var(--ff-primary);
+  background: var(--ff-modal-button);
+  color: var(--ff-modal-on-header);
+}
+
+.priest-edit-cancel {
+  border-color: #d1d5db;
+  background: #fff;
+  color: #374151;
+}
+
+.priest-status-toggle-button {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 140ms ease, border-color 140ms ease;
+}
+
+.priest-status-toggle-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.priest-status-toggle-button.is-active {
+  border-color: #bbf7d0;
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.priest-status-toggle-button.is-inactive {
+  border-color: #fecaca;
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.priest-status-toggle-button:disabled {
+  opacity: 0.74;
+  cursor: not-allowed;
+}
+
+.priest-schedule-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 10px;
+  margin-bottom: 0;
+}
+
+.priest-schedule-summary-card {
+  border: 1px solid var(--ff-container-border);
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 14px;
+  box-shadow: 0 8px 14px var(--ff-container-shadow);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 140ms ease, box-shadow 140ms ease, transform 140ms ease;
+}
+
+.priest-schedule-summary-card:hover {
+  border-color: color-mix(in srgb, var(--ff-primary) 28%, var(--ff-container-border));
+  transform: translateY(-1px);
+}
+
+.priest-schedule-summary-card.is-active {
+  border-color: color-mix(in srgb, var(--ff-primary) 42%, var(--ff-container-border));
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--ff-primary) 12%, transparent 88%),
+    0 8px 14px var(--ff-container-shadow);
+}
+
+.priest-schedule-summary-card .priest-stat-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff3d9;
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 42%, #f0d49a);
+  color: var(--ff-primary);
+  flex-shrink: 0;
+}
+
+.priest-schedule-summary-card p {
+  margin: 0;
+  color: #526072;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.priest-schedule-summary-card h5 {
+  margin: 2px 0 0;
+  color: var(--ff-primary);
+  font-size: 1.28rem;
+}
+
+.priest-list-section {
+  display: grid;
+  gap: 10px;
+}
+
+.priest-section-card {
+  padding: 14px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 8px 16px var(--ff-container-shadow);
+}
+
+.priest-list-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.priest-list-section-header h4 {
+  margin: 0;
+  color: color-mix(in srgb, var(--ff-primary) 88%, #1f2937);
+  font-size: 1rem;
+}
+
+.priest-list-section-header p {
+  margin: 3px 0 0;
+  color: #64748b;
+  font-size: 0.78rem;
+}
+
+.priest-list-count {
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--ff-primary) 12%, #ffffff);
+  color: var(--ff-primary);
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.priest-schedule-groups {
+  display: grid;
+  gap: 16px;
+}
+
+.priest-schedule-group {
+  display: grid;
+  gap: 8px;
+}
+
+.priest-schedule-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0 2px;
+}
+
+.priest-schedule-group-head h5 {
+  margin: 0;
+  color: var(--ff-text-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.priest-schedule-group-head span {
+  color: var(--ff-text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.priest-schedule-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.priest-schedule-card {
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 22%, var(--ff-container-border));
+  border-radius: 12px;
+  padding: 13px 14px;
+  display: grid;
+  gap: 6px;
+  border-left: 3px solid var(--ff-primary);
+  background: var(--ff-container-elevated);
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--ff-primary) 6%, transparent 94%);
+  cursor: pointer;
+  transition: border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.priest-schedule-card:hover {
+  border-color: color-mix(in srgb, var(--ff-primary) 28%, var(--ff-container-border));
+  box-shadow: 0 10px 18px color-mix(in srgb, var(--ff-primary) 10%, transparent 90%);
+}
+
+.priest-schedule-card:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--ff-secondary) 70%, var(--ff-primary) 30%);
+  outline-offset: 2px;
+}
+
+.priest-schedule-card.is-appointment {
+  border-left-color: color-mix(in srgb, var(--ff-secondary) 70%, var(--ff-primary) 30%);
+}
+
+.priest-schedule-card.is-parish_event {
+  border-left-color: var(--ff-primary);
+}
+
+.priest-schedule-card.is-upcoming {
+  border-color: color-mix(in srgb, var(--ff-primary) 20%, var(--ff-container-border));
+}
+
+.priest-schedule-card.is-past {
+  opacity: 0.78;
+}
+
+.priest-schedule-card.is-today {
+  border-color: color-mix(in srgb, var(--ff-secondary) 40%, var(--ff-container-border));
+}
+
+.priest-schedule-card.is-focus,
+.priest-remark-card.is-focus {
+  border-color: color-mix(in srgb, var(--ff-primary) 40%, var(--ff-container-border));
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--ff-primary) 16%, transparent 84%),
+    0 10px 18px color-mix(in srgb, var(--ff-primary) 10%, transparent 90%);
+}
+
+.priest-schedule-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.priest-schedule-card-head strong {
+  color: var(--ff-primary);
+  font-size: 1rem;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.priest-schedule-card-kind {
+  margin: 2px 0 0;
+  color: var(--ff-text-muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.priest-schedule-card-when {
+  margin: 0;
+  color: var(--ff-text);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.priest-schedule-chip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.priest-schedule-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+.priest-schedule-card-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ff-text);
+  font-size: 0.82rem;
+}
+
+.priest-schedule-card-meta svg {
+  color: var(--ff-primary);
+  flex: 0 0 auto;
+}
+
+.priest-schedule-card-notes {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ff-primary) 6%, var(--ff-container-elevated));
+  color: var(--ff-text);
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.priest-event-chip {
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 28%, #d1d5db);
+  color: var(--ff-primary);
+  background: color-mix(in srgb, var(--ff-primary) 8%, #ffffff);
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.priest-schedule-status {
+  border-radius: 999px;
+  padding: 2px 6px;
+  font-size: 0.64rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.priest-schedule-status.is-today {
+  color: #8b5a00;
+  border-color: #f7d78f;
+  background: #fff7e3;
+}
+
+.priest-schedule-status.is-upcoming {
+  color: #155e75;
+  border-color: #a5f3fc;
+  background: #ecfeff;
+}
+
+.priest-schedule-status.is-past {
+  color: #4b5563;
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+
+.priest-schedule-status.is-unknown {
+  color: #7c2d12;
+  border-color: #fed7aa;
+  background: #fff7ed;
+}
+
+.priest-empty {
+  margin: 10px 0 0;
+  color: #4b5563;
+  font-size: 0.9rem;
+}
+
+.priest-empty-card {
+  border: 1px dashed color-mix(in srgb, var(--ff-primary) 22%, #d1d5db);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ff-surface, #ffffff) 88%, var(--ff-container-priests, #fffdf8));
+  padding: 22px 16px;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  gap: 8px;
+  color: #64748b;
+}
+
+.priest-empty-card p {
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.priest-detail-layout-bar {
+  align-items: center;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.priest-detail-layout-bar .priest-detail-view-toggle {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.priest-detail-view-toggle {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.priest-detail-view-button {
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 28%, var(--ff-container-border));
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ff-container-elevated) 86%, white 14%);
+  color: var(--ff-text);
+  min-height: 48px;
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: border-color 140ms ease, background-color 140ms ease, box-shadow 140ms ease, color 140ms ease;
+}
+
+.priest-detail-view-button span {
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--ff-primary) 10%, var(--ff-container-elevated));
+  color: var(--ff-primary);
+  font-size: 0.74rem;
+}
+
+.priest-detail-view-button span.is-alert {
+  background: #dc2626;
+  color: #fff;
+}
+
+.priest-detail-view-button:hover {
+  border-color: color-mix(in srgb, var(--ff-primary) 36%, var(--ff-container-border));
+  background: color-mix(in srgb, var(--ff-secondary) 12%, var(--ff-container-elevated));
+}
+
+.priest-detail-view-button.is-active {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ff-primary) 90%, black 10%) 0%,
+    color-mix(in srgb, var(--ff-primary) 78%, black 22%) 100%
+  );
+  border-color: color-mix(in srgb, var(--ff-primary) 68%, black 32%);
+  color: #fffdf7;
+  box-shadow: 0 10px 18px color-mix(in srgb, var(--ff-primary) 22%, transparent 78%);
+}
+
+.priest-detail-view-button.is-active span {
+  background: rgba(255, 253, 247, 0.18);
+  color: #fffdf7;
+}
+
+.priest-detail-view-button.is-active span.is-alert {
+  background: #fff;
+  color: #b91c1c;
+}
+
+.priest-remarks-header h4 {
+  margin: 0;
+}
+
+.priest-remarks-filter {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--ff-primary) 16%, #e8dcc4);
+  margin: 2px 0 6px;
+}
+
+.priest-remarks-filter-button {
+  appearance: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: #6b5b4a;
+  min-height: 38px;
+  padding: 6px 4px 8px;
+  margin-right: 22px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: color 140ms ease, border-color 140ms ease;
+}
+
+.priest-remarks-filter-button em {
+  font-style: normal;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--ff-primary) 8%, #f8f1e4);
+  color: #7f1717;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.priest-remarks-filter-button em.is-alert {
+  background: color-mix(in srgb, #7f1717 12%, #fff6f6);
+  color: #9b1c1c;
+}
+
+.priest-remarks-filter-button:hover {
+  color: var(--ff-primary);
+}
+
+.priest-remarks-filter-button.is-active {
+  color: var(--ff-primary);
+  border-bottom-color: var(--ff-primary);
+}
+
+.priest-remarks-filter-button.is-active em {
+  background: color-mix(in srgb, var(--ff-primary) 14%, #fff8ee);
+  color: var(--ff-primary);
+}
+
+.priest-list-pagination {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.priest-list-pagination-button {
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 70%, white 30%);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ff-primary);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 7px 12px;
+  cursor: pointer;
+}
+
+.priest-list-pagination-button:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ff-secondary) 16%, white 84%);
+  border-color: var(--ff-secondary);
+}
+
+.priest-list-pagination-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.priest-list-pagination-label {
+  font-size: 0.82rem;
+  color: #5b6678;
+  font-weight: 600;
+}
+
+.priest-remarks-section {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
+}
+
+.priest-remarks-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.priest-remark-card {
+  border: 1px solid color-mix(in srgb, var(--ff-container-border, #e2e8f0) 80%, #d1d5db);
+  border-radius: 14px;
+  background: linear-gradient(180deg, var(--ff-surface, #ffffff) 0%, color-mix(in srgb, var(--ff-container-priests, #fffdf8) 62%, #ffffff) 100%);
+  padding: 12px 14px;
+  display: grid;
+  gap: 10px;
+  box-shadow: 0 8px 16px var(--ff-container-shadow, rgba(15, 23, 42, 0.07));
+}
+
+.priest-remark-card.is-pending {
+  border-color: color-mix(in srgb, var(--ff-secondary, #c89a3c) 42%, #f7d78f);
+  border-left: 4px solid color-mix(in srgb, var(--ff-secondary, #c89a3c) 78%, #8b5a00);
+}
+
+.priest-remark-card.is-reviewed {
+  border-left: 4px solid #64748b;
+}
+
+.priest-remark-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.priest-remark-top strong {
+  color: color-mix(in srgb, var(--ff-primary) 86%, #111827);
+  font-size: 0.96rem;
+}
+
+.priest-remark-requester {
+  margin: 3px 0 0;
+  color: #64748b;
+  font-size: 0.78rem;
+}
+
+.priest-remark-quote {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ff-primary) 7%, #ffffff);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: start;
+}
+
+.priest-remark-quote svg {
+  color: var(--ff-primary);
+  margin-top: 2px;
+}
+
+.priest-remark-quote p {
+  margin: 0;
+  color: #1f2937;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.priest-remark-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.priest-remark-footer p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.76rem;
+}
+
+.priest-remark-review-button {
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 28%, #cfd8e3);
+  background: var(--ff-surface, #ffffff);
+  color: var(--ff-primary);
+  border-radius: 999px;
+  padding: 7px 12px;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 120ms ease, background-color 130ms ease, border-color 130ms ease;
+}
+
+.priest-remark-review-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: color-mix(in srgb, var(--ff-primary) 10%, #ffffff);
+}
+
+.priest-remark-review-button:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
+
+
+@media (max-width: 1120px) {
+  .priest-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-management-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-details-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-selected-profile-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-profile-card {
+    position: static;
+    top: auto;
+  }
+
+  .priest-schedule-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .priest-picker-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .priest-list-section-header,
+  .priest-schedule-card-head,
+  .priest-remark-top,
+  .priest-remark-footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .priest-schedule-chip-row,
+  .priest-remark-footer {
+    justify-content: flex-start;
+  }
+
+  .priest-detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-edit-name-wrap input,
+  .priest-edit-name-wrap select {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .priest-confirm-modal-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-detail-layout-bar {
+    flex-wrap: wrap;
+  }
+
+  .priest-detail-view-toggle {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-remarks-filter {
+    gap: 4px;
+  }
+
+  .priest-remarks-filter-button {
+    margin-right: 14px;
+  }
+}
+
+.priest-schedule-card,
+.priest-remark-card,
+.priest-remark-card.is-pending,
+.priest-remark-card.is-reviewed {
+  display: grid;
+  grid-template-columns: 84px minmax(0, 1fr);
+  gap: 0;
+  padding: 0;
+  overflow: hidden;
+  border-left-width: 1px;
+  border-radius: 14px;
+}
+
+.priest-card-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 14px 8px;
+  background: var(--ff-primary);
+  color: #ffffff;
+  text-align: center;
+}
+
+.priest-card-date span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.priest-card-date strong {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.priest-card-date small {
+  font-size: 0.72rem;
+  opacity: 0.75;
+}
+
+.priest-schedule-card.is-past {
+  opacity: 1;
+}
+
+.priest-schedule-card.is-past .priest-card-body {
+  opacity: 0.85;
+}
+
+.priest-card-body {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+  padding: 14px 18px;
+}
+
+.priest-remark-card .priest-card-body {
+  gap: 10px;
+}
+
+@media (max-width: 720px) {
+  .priest-schedule-card,
+  .priest-remark-card,
+  .priest-remark-card.is-pending,
+  .priest-remark-card.is-reviewed {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-card-date {
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+    gap: 8px;
+    padding: 10px 16px;
+  }
+
+  .priest-card-date strong {
+    font-size: 1.2rem;
+  }
+}

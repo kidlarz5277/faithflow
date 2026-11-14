@@ -1,0 +1,723 @@
+.priest-dashboard-hero p {
+  max-width: 760px;
+}
+
+.priest-dashboard-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 16px;
+  background: var(--ff-surface);
+}
+
+.priest-summary-card {
+  min-width: 0;
+  min-height: 62px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 9px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 11px;
+  border-left: 3px solid var(--priest-summary-accent, var(--ff-primary));
+  background: var(--ff-surface);
+  transition: transform 140ms ease, border-color 140ms ease, background-color 140ms ease;
+}
+
+.priest-summary-card:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--priest-summary-accent, var(--ff-primary)) 38%, var(--ff-container-border));
+  background: color-mix(in srgb, var(--priest-summary-accent, var(--ff-primary)) 3%, var(--ff-surface) 97%);
+}
+
+.priest-summary-card.is-total-schedules {
+  --priest-summary-accent: var(--ff-primary);
+}
+
+.priest-summary-card.is-upcoming {
+  --priest-summary-accent: #1d4ed8;
+}
+
+.priest-summary-card.is-completed,
+.priest-summary-card.is-completed-records {
+  --priest-summary-accent: #15803d;
+}
+
+.priest-summary-card.is-total-records {
+  --priest-summary-accent: #7c3aed;
+}
+
+.priest-summary-card.is-pending-records {
+  --priest-summary-accent: #b45309;
+}
+
+.priest-summary-icon {
+  width: 29px;
+  height: 29px;
+  flex: 0 0 29px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--priest-summary-accent) 10%, var(--ff-surface) 90%);
+  color: var(--priest-summary-accent);
+}
+
+.priest-summary-icon.priest-summary-icon-admin {
+  width: 34px;
+  height: 34px;
+  flex-basis: 34px;
+  border-radius: 10px;
+  background: #fff3d9;
+  color: var(--ff-primary);
+}
+
+.priest-summary-card p {
+  margin: 0;
+  color: var(--ff-text-muted);
+  font-size: 0.64rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.priest-summary-card h3 {
+  margin: 3px 0 0;
+  color: var(--ff-text);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+body .dashboard-panel.priest-selected-day-panel {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--ff-primary);
+  border-radius: 16px;
+  background: var(--ff-primary);
+  color: #fffdf8;
+  box-shadow: none;
+}
+
+.priest-selected-day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid rgba(255, 253, 248, 0.22);
+}
+
+.priest-selected-day-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #f8e7b4;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+body .dashboard-panel.priest-selected-day-panel h3,
+body .dashboard-panel.priest-selected-day-panel .priest-selected-day-title,
+.priest-selected-day-header h3 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: #ffffff !important;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.priest-selected-day-count {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 4px 8px;
+  background: rgba(255, 253, 248, 0.16);
+  color: #fffdf8;
+  font-size: 0.66rem;
+  font-weight: 800;
+}
+
+.priest-selected-day-list {
+  display: grid;
+  gap: 8px;
+  max-height: 280px;
+  margin: 0;
+  padding: 0 3px 0 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.priest-selected-day-entry {
+  min-width: 0;
+  display: block;
+  padding: 12px 14px;
+  border: 0;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.priest-selected-day-entry.is-appointment {
+  --priest-entry-accent: #2563eb;
+}
+
+.priest-selected-day-entry.is-priest {
+  --priest-entry-accent: #15803d;
+}
+
+.priest-selected-day-entry.is-parish {
+  --priest-entry-accent: #b45309;
+}
+
+.priest-selected-day-entry.is-special {
+  --priest-entry-accent: #7c3aed;
+}
+
+.priest-selected-day-entry-icon {
+  display: none;
+}
+
+.priest-selected-day-entry-copy {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.priest-selected-day-entry-copy strong {
+  overflow: hidden;
+  color: #1c1917;
+  font-size: 0.95rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.priest-selected-day-entry-copy small,
+.priest-selected-day-entry-copy em {
+  color: #3f3428;
+  font-size: 0.84rem;
+  font-style: normal;
+}
+
+.priest-selected-day-message,
+.priest-selected-day-empty,
+.priest-selected-day-empty strong,
+.priest-selected-day-empty p {
+  color: #5c1f1f;
+}
+
+.priest-selected-day-empty {
+  background: linear-gradient(180deg, #fffefb 0%, #fff6eb 100%);
+  border-color: rgba(255, 239, 213, 0.62);
+}
+
+.priest-selected-day-message {
+  margin: 0;
+  color: var(--ff-text-muted);
+  font-size: 0.84rem;
+}
+
+.priest-selected-day-empty {
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 9px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 10px;
+  background: var(--ff-surface-elevated);
+}
+
+.priest-selected-day-empty.is-day-off {
+  border-color: #fecaca;
+  background: #fff7f7;
+}
+
+.priest-selected-day-empty-icon {
+  width: 29px;
+  height: 29px;
+  flex: 0 0 29px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--ff-primary) 8%, var(--ff-surface) 92%);
+  color: var(--ff-primary);
+}
+
+.priest-selected-day-empty.is-day-off .priest-selected-day-empty-icon {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.priest-selected-day-empty strong {
+  color: var(--ff-text);
+  font-size: 0.72rem;
+}
+
+.priest-selected-day-empty p {
+  margin: 3px 0 0;
+  color: var(--ff-text-muted);
+  font-size: 0.64rem;
+  line-height: 1.45;
+}
+
+.priest-dashboard-list-panel {
+  display: grid;
+  gap: 12px;
+}
+
+.priest-dashboard-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.priest-dashboard-list-header h3 {
+  margin: 0;
+}
+
+.priest-dashboard-refresh-btn {
+  border: 1px solid rgba(127, 23, 23, 0.22);
+  background: #fff8f8;
+  color: #7f1717;
+  border-radius: 10px;
+  padding: 8px 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.priest-dashboard-refresh-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.priest-dashboard-error {
+  margin: 0;
+  border-radius: 10px;
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 10px 12px;
+}
+
+.priest-dashboard-empty {
+  margin: 0;
+  border-radius: 10px;
+  background: #f9fafb;
+  color: #4b5563;
+  padding: 10px 12px;
+}
+
+.priest-dashboard-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.priest-dashboard-item {
+  border: 1px solid rgba(127, 23, 23, 0.14);
+  border-radius: 12px;
+  background: #fff;
+  padding: 12px;
+  display: grid;
+  gap: 5px;
+}
+
+.priest-dashboard-item-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.priest-dashboard-item-top span {
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.priest-dashboard-item p {
+  margin: 0;
+  color: #111827;
+  font-size: 13px;
+}
+
+.priest-dashboard-item p span {
+  font-weight: 700;
+  color: #7f1717;
+}
+
+.priest-record-status-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+}
+
+.priest-record-status-chip.is-completed {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.priest-record-status-chip.is-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.priest-record-status-chip.is-scheduled {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.priest-record-status-chip.is-cancelled {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.priest-account-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@media (max-width: 760px) {
+  .priest-dashboard-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .priest-dashboard-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-selected-day-panel {
+    padding: 12px;
+  }
+}
+
+.priest-calendar-panel {
+  min-height: 252px;
+}
+
+.priest-calendar-panel > .admin-content-header {
+  align-items: center;
+  gap: 10px;
+}
+
+.priest-calendar-panel > .admin-content-header h3 {
+  flex: 0 0 auto;
+}
+
+.priest-parish-activity-section {
+  margin-top: 14px;
+}
+
+.priest-parish-activity-empty-card {
+  min-height: 220px;
+  margin: 0;
+  border: 1px dashed #e2d8cc;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #fffdfb 0%, #faf6f0 100%);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+}
+
+.priest-parish-activity-section .priest-parish-activity-empty-card .appointment-requests-empty-state-title {
+  color: #3f0f0f;
+}
+
+.priest-parish-activity-section .priest-parish-activity-empty-card .appointment-requests-empty-state-text {
+  color: #64748b;
+}
+
+.priest-calendar-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.priest-calendar-header h3 {
+  margin: 0;
+}
+
+.priest-calendar-header p {
+  margin: 6px 0 0;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.priest-calendar-view-filter {
+  min-width: 190px;
+  max-width: 220px;
+}
+
+.priest-calendar-view-filter .appointment-filter-select {
+  height: 38px;
+  min-height: 38px;
+  max-height: 38px;
+  width: 100%;
+  font-size: 0.74rem;
+  font-weight: 600;
+  padding: 0 28px 0 9px;
+}
+
+.priest-calendar-controls {
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.priest-calendar-nav {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #d8c39a;
+  background: #ffffff;
+  color: #7f1717;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.priest-calendar-nav:hover {
+  background: #fff6e6;
+}
+
+.priest-calendar-month {
+  color: #7f1717;
+  font-size: 1rem;
+  min-width: 180px;
+  text-align: center;
+}
+
+.priest-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.priest-calendar-day {
+  text-align: center;
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 700;
+}
+
+.priest-calendar-date {
+  min-height: 62px;
+  border: 1px solid #e8ddca;
+  border-radius: 10px;
+  background: #fffdf8;
+  color: #1f2937;
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.priest-calendar-date:hover {
+  border-color: #d6bb88;
+  background: #fff7eb;
+}
+
+.priest-calendar-date.is-empty {
+  background: transparent;
+  border-style: dashed;
+  border-color: #edf2f7;
+  cursor: default;
+}
+
+.priest-calendar-date.is-mine {
+  background: #fff8e8;
+  border-color: #dfcca2;
+}
+
+.priest-calendar-date.is-other {
+  background: #edf5ff;
+  border-color: #bfd6f4;
+}
+
+.priest-calendar-date.is-mixed {
+  background: #f3e8ff;
+  border-color: #d8b4fe;
+}
+
+.priest-calendar-date.is-selected {
+  outline: 2px solid #7f1717;
+  outline-offset: 1px;
+}
+
+.priest-calendar-date.is-today {
+  border-width: 2px;
+}
+
+.priest-calendar-date-number {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.priest-calendar-entry-count {
+  min-width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background: #000000;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0 6px;
+}
+
+.priest-calendar-legend {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  color: #475569;
+  font-size: 0.82rem;
+}
+
+.priest-calendar-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.priest-calendar-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background: rgba(15, 23, 42, 0.58);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  backdrop-filter: blur(3px);
+}
+
+.priest-calendar-modal {
+  width: min(100%, 780px);
+  max-height: calc(100vh - 32px);
+  overflow: auto;
+  border-radius: 14px;
+  border: 1px solid #e8d8b8;
+  background: linear-gradient(180deg, #fffdfa 0%, #fff7ea 100%);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.28);
+  padding: 14px;
+  display: grid;
+  gap: 12px;
+}
+
+.priest-calendar-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-bottom: 1px solid #eadfca;
+  padding-bottom: 8px;
+}
+
+.priest-calendar-modal-header h3 {
+  margin: 0;
+  color: var(--ff-primary);
+}
+
+.priest-calendar-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid #eadfca;
+  background: #fff;
+  color: #6b7280;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.priest-calendar-modal-close:hover {
+  color: var(--ff-primary);
+  border-color: #d8c59f;
+}
+
+.priest-selected-date-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.priest-selected-date-list li {
+  border: 1px solid #e8ddca;
+  border-radius: 10px;
+  padding: 10px;
+  display: grid;
+  gap: 4px;
+  background: #fff;
+}
+
+.priest-selected-date-list li.is-mine {
+  border-left: 4px solid #c5a424;
+}
+
+.priest-selected-date-list li.is-other {
+  border-left: 4px solid #1f4b87;
+}
+
+.priest-selected-date-list li strong {
+  color: #7f1717;
+}
+
+.priest-selected-date-list li span {
+  color: #334155;
+  font-size: 0.86rem;
+}
+
+.priest-print-month-button {
+  margin-left: auto;
+}
+
+@media (max-width: 900px) {
+  .priest-calendar-panel > .admin-content-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .priest-calendar-view-filter {
+    min-width: 0;
+    max-width: none;
+  }
+
+  .priest-print-month-button {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .priest-calendar-grid {
+    gap: 6px;
+  }
+
+  .priest-calendar-date {
+    min-height: 52px;
+  }
+}

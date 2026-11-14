@@ -1,0 +1,276 @@
+.sacrament-archive-panel {
+  margin-top: 16px;
+}
+
+.sacrament-archive-empty-state {
+  margin-top: 4px;
+  border: 1px dashed #d8c39a;
+  border-radius: 12px;
+  background: #fffaf0;
+  padding: 20px 16px;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.sacrament-archive-empty-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border: 1px solid #eadfc8;
+  color: #8b6517;
+}
+
+.sacrament-archive-empty-state h4 {
+  margin: 0;
+  color: #7f1717;
+  font-size: 0.98rem;
+}
+
+.sacrament-archive-empty-state p {
+  margin: 0;
+  color: #5b6677;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.sacrament-archive-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sacrament-archive-card {
+  align-items: center;
+  background: color-mix(in srgb, var(--ff-container-elevated, #fffdf8) 88%, white 12%);
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 14%, #eadfc8 86%);
+  border-radius: 14px;
+  box-shadow: 0 8px 18px color-mix(in srgb, var(--ff-primary) 8%, transparent 92%);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 1rem 1.1rem;
+}
+
+.sacrament-archive-card-identity {
+  align-items: flex-start;
+  display: flex;
+  gap: 0.85rem;
+  min-width: 0;
+}
+
+.sacrament-archive-card-icon {
+  align-items: center;
+  background: color-mix(in srgb, var(--ff-primary) 10%, white 90%);
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 18%, #eadfc8 82%);
+  border-radius: 12px;
+  color: var(--ff-primary);
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 46px;
+  justify-content: center;
+  width: 46px;
+}
+
+.sacrament-archive-card-copy {
+  display: grid;
+  gap: 0.28rem;
+  min-width: 0;
+}
+
+.sacrament-archive-card-title-row {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.sacrament-archive-card-copy h3 {
+  color: var(--ff-primary);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0;
+}
+
+.sacrament-archive-card-badge {
+  background: color-mix(in srgb, var(--ff-primary) 12%, white 88%);
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 20%, #eadfc8 80%);
+  border-radius: 999px;
+  color: var(--ff-primary);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 0.18rem 0.5rem;
+  text-transform: uppercase;
+}
+
+.sacrament-archive-card-copy p {
+  color: var(--ff-text-muted, #5b6678);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.sacrament-archive-card-meta {
+  color: var(--ff-text-muted, #5b6678);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  list-style: none;
+  margin: 0.15rem 0 0;
+  padding: 0;
+}
+
+.certificate-archive-action {
+  align-items: center;
+  border-radius: 10px;
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  justify-content: center;
+  min-height: 36px;
+  min-width: 92px;
+  padding: 0.4rem 0.95rem;
+}
+
+.certificate-archive-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.certificate-archive-action--restore {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  color: #15803d;
+}
+
+.certificate-archive-action--restore:hover:not(:disabled) {
+  background: #dcfce7;
+}
+
+.certificate-archive-action--remove {
+  background: #fff7f7;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+}
+
+.certificate-archive-action--remove:hover:not(:disabled) {
+  background: #fee2e2;
+}
+
+.sacrament-archive-card-meta li {
+  align-items: center;
+  background: color-mix(in srgb, var(--ff-background, #f8f1e4) 70%, white 30%);
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 10%, #eadfc8 90%);
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.16rem 0.55rem;
+}
+
+.sacrament-archive-card-actions {
+  align-items: center;
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.5rem;
+}
+
+.sacrament-archive-card-action {
+  align-items: center;
+  background: color-mix(in srgb, var(--ff-primary) 8%, white 92%);
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 28%, #cbd5e1 72%);
+  border-radius: 10px;
+  color: var(--ff-primary);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  gap: 0.35rem;
+  min-height: 36px;
+  padding: 0.4rem 0.8rem;
+}
+
+.sacrament-archive-card-action:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ff-primary) 14%, white 86%);
+}
+
+.sacrament-archive-card-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.sacrament-archive-card-action--restore {
+  background: linear-gradient(180deg, #2eae64 0%, #157a3d 100%);
+  border-color: #146c37;
+  border-radius: 999px;
+  box-shadow: 0 8px 16px rgba(21, 122, 61, 0.18);
+  color: #f7fff9;
+  min-height: 38px;
+  padding: 0.28rem 0.95rem 0.28rem 0.32rem;
+  transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.sacrament-archive-card-action--restore svg {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  box-sizing: content-box;
+  height: 16px;
+  padding: 5px;
+  width: 16px;
+}
+
+.sacrament-archive-card-action--restore:hover:not(:disabled) {
+  background: linear-gradient(180deg, #279656 0%, #116833 100%);
+  box-shadow: 0 10px 18px rgba(21, 122, 61, 0.24);
+  transform: translateY(-1px);
+}
+
+.sacrament-archive-card-action--danger {
+  background: #fff7f7;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.sacrament-archive-card-action--danger:hover:not(:disabled) {
+  background: #fff1f2;
+}
+
+.sacrament-archive-confirm-icon {
+  background: #ecfdf3;
+  border-color: #bbf7d0;
+  color: #166534;
+}
+
+.sacrament-archive-confirm-btn {
+  background: #ecfdf3;
+  border-color: #86efac;
+  color: #166534;
+}
+
+.sacrament-archive-confirm-btn:hover:not(:disabled) {
+  background: #dcfce7;
+}
+
+@media (max-width: 760px) {
+  .sacrament-archive-card {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .sacrament-archive-card-actions {
+    justify-content: flex-end;
+  }
+}

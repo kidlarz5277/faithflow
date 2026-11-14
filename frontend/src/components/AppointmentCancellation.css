@@ -1,0 +1,881 @@
+body .appointment-confirm-modal.appointment-cancelled-list-modal {
+  width: min(640px, 100%);
+  max-height: min(86vh, 760px);
+  display: flex;
+  flex-direction: column;
+}
+
+.appointment-cancelled-list-modal .user-status-modal-body {
+  overflow-y: auto;
+  padding-bottom: 18px;
+}
+
+.appointment-cancel-field {
+  display: grid;
+  gap: 6px;
+}
+
+.appointment-cancel-field span {
+  color: var(--ff-text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.appointment-cancel-field textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 76px;
+  padding: 10px 12px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 10px;
+  background: var(--ff-container-elevated);
+  color: var(--ff-text);
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.appointment-cancel-error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+:is(body .user-status-modal, .appointment-cancel-page) .appointment-cancel-danger,
+:is(body .user-status-modal, .appointment-cancel-page) .appointment-cancel-primary,
+:is(body .user-status-modal, .appointment-cancel-page) .appointment-cancel-ghost,
+.progress-cancel-card > .appointment-cancel-danger,
+.progress-cancel-card > .appointment-cancel-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+:is(body .user-status-modal, .appointment-cancel-page) .appointment-cancel-danger,
+.progress-cancel-card > .appointment-cancel-danger {
+  border: 1px solid #b91c1c;
+  background: #b91c1c;
+  color: #ffffff;
+}
+
+:is(body .user-status-modal, .appointment-cancel-page) .appointment-cancel-danger:hover:not(:disabled),
+.progress-cancel-card > .appointment-cancel-danger:hover:not(:disabled) {
+  background: #991b1b;
+}
+
+:is(body .user-status-modal, .appointment-cancel-page) .appointment-cancel-primary {
+  border: 1px solid var(--ff-button-primary);
+  background: var(--ff-modal-button);
+  color: #ffffff;
+}
+
+:is(body .user-status-modal, .appointment-cancel-page) .appointment-cancel-primary:hover:not(:disabled) {
+  background: var(--ff-button-primary-hover);
+}
+
+:is(body .user-status-modal, .appointment-cancel-page) .appointment-cancel-ghost,
+.progress-cancel-card > .appointment-cancel-ghost {
+  border: 1px solid var(--ff-container-border);
+  background: var(--ff-container-elevated);
+  color: var(--ff-text);
+}
+
+:is(body .user-status-modal, .appointment-cancel-page) :is(.appointment-cancel-danger, .appointment-cancel-primary, .appointment-cancel-ghost):disabled,
+.progress-cancel-card > button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.appointment-cancel-empty {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  padding: 26px 12px;
+  color: var(--ff-text-muted);
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+.appointment-cancel-empty strong {
+  color: var(--ff-text);
+}
+
+.appointment-cancelled-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.appointment-cancelled-item {
+  display: grid;
+  gap: 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--ff-container-border);
+  border-left: 4px solid #b91c1c;
+  border-radius: 12px;
+  background: var(--ff-container-elevated);
+}
+
+.appointment-cancelled-item.is-grid {
+  position: relative;
+  gap: 8px;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 14px;
+  box-shadow: 0 6px 16px var(--ff-container-shadow);
+  overflow: hidden;
+}
+
+.appointment-cancelled-item.is-grid::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: #9b3434;
+}
+
+.appointment-cancelled-grid-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.appointment-cancelled-grid-icon {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in srgb, #9b3434 22%, var(--ff-container-border) 78%);
+  border-radius: 12px;
+  background: color-mix(in srgb, #9b3434 10%, var(--ff-container-elevated) 90%);
+  color: #9b3434;
+}
+
+.appointment-cancelled-grid-id {
+  color: var(--ff-text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.appointment-cancelled-item.is-grid .appointment-cancelled-head strong {
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.appointment-cancelled-grid-type {
+  margin: 0;
+  color: var(--ff-text-muted);
+  font-size: 0.84rem;
+  line-height: 1.35;
+}
+
+.appointment-cancelled-item.is-restore {
+  border-left-color: #15803d;
+}
+
+.appointment-cancelled-tag.is-restore {
+  border-color: color-mix(in srgb, #15803d 45%, transparent);
+  background: color-mix(in srgb, #15803d 10%, transparent);
+  color: #166534;
+}
+
+.progress-tracker-requests-count {
+  min-width: 20px;
+  height: 20px;
+  margin-left: 6px;
+  padding: 0 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: #b91c1c;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.appointment-cancelled-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.appointment-cancelled-head strong {
+  color: var(--ff-text);
+  font-size: 0.98rem;
+}
+
+.appointment-cancelled-tag {
+  padding: 2px 10px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, #b91c1c 45%, transparent);
+  background: color-mix(in srgb, #b91c1c 10%, transparent);
+  color: #991b1b;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.appointment-cancelled-facts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 12px;
+}
+
+.appointment-cancelled-facts dt {
+  color: var(--ff-text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.appointment-cancelled-facts dd {
+  margin: 2px 0 0;
+  color: var(--ff-text);
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.appointment-cancelled-reason {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: color-mix(in srgb, #b91c1c 6%, var(--ff-container-elevated));
+  color: var(--ff-text);
+  font-size: 0.84rem;
+}
+
+.appointment-cancelled-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.appointment-cancelled-status {
+  margin: 0;
+  color: var(--ff-text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.appointment-cancelled-status.is-declined {
+  color: #991b1b;
+}
+
+.progress-cancel-card {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 16px;
+  padding: 16px 18px;
+  border-radius: 14px;
+  border: 1px solid color-mix(in srgb, #b91c1c 28%, var(--ff-container-border));
+  background: color-mix(in srgb, #b91c1c 4%, var(--ff-container-elevated));
+}
+
+.progress-cancel-card.is-pending {
+  border-style: dashed;
+  border-color: color-mix(in srgb, #b45309 55%, var(--ff-container-border));
+  background: color-mix(in srgb, #f59e0b 9%, var(--ff-container-elevated));
+}
+
+.progress-cancel-card-copy {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.progress-cancel-card-copy h3 {
+  margin: 0 0 4px;
+  font-size: 1rem;
+  color: #991b1b;
+}
+
+.progress-cancel-card.is-pending .progress-cancel-card-copy h3 {
+  color: #92400e;
+}
+
+.progress-cancel-card-copy p {
+  margin: 0;
+  color: var(--ff-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.progress-cancel-card-copy .progress-cancel-card-reason {
+  margin-top: 6px;
+  color: var(--ff-text);
+  overflow-wrap: anywhere;
+}
+
+.progress-cancel-card > button {
+  flex: 0 0 auto;
+}
+
+.appointment-status-change-note {
+  margin: 8px 0 0;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px dashed color-mix(in srgb, #b45309 55%, var(--ff-container-border));
+  background: color-mix(in srgb, #f59e0b 10%, var(--ff-container-elevated));
+  color: #92400e;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.user-status-header-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.user-status-cancelled-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 42px;
+  padding: 5px 16px 5px 6px;
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 28%, #e7e5e4);
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 10px 22px rgba(42, 18, 18, 0.08);
+  color: var(--ff-primary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  cursor: pointer;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.user-status-cancelled-button svg {
+  box-sizing: content-box;
+  flex: 0 0 auto;
+  padding: 7px;
+  border-radius: 999px;
+  background: var(--ff-primary);
+  color: #ffffff;
+}
+
+.user-status-cancelled-button:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: 0 7px 16px color-mix(in srgb, var(--ff-button-primary) 30%, transparent);
+}
+
+.user-status-cancelled-button:active {
+  transform: translateY(0);
+  filter: brightness(0.96);
+}
+
+.user-status-cancelled-button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--ff-secondary) 72%, white 28%);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .user-status-cancelled-button {
+    width: 100%;
+  }
+}
+
+.appointment-cancel-page-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.appointment-cancel-page-hero .progress-back-button {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 14px 20px;
+  font-size: 1rem;
+}
+
+.appointment-cancel-page-hero-copy {
+  min-width: 0;
+}
+
+.appointment-cancel-page-hero-copy h2 {
+  margin: 0;
+}
+
+.appointment-cancel-page-hero-copy p {
+  margin: 4px 0 0;
+  opacity: 0.85;
+  font-size: 0.88rem;
+}
+
+.appointment-cancel-page-panel {
+  display: grid;
+  gap: 14px;
+}
+
+.appointment-cancel-page-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.appointment-cancel-page-panel-head h3 {
+  margin: 0;
+}
+
+.appointment-cancel-page-count {
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--ff-container-border);
+  background: var(--ff-container-elevated);
+  color: var(--ff-text-muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.appointment-cancelled-list.is-page {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));
+  gap: 14px;
+}
+
+.appointment-cancelled-list.is-page.is-grid {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.appointment-cancelled-list.is-page.is-list {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.appointment-cancelled-list.is-page .appointment-cancelled-item {
+  align-content: start;
+  padding: 16px 18px;
+}
+
+.appointment-cancelled-list.is-page .appointment-cancelled-item.is-grid {
+  padding: 16px;
+}
+
+.appointment-cancelled-item.is-grid .appointment-cancelled-facts {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+}
+
+.appointment-cancelled-item.is-grid .appointment-cancelled-actions {
+  margin-top: auto;
+}
+
+.appointment-cancelled-item.is-grid .appointment-cancel-primary {
+  width: 100%;
+  justify-content: center;
+}
+
+.appointment-cancel-page-empty {
+  padding: 48px 12px;
+  border: 1px dashed var(--ff-container-border);
+  border-radius: 14px;
+}
+
+/* Themed buttons shared by the cancellation pages and confirm dialogs */
+.change-request-button.change-request-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 18px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.change-request-button.is-primary {
+  border: 1px solid var(--ff-button-primary);
+  background: var(--ff-modal-button, var(--ff-button-primary));
+  color: #ffffff;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--ff-button-primary) 22%, transparent);
+}
+
+.change-request-button.is-primary:hover:not(:disabled) {
+  background: var(--ff-button-primary-hover, var(--ff-button-primary));
+}
+
+.change-request-button.is-secondary {
+  border: 1px solid color-mix(in srgb, var(--ff-button-primary) 35%, var(--ff-container-border));
+  background: var(--ff-container-elevated);
+  color: var(--ff-button-primary);
+}
+
+.change-request-button.is-secondary:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ff-button-primary) 7%, var(--ff-container-elevated));
+  border-color: var(--ff-button-primary);
+}
+
+.change-request-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.appointment-cancel-page-panel-note {
+  margin: 4px 0 0;
+  color: var(--ff-text-muted);
+  font-size: 0.84rem;
+}
+
+/* Admin cancellation request cards */
+.change-request-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 460px), 1fr));
+  gap: 16px;
+}
+
+.change-request-card {
+  display: grid;
+  gap: 14px;
+  padding: 18px 20px;
+  border: 1px solid var(--ff-container-border);
+  border-top: 4px solid var(--ff-button-primary);
+  border-radius: 14px;
+  background: var(--ff-container-elevated);
+  box-shadow: 0 6px 18px var(--ff-container-shadow);
+}
+
+.change-request-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ff-container-border);
+}
+
+.change-request-card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.change-request-card-icon {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--ff-button-primary) 10%, var(--ff-container-elevated));
+  color: var(--ff-button-primary);
+}
+
+.change-request-card-title h4 {
+  margin: 0;
+  color: var(--ff-text);
+  font-size: 1.02rem;
+}
+
+.change-request-card-title p {
+  margin: 2px 0 0;
+  color: var(--ff-text-muted);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.change-request-type {
+  flex: 0 0 auto;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  border: 1px solid color-mix(in srgb, #b45309 40%, transparent);
+  background: color-mix(in srgb, #f59e0b 12%, transparent);
+  color: #92400e;
+}
+
+.change-request-type.is-restore {
+  border-color: color-mix(in srgb, #15803d 40%, transparent);
+  background: color-mix(in srgb, #15803d 10%, transparent);
+  color: #166534;
+}
+
+.change-request-facts {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+}
+
+.change-request-facts dt {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--ff-text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.change-request-facts dd {
+  margin: 3px 0 0;
+  color: var(--ff-text);
+  font-size: 0.88rem;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.change-request-reason {
+  padding: 10px 14px;
+  border-left: 3px solid color-mix(in srgb, var(--ff-button-primary) 55%, transparent);
+  border-radius: 0 10px 10px 0;
+  background: color-mix(in srgb, var(--ff-button-primary) 5%, var(--ff-container-elevated));
+}
+
+.change-request-reason span {
+  color: var(--ff-text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.change-request-reason p {
+  margin: 4px 0 0;
+  color: var(--ff-text);
+  font-size: 0.9rem;
+  font-style: italic;
+  overflow-wrap: anywhere;
+}
+
+.change-request-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ff-container-border);
+}
+
+.change-request-card-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.change-request-link {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--ff-button-primary);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+/* "Are you sure?" dialog */
+.change-request-confirm-summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, #b45309 30%, var(--ff-container-border));
+  border-radius: 12px;
+  background: color-mix(in srgb, #f59e0b 8%, var(--ff-container-elevated));
+}
+
+.change-request-confirm-summary strong {
+  display: block;
+  color: var(--ff-text);
+  font-size: 0.9rem;
+}
+
+.change-request-confirm-summary p {
+  margin: 4px 0 0;
+  color: var(--ff-text-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.change-request-confirm-summary > p {
+  margin: 0;
+  color: var(--ff-text);
+}
+
+.change-request-confirm-icon {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: color-mix(in srgb, #f59e0b 18%, transparent);
+  color: #b45309;
+}
+
+/* Tag on admin Progress Tracker cards */
+.appointment-badge.progress-change-request-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid color-mix(in srgb, #b45309 45%, transparent);
+  background: color-mix(in srgb, #f59e0b 14%, transparent);
+  color: #92400e;
+  font-weight: 700;
+}
+
+.appointment-badge.progress-change-request-badge.is-restore {
+  border-color: color-mix(in srgb, #15803d 45%, transparent);
+  background: color-mix(in srgb, #15803d 10%, transparent);
+  color: #166534;
+}
+
+/* Banner on admin appointment progress page */
+.progress-change-request-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  border: 1px solid color-mix(in srgb, #b45309 40%, var(--ff-container-border));
+  border-left: 4px solid #d97706;
+  border-radius: 12px;
+  background: color-mix(in srgb, #f59e0b 10%, var(--ff-container-elevated));
+}
+
+.progress-change-request-banner.is-restore {
+  border-color: color-mix(in srgb, #15803d 35%, var(--ff-container-border));
+  border-left-color: #15803d;
+  background: color-mix(in srgb, #15803d 7%, var(--ff-container-elevated));
+}
+
+.progress-change-request-banner-icon {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: color-mix(in srgb, #f59e0b 20%, transparent);
+  color: #b45309;
+}
+
+.progress-change-request-banner.is-restore .progress-change-request-banner-icon {
+  background: color-mix(in srgb, #15803d 14%, transparent);
+  color: #166534;
+}
+
+.progress-change-request-banner-copy {
+  flex: 1 1 260px;
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.progress-change-request-banner-copy strong {
+  color: var(--ff-text);
+  font-size: 0.92rem;
+}
+
+.progress-change-request-banner-copy span {
+  color: var(--ff-text-muted);
+  font-size: 0.84rem;
+  overflow-wrap: anywhere;
+}
+
+.progress-change-request-banner-action {
+  min-height: 36px;
+  padding: 0 16px;
+  border: 1px solid var(--ff-button-primary);
+  border-radius: 999px;
+  background: var(--ff-modal-button, var(--ff-button-primary));
+  color: #ffffff;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.progress-cancel-appointment-row.is-user {
+  margin-top: 16px;
+}
+
+@media (max-width: 1100px) {
+  .appointment-cancelled-list.is-page.is-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .appointment-cancelled-list.is-page.is-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 460px) {
+  .appointment-cancelled-list.is-page.is-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .appointment-cancelled-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .appointment-cancel-page-hero {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .change-request-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .change-request-card-buttons {
+    width: 100%;
+  }
+
+  .change-request-card-buttons .change-request-button {
+    flex: 1 1 auto;
+  }
+}

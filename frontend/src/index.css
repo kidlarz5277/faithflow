@@ -1,0 +1,730 @@
+* {
+  box-sizing: border-box;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+:root {
+  --ff-primary: #8f1d1d;
+  --ff-secondary: #c5a424;
+  --ff-third: #1f4b87;
+  --ff-background: #eef3fb;
+  --ff-primary-rgb: 143, 29, 29;
+  --ff-secondary-rgb: 197, 164, 36;
+  --ff-third-rgb: 31, 75, 135;
+  --ff-surface: #ffffff;
+  --ff-surface-elevated: #f8fafc;
+  --ff-container: #fff8f1;
+  --ff-container-rgb: 255, 248, 241;
+  --ff-container-elevated: color-mix(in srgb, var(--ff-container) 72%, white 28%);
+  --ff-container-soft: color-mix(in srgb, var(--ff-container) 84%, var(--ff-secondary) 16%);
+  --ff-container-border: color-mix(in srgb, var(--ff-primary) 16%, #eadfbe 84%);
+  --ff-container-shadow: color-mix(in srgb, var(--ff-primary) 12%, transparent 88%);
+  --ff-container-appointments: color-mix(in srgb, var(--ff-primary) 7%, var(--ff-container) 93%);
+  --ff-container-progress: color-mix(in srgb, var(--ff-third) 10%, var(--ff-container) 90%);
+  --ff-container-priests: color-mix(in srgb, var(--ff-secondary) 18%, var(--ff-container) 82%);
+  --ff-container-programs: color-mix(in srgb, var(--ff-secondary) 12%, var(--ff-container) 88%);
+  --ff-container-certificates: color-mix(in srgb, var(--ff-primary) 5%, var(--ff-container) 95%);
+  --ff-container-reports: color-mix(in srgb, var(--ff-third) 8%, var(--ff-container) 92%);
+  --ff-border: #d8dee8;
+  --ff-text: #1f2937;
+  --ff-text-muted: #5b6678;
+  --ff-accent-surface: color-mix(in srgb, var(--ff-primary) 6%, white 94%);
+  --ff-accent-border: color-mix(in srgb, var(--ff-primary) 22%, var(--ff-border) 78%);
+  --ff-button-primary: color-mix(in srgb, var(--ff-primary) 88%, black 12%);
+  --ff-button-primary-hover: color-mix(in srgb, var(--ff-primary) 78%, black 22%);
+  --ff-button-secondary: color-mix(in srgb, var(--ff-secondary) 82%, white 18%);
+  --ff-button-secondary-hover: color-mix(in srgb, var(--ff-secondary) 70%, white 30%);
+  --ff-modal-header: linear-gradient(
+    180deg,
+    var(--ff-primary) 0%,
+    color-mix(in srgb, var(--ff-primary) 72%, black 28%) 100%
+  );
+  --ff-modal-header-blend: linear-gradient(
+    180deg,
+    var(--ff-primary) 0%,
+    color-mix(in srgb, var(--ff-third) 42%, var(--ff-primary) 58%) 100%
+  );
+  --ff-modal-on-header: #ffffff;
+  --ff-modal-button: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ff-primary) 88%, white 12%) 0%,
+    var(--ff-button-primary) 100%
+  );
+  --ff-modal-card: linear-gradient(
+    180deg,
+    var(--ff-primary) 0%,
+    color-mix(in srgb, var(--ff-primary) 68%, black 32%) 100%
+  );
+  --ff-modal-card-border: color-mix(in srgb, var(--ff-primary) 42%, white 58%);
+  --ff-modal-card-hover: color-mix(in srgb, var(--ff-primary) 32%, white 68%);
+  --ff-modal-shadow: color-mix(in srgb, var(--ff-primary) 28%, transparent 72%);
+  --ff-modal-accent-soft: color-mix(in srgb, var(--ff-primary) 10%, white 90%);
+  --ff-banner-gradient: linear-gradient(
+    110deg,
+    color-mix(in srgb, var(--ff-primary) 92%, black 8%) 0%,
+    color-mix(in srgb, var(--ff-third) 44%, var(--ff-primary) 56%) 45%,
+    color-mix(in srgb, var(--ff-secondary) 88%, black 12%) 100%
+  );
+}
+
+:root[data-faithflow-color-preset="maroon-white"] {
+  --ff-banner-gradient: linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--ff-primary) 72%, black 28%) 0%,
+    var(--ff-primary) 52%,
+    color-mix(in srgb, var(--ff-third) 82%, var(--ff-primary) 18%) 100%
+  );
+  --ff-container-border: color-mix(in srgb, var(--ff-primary) 14%, #ece6e4 86%);
+  --ff-container-shadow: color-mix(in srgb, var(--ff-primary) 9%, transparent 91%);
+  --ff-container-elevated: #ffffff;
+  --ff-container-soft: color-mix(in srgb, var(--ff-primary) 3%, white 97%);
+  --ff-container-appointments: color-mix(in srgb, var(--ff-primary) 3%, white 97%);
+  --ff-container-progress: color-mix(in srgb, var(--ff-primary) 3%, white 97%);
+  --ff-container-priests: color-mix(in srgb, var(--ff-primary) 3%, white 97%);
+  --ff-container-programs: color-mix(in srgb, var(--ff-primary) 3%, white 97%);
+  --ff-container-certificates: color-mix(in srgb, var(--ff-primary) 3%, white 97%);
+  --ff-container-reports: color-mix(in srgb, var(--ff-primary) 3%, white 97%);
+  --ff-border: color-mix(in srgb, var(--ff-primary) 12%, #e5e0de 88%);
+  --ff-text: #2a1a1d;
+  --ff-text-muted: #6b5a5d;
+}
+
+:root:is(
+  [data-faithflow-color-preset="green-yellow"],
+  [data-faithflow-color-preset="navy-gold"],
+  [data-faithflow-color-preset="teal-sand"],
+  [data-faithflow-color-preset="plum-rose"],
+  [data-faithflow-color-preset="charcoal-champagne"],
+  [data-faithflow-color-preset="amethyst-candlelight"],
+  [data-faithflow-color-preset="mahogany-cream"]
+) {
+  --ff-banner-gradient: linear-gradient(
+    115deg,
+    color-mix(in srgb, var(--ff-primary) 78%, black 22%) 0%,
+    var(--ff-primary) 55%,
+    color-mix(in srgb, var(--ff-third) 55%, var(--ff-primary) 45%) 100%
+  );
+  --ff-container-border: color-mix(in srgb, var(--ff-primary) 12%, #e8e6e3 88%);
+  --ff-container-shadow: color-mix(in srgb, var(--ff-primary) 8%, transparent 92%);
+  --ff-container-elevated: #ffffff;
+  --ff-border: color-mix(in srgb, var(--ff-primary) 12%, #e5e3e0 88%);
+}
+
+body {
+  margin: 0;
+  color: var(--ff-text);
+  background: var(--ff-background);
+  font-family: var(--ff-font-family, "Poppins", Arial, sans-serif);
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+body[data-faithflow-background="gradient"] {
+  background: linear-gradient(135deg, color-mix(in srgb, var(--ff-background) 65%, white 35%) 0%, color-mix(in srgb, var(--ff-third) 14%, white 86%) 100%);
+}
+
+body[data-faithflow-background="soft-pattern"] {
+  background:
+    radial-gradient(circle at 15% 20%, color-mix(in srgb, var(--ff-secondary) 22%, transparent 78%) 0, transparent 28%),
+    radial-gradient(circle at 85% 15%, color-mix(in srgb, var(--ff-third) 20%, transparent 80%) 0, transparent 30%),
+    radial-gradient(circle at 40% 80%, color-mix(in srgb, var(--ff-primary) 16%, transparent 84%) 0, transparent 30%),
+    var(--ff-background);
+}
+
+:root[data-faithflow-theme="dark"] {
+  --ff-background: #07111f;
+  --ff-surface: #111c2b;
+  --ff-surface-elevated: #162437;
+  --ff-container: #162437;
+  --ff-container-elevated: #1c2c42;
+  --ff-container-soft: #142233;
+  --ff-container-border: #2a3a4f;
+  --ff-container-shadow: rgba(0, 0, 0, 0.28);
+  --ff-container-appointments: #1a2436;
+  --ff-container-progress: #18283a;
+  --ff-container-priests: #1b2838;
+  --ff-container-programs: #1a2736;
+  --ff-container-certificates: #1a2434;
+  --ff-container-reports: #182736;
+  --ff-border: #2a3a4f;
+  --ff-text: #e5edf8;
+  --ff-text-muted: #9fb0c6;
+  --ff-container-rgb: 22, 36, 55;
+  --ff-primary-on-dark: color-mix(in srgb, var(--ff-primary) 30%, #ffd9df 70%);
+  --ff-accent-surface: color-mix(in srgb, var(--ff-primary) 14%, var(--ff-surface) 86%);
+  --ff-accent-border: color-mix(in srgb, var(--ff-primary) 30%, var(--ff-border) 70%);
+  --ff-button-secondary: var(--ff-surface-elevated);
+  --ff-button-secondary-hover: #1f3048;
+  --ff-modal-accent-soft: color-mix(in srgb, var(--ff-primary) 18%, var(--ff-surface) 82%);
+  --ff-modal-card-border: color-mix(in srgb, var(--ff-primary) 40%, var(--ff-border) 60%);
+  --ff-modal-card-hover: color-mix(in srgb, var(--ff-primary) 30%, var(--ff-surface) 70%);
+  color-scheme: dark;
+}
+
+body[data-faithflow-theme="dark"] {
+  background-color: var(--ff-background);
+  color: var(--ff-text);
+}
+
+/* Global theme mapping for UI consistency */
+body :is(
+  .dashboard-panel:not(.dashboard-hero):not(.admin-parish-activities-card):not(.priest-selected-day-panel),
+  .admin-stat-card,
+  .admin-content-card:not(.admin-announcements-card):not(.admin-special-programs-card):not(.admin-parish-activities-card),
+  .request-type-card,
+  .appointment-request-item,
+  .profile-card,
+  .settings-section-card,
+  .about-feature-item,
+  .about-card,
+  .about-description,
+  .user-menu-dropdown,
+  .notification-menu-dropdown,
+  .admin-calendar-modal,
+  .appointment-confirm-modal,
+  .appointment-details-modal,
+  .account-type-modal,
+  .priest-modal-card,
+  .priest-confirm-modal,
+  .priest-selected-profile-card,
+  .priest-schedule-summary-card,
+  .priest-dashboard-item,
+  .priest-summary-card
+) {
+  background: linear-gradient(180deg, var(--ff-container-elevated) 0%, var(--ff-container) 100%);
+  border-color: var(--ff-container-border);
+  color: var(--ff-text);
+  box-shadow: 0 10px 24px var(--ff-container-shadow);
+}
+
+body :is(
+  .dashboard-panel:not(.dashboard-hero):not(.admin-parish-activities-card) p,
+  .admin-stat-label,
+  .item-meta,
+  .empty-state,
+  .appointment-request-row,
+  .history-pagination-label,
+  .about-feature-item p,
+  .about-card p,
+  .about-description p,
+  .notification-menu-body,
+  .notification-menu-time,
+  .notification-menu-status,
+  .account-type-modal p,
+  .priest-empty,
+  .profile-subtitle
+) {
+  color: var(--ff-text-muted);
+}
+
+body .admin-content-card.admin-verse-card {
+  border-color: color-mix(in srgb, var(--ff-third) 14%, var(--ff-container-border) 86%);
+  border-left: 3px solid color-mix(in srgb, var(--ff-third) 34%, var(--ff-secondary) 66%);
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--ff-third) 4%, var(--ff-container-elevated) 96%) 0%,
+    color-mix(in srgb, var(--ff-secondary) 7%, var(--ff-container-elevated) 93%) 100%
+  );
+}
+
+body .admin-content-card.admin-verse-card .admin-verse-content p {
+  color: color-mix(in srgb, var(--ff-primary) 58%, var(--ff-text) 42%);
+}
+
+body .admin-content-card.admin-verse-card .admin-verse-content span {
+  color: color-mix(in srgb, var(--ff-primary) 68%, var(--ff-secondary) 32%);
+}
+
+/* Page title banners match the Dashboard Welcome maroon container */
+body .dashboard-panel.dashboard-hero {
+  background: var(--ff-banner-gradient);
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 34%, transparent 66%);
+  color: #fffdf7;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+}
+
+body .dashboard-panel.dashboard-hero :is(h1, h2, h3) {
+  color: #fffdf7;
+}
+
+body .dashboard-panel.dashboard-hero p {
+  color: #f8f0dd;
+}
+
+body .dashboard-panel.dashboard-hero :is(
+  .appointment-trash-nav,
+  .appointment-back-button,
+  .progress-tracker-hero-action,
+  .progress-tracker-cancelled-button,
+  .progress-tracker-back-icon,
+  .progress-details-hero-action,
+  .progress-back-button,
+  .priest-hero-add-button,
+  .special-programs-primary-button,
+  .special-programs-secondary-button,
+  .progress-template-btn--hero,
+  .certificate-hero-action,
+  .reports-hero-print,
+  .profile-back-button
+) {
+  background: #fffdf7;
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 45%, #fffdf7 55%);
+  color: var(--ff-primary);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.14);
+}
+
+body .dashboard-panel.dashboard-hero :is(
+  .appointment-trash-nav,
+  .appointment-back-button,
+  .progress-tracker-hero-action,
+  .progress-tracker-cancelled-button,
+  .progress-tracker-back-icon,
+  .progress-details-hero-action,
+  .progress-back-button,
+  .priest-hero-add-button,
+  .special-programs-primary-button,
+  .special-programs-secondary-button,
+  .progress-template-btn--hero,
+  .certificate-hero-action,
+  .reports-hero-print,
+  .profile-back-button
+):hover {
+  background: color-mix(in srgb, var(--ff-secondary) 22%, #fffdf7 78%);
+  color: color-mix(in srgb, var(--ff-primary) 86%, black 14%);
+}
+
+body .dashboard-panel.dashboard-hero .hero-tags span {
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fffdf7;
+}
+
+body :is(
+  .admin-content-card.admin-announcements-card
+) {
+  background: var(--ff-primary);
+  border: 1px solid var(--ff-primary);
+  color: #fffdf7;
+  box-shadow: none;
+}
+
+body .admin-content-card.admin-parish-activities-card {
+  background: var(--ff-container-elevated);
+  border: 1px solid color-mix(in srgb, var(--admin-parish-activity-accent) 76%, transparent 24%);
+  border-top: 3px solid var(--admin-parish-activity-accent);
+  color: var(--ff-text);
+  box-shadow: 0 14px 32px color-mix(in srgb, var(--ff-primary) 9%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.88);
+}
+
+body .admin-content-card.admin-special-programs-card {
+  background: var(--ff-banner-gradient);
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 34%, transparent 66%);
+  color: #fffdf7;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+}
+
+body :is(.admin-announcements-card, .admin-special-programs-card) .admin-content-header h3,
+body :is(.admin-announcements-card, .admin-special-programs-card) .admin-content-header h3 > svg {
+  color: #fffdf7;
+}
+
+body .admin-parish-activities-card .admin-content-header h3,
+body .admin-parish-activities-card .admin-content-header h3 > svg {
+  color: var(--ff-text);
+}
+
+body .admin-special-programs-card .admin-content-header h3 .page-guide-trigger,
+body .admin-special-programs-card .admin-content-header h3 .page-guide-trigger svg {
+  color: #fffdf7;
+  stroke: #fffdf7;
+}
+
+body .admin-content-grid.is-read-only-dashboard-grid .admin-content-card.admin-special-programs-card {
+  border: 1px solid var(--ff-primary);
+  border-left: 4px solid var(--ff-primary);
+  background: var(--ff-primary) !important;
+  box-shadow: none;
+  color: #fffdf7;
+}
+
+body .admin-content-grid.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header {
+  border-bottom-color: rgba(255, 253, 247, 0.28);
+}
+
+body .admin-content-grid.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header h3,
+body .admin-content-grid.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header h3 > svg {
+  color: #fffdf7;
+  text-shadow: none;
+}
+
+body .admin-content-grid.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header h3 .page-guide-trigger,
+body .admin-content-grid.is-read-only-dashboard-grid .admin-special-programs-card .admin-content-header h3 .page-guide-trigger svg {
+  color: #fffdf7;
+  stroke: currentColor;
+}
+
+body :is(
+  .dashboard-panel:not(.dashboard-hero):not(.admin-parish-activities-card) h2,
+  .dashboard-panel:not(.dashboard-hero):not(.admin-parish-activities-card) h3,
+  .profile-card h2,
+  .settings-section-card h3,
+  .priest-management-header h3,
+  .priest-schedule-scroll-body h4,
+  .priest-schedule-appointments-section h4,
+  .priest-dashboard-list-header h3
+) {
+  color: var(--ff-primary);
+}
+
+body .priest-selected-day-panel {
+  border-color: var(--ff-primary);
+  background: var(--ff-primary);
+  color: #fffdf8;
+}
+
+body .priest-selected-day-header {
+  border-bottom-color: var(--ff-container-border);
+}
+
+body .priest-selected-day-panel .priest-selected-day-header h3,
+body .priest-selected-day-panel .priest-selected-day-title {
+  color: #ffffff !important;
+}
+
+body .priest-selected-day-panel .priest-selected-day-kicker {
+  color: var(--ff-secondary);
+}
+
+body .priest-selected-day-panel .priest-selected-day-count {
+  color: #fffdf8;
+}
+
+body .priest-selected-day-count {
+  background: rgba(255, 253, 248, 0.16);
+}
+
+body .priest-selected-day-empty:not(.is-day-off) {
+  border-color: var(--ff-container-border);
+  background: var(--ff-surface-elevated);
+}
+
+body .priest-selected-day-empty:not(.is-day-off) .priest-selected-day-empty-icon {
+  background: color-mix(in srgb, var(--ff-primary) 8%, var(--ff-surface) 92%);
+  color: var(--ff-primary);
+}
+
+body :is(
+  .admin-calendar-form input:not([type="color"]),
+  .admin-calendar-form select,
+  .admin-calendar-form textarea,
+  .admin-appointment-field input:not([type="color"]),
+  .admin-appointment-field select,
+  .admin-appointment-field textarea,
+  .appointment-search-input,
+  .appointment-filter-select,
+  .appointment-filter-date,
+  .settings-field select,
+  .priest-add-form input,
+  .priest-add-form select,
+  .profile-edit-input
+) {
+  background: var(--ff-surface-elevated);
+  color: var(--ff-text);
+  border-color: var(--ff-accent-border);
+}
+
+body :is(
+  .settings-action-button.primary,
+  .priest-add-form button,
+  .priest-edit-save,
+  .priest-dashboard-refresh-btn
+) {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ff-button-primary) 88%, white 12%) 0%,
+    var(--ff-button-primary) 100%
+  );
+  border-color: color-mix(in srgb, var(--ff-primary) 72%, black 28%);
+  color: #fff;
+}
+
+body :is(
+  .settings-action-button.primary:hover,
+  .priest-add-form button:hover,
+  .priest-edit-save:hover,
+  .priest-dashboard-refresh-btn:hover
+) {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ff-button-primary-hover) 88%, white 12%) 0%,
+    var(--ff-button-primary-hover) 100%
+  );
+}
+
+body :is(
+  .settings-action-button.secondary,
+  .priest-modal-cancel-button,
+  .priest-edit-cancel,
+  .priest-confirm-btn.secondary
+) {
+  background: var(--ff-button-secondary);
+  border-color: color-mix(in srgb, var(--ff-secondary) 58%, var(--ff-border) 42%);
+  color: color-mix(in srgb, var(--ff-primary) 78%, black 22%);
+}
+
+body :is(
+  .settings-action-button.secondary:hover,
+  .priest-modal-cancel-button:hover,
+  .priest-edit-cancel:hover,
+  .priest-confirm-btn.secondary:hover
+) {
+  background: var(--ff-button-secondary-hover);
+}
+
+body :is(
+  .priest-type-chip.is-diocesan,
+  .priest-type-chip.is-religious,
+  .priest-order-chip,
+  .hero-tags span
+) {
+  border-color: color-mix(in srgb, var(--ff-primary) 30%, var(--ff-border) 70%);
+}
+
+body[data-faithflow-theme="dark"] :is(.about-page, .dashboard-layout, .dashboard-main) {
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .dashboard-page {
+  background-color: color-mix(in srgb, var(--ff-background) 76%, black 24%);
+  background-blend-mode: multiply;
+}
+
+body[data-faithflow-theme="dark"] :is(
+  .dashboard-panel:not(.dashboard-hero):not(.admin-parish-activities-card):not(.priest-selected-day-panel),
+  .admin-stat-card,
+  .admin-content-card:not(.admin-announcements-card):not(.admin-special-programs-card):not(.admin-parish-activities-card),
+  .request-type-card,
+  .appointment-request-item,
+  .profile-card,
+  .settings-section-card,
+  .about-feature-item,
+  .about-card,
+  .about-description,
+  .user-menu-dropdown,
+  .notification-menu-dropdown,
+  .admin-calendar-modal,
+  .appointment-confirm-modal,
+  .appointment-details-modal,
+  .account-type-modal
+) {
+  background: var(--ff-container) !important;
+  border-color: var(--ff-container-border) !important;
+  color: var(--ff-text) !important;
+}
+
+body[data-faithflow-theme="dark"] :is(
+  .dashboard-panel:not(.dashboard-hero):not(.admin-parish-activities-card) p,
+  .admin-stat-label,
+  .item-meta,
+  .empty-state,
+  .appointment-request-row,
+  .history-pagination-label,
+  .about-feature-item p,
+  .about-card p,
+  .about-description p,
+  .notification-menu-body,
+  .notification-menu-time,
+  .notification-menu-status,
+  .account-type-modal p
+) {
+  color: var(--ff-text-muted) !important;
+}
+
+body[data-faithflow-theme="dark"] .dashboard-panel.dashboard-hero {
+  background: var(--ff-banner-gradient) !important;
+  border-color: color-mix(in srgb, var(--ff-primary) 34%, transparent 66%) !important;
+  color: #fffdf7 !important;
+}
+
+body[data-faithflow-theme="dark"] .admin-content-card.admin-announcements-card {
+  background: var(--ff-primary) !important;
+  border-color: var(--ff-primary) !important;
+  box-shadow: none !important;
+  color: #fffdf7 !important;
+}
+
+body[data-faithflow-theme="dark"] .admin-content-card.admin-parish-activities-card {
+  background: var(--ff-container-elevated) !important;
+  border-color: color-mix(in srgb, var(--admin-parish-activity-accent) 76%, transparent 24%) !important;
+  border-top-color: var(--admin-parish-activity-accent) !important;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22), inset 0 1px 0 color-mix(in srgb, var(--ff-container-elevated) 78%, white 22%) !important;
+  color: var(--ff-text) !important;
+}
+
+body[data-faithflow-theme="dark"] .admin-content-card.admin-special-programs-card {
+  background: var(--ff-banner-gradient) !important;
+  border-color: color-mix(in srgb, var(--ff-primary) 34%, transparent 66%) !important;
+  color: #fffdf7 !important;
+}
+
+body[data-faithflow-theme="dark"] .dashboard-panel.dashboard-hero :is(h1, h2, h3) {
+  color: #fffdf7 !important;
+}
+
+body[data-faithflow-theme="dark"] .dashboard-panel.dashboard-hero p {
+  color: #f8f0dd !important;
+}
+
+body[data-faithflow-theme="dark"] .dashboard-panel.dashboard-hero :is(
+  .appointment-trash-nav,
+  .appointment-back-button,
+  .progress-tracker-hero-action,
+  .progress-tracker-cancelled-button,
+  .progress-tracker-back-icon,
+  .progress-details-hero-action,
+  .progress-back-button,
+  .priest-hero-add-button,
+  .special-programs-primary-button,
+  .special-programs-secondary-button,
+  .progress-template-btn--hero,
+  .certificate-hero-action,
+  .reports-hero-print,
+  .profile-back-button
+) {
+  background: #fffdf7 !important;
+  border-color: color-mix(in srgb, var(--ff-secondary) 45%, #fffdf7 55%) !important;
+  color: var(--ff-primary) !important;
+}
+
+body[data-faithflow-theme="dark"] :is(
+  .sidebar-item button:hover,
+  .sidebar-item.is-active button,
+  .view-details-button,
+  .history-pagination-button,
+  .appointment-trash-nav,
+  .admin-content-card:not(.admin-announcements-card):not(.admin-special-programs-card):not(.admin-parish-activities-card) .admin-content-header button,
+  .admin-calendar-modal-header button:not(.admin-appointment-close-button):not(.admin-appointment-back-button)
+) {
+  background: var(--ff-surface-elevated) !important;
+  border-color: var(--ff-border) !important;
+  color: var(--ff-text) !important;
+}
+
+body[data-faithflow-theme="dark"] :is(
+  .admin-calendar-form input:not([type="color"]),
+  .admin-calendar-form select,
+  .admin-calendar-form textarea,
+  .admin-appointment-field input:not([type="color"]),
+  .admin-appointment-field select,
+  .admin-appointment-field textarea,
+  .appointment-search-input,
+  .appointment-filter-select,
+  .appointment-filter-date,
+  .settings-field select
+) {
+  background: var(--ff-surface-elevated) !important;
+  color: var(--ff-text) !important;
+  border-color: var(--ff-border) !important;
+}
+
+body[data-faithflow-theme="dark"] .app-sidebar {
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .sidebar-icon {
+  border-color: color-mix(in srgb, var(--ff-secondary) 40%, black 60%);
+}
+
+body[data-faithflow-theme="dark"] .header-notif-badge {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--ff-primary) 75%, black 25%);
+}
+
+body[data-faithflow-design="modern"] * {
+  border-radius: max(10px, inherit);
+}
+
+body[data-faithflow-design="soft"] * {
+  border-radius: max(14px, inherit);
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* All dialogs inherit the saved Website Design palette. */
+body :is(
+  .appointment-confirm-modal h3,
+  .appointment-details-modal h3,
+  .account-type-modal h2,
+  .priest-confirm-modal h4,
+  .priest-calendar-modal-header h3,
+  .priest-details-modal-header h3,
+  .priest-modal-card .priest-management-header h3,
+  .user-history-modal-section h4,
+  .user-history-confirm-modal h4,
+  .certificate-approve-modal-header h3,
+  .profile-edit-modal h3,
+  .template-step-editor-modal-body h4,
+  .sacrament-requirements-modal-heading,
+  .about-parish-activity-modal-header h4
+) {
+  color: var(--ff-primary);
+}
+
+body .user-history-modal-header h3,
+body .user-history-modal-header p,
+body .user-history-modal-close,
+body .certificate-pickup-modal-bar h3,
+body .certificate-pickup-modal-bar p,
+body .certificate-pickup-modal-close,
+body .priest-schedule-detail-header h3,
+body .priest-schedule-detail-header p,
+body .priest-schedule-detail-close,
+body .certificate-details-bar h3,
+body .certificate-details-bar .certificate-details-id,
+body .certificate-details-modal .certificate-pickup-modal-close,
+body .progress-schedule-details-modal-header h3,
+body .progress-schedule-details-modal-header p,
+body .page-guide-bar h3,
+body .page-guide-close,
+body .progress-schedule-details-close {
+  color: var(--ff-modal-on-header);
+}
+
+body .certificate-pickup-modal-bar .certificate-pickup-modal-kicker,
+body .progress-schedule-details-kicker {
+  color: color-mix(in srgb, var(--ff-modal-on-header) 78%, transparent 22%);
+}
+
+body :is(
+  .account-type-modal-actions .secondary-button,
+  .about-parish-activity-modal-header button,
+  .about-parish-activity-modal-arrow,
+  .priest-calendar-modal-close,
+  .priest-details-modal-close
+) {
+  color: var(--ff-primary);
+}
+
+body :is(
+  .sacrament-requirements-modal-close,
+  .sacrament-schema-add-type-modal .template-modal-btn.primary,
+  .admin-inline-priest-form button
+) {
+  background: var(--ff-modal-button);
+  border-color: var(--ff-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(var(--ff-primary-rgb), 0.24);
+}
+
+.route-fallback {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: var(--ff-background);
+  color: var(--ff-text-muted);
+  font-size: 1rem;
+}

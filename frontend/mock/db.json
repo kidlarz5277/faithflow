@@ -1,0 +1,37 @@
+{
+  "announcements": [
+    {
+      "id": 1,
+      "title": "Parish Office Closed on Holy Week",
+      "date": "2026-02-21"
+    },
+    {
+      "id": 2,
+      "title": "Marriage Seminar Schedule - March 5, 2026",
+      "date": "2026-02-21"
+    },
+    {
+      "id": 3,
+      "title": "Morning Mass will be moved to 6:00 AM",
+      "date": "2026-02-21"
+    }
+  ],
+  "activities": [
+    {
+      "id": 1,
+      "title": "Youth Bible Study",
+      "location": "Parish Hall",
+      "time": "9:00 AM",
+      "eventDate": "2026-04-04"
+    },
+    {
+      "id": 2,
+      "title": "Community Outreach",
+      "location": "Main Grounds",
+      "time": "7:30 AM",
+      "eventDate": "2026-04-11"
+    }
+  ],
+  "appointments": [],
+  "certificateRequests": []
+}

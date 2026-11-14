@@ -1,0 +1,567 @@
+.priest-notes-section {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 14px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 14px;
+  background: var(--ff-surface);
+  text-align: left;
+}
+
+.priest-notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.priest-notes-header h4 {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--ff-text);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.priest-note-coverage {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.priest-note-coverage-option {
+  border: 1px solid var(--ff-container-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ff-text);
+  padding: 7px 12px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.priest-note-coverage-option.is-selected {
+  border-color: var(--ff-primary);
+  background: color-mix(in srgb, var(--ff-primary) 12%, white 88%);
+  color: var(--ff-primary);
+}
+
+.priest-note-range-picker,
+.priest-note-choice-list {
+  display: grid;
+  gap: 8px;
+}
+
+.priest-note-range-edges,
+.priest-note-choice-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.priest-note-range-edges button,
+.priest-note-choice {
+  border: 1px solid var(--ff-container-border);
+  border-radius: 10px;
+  background: #fff;
+  color: #1f2937;
+  padding: 8px 10px;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.priest-note-range-edges button.is-selected,
+.priest-note-choice.is-selected {
+  border-color: var(--ff-primary);
+  background: color-mix(in srgb, var(--ff-primary) 12%, white 88%);
+  color: var(--ff-primary);
+}
+
+.priest-note-choice small {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--ff-text-muted);
+}
+
+.priest-note-calendar {
+  border: 1px solid var(--ff-container-border);
+  border-radius: 12px;
+  background: #fff;
+  padding: 10px;
+}
+
+.priest-note-calendar-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.priest-note-calendar-nav button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 999px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.priest-note-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.priest-note-calendar-weekday,
+.priest-note-calendar-day {
+  text-align: center;
+  font-size: 0.72rem;
+}
+
+.priest-note-calendar-weekday {
+  color: #6b7280;
+  font-weight: 700;
+}
+
+.priest-note-calendar-day {
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  min-height: 28px;
+  cursor: pointer;
+}
+
+.priest-note-calendar-day.is-selected {
+  background: var(--ff-primary);
+  color: #fffdf8;
+}
+
+.priest-note-calendar-day.is-in-range {
+  background: color-mix(in srgb, var(--ff-primary) 14%, white 86%);
+}
+
+.priest-note-calendar-day.is-past {
+  color: #c4c9d1;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.priest-note-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.priest-note-range label {
+  display: grid;
+  gap: 4px;
+}
+
+.priest-note-range span {
+  color: var(--ff-text-muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.priest-notes-empty,
+.priest-note-hint.is-conflict {
+  color: var(--ff-primary);
+  font-weight: 600;
+}
+
+.priest-notes-empty.is-day-off,
+.priest-note-closed-notice {
+  margin: 0;
+  padding: 9px 11px;
+  border: 1px solid color-mix(in srgb, #b45309 28%, var(--ff-container-border) 72%);
+  border-radius: 9px;
+  background: color-mix(in srgb, #fef3c7 45%, var(--ff-surface) 55%);
+  color: #854d0e;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.priest-notes-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.priest-note-card {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--ff-container-border);
+  border-left: 4px solid #d97706;
+  border-radius: 10px;
+  background: var(--ff-surface);
+}
+
+.priest-note-card.is-scheduled {
+  border-left-color: #0f766e;
+}
+
+.priest-note-card.is-reviewed {
+  border-left-color: #2563eb;
+}
+
+.priest-note-card-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.priest-note-card-top strong {
+  color: var(--ff-text);
+  font-size: 0.86rem;
+}
+
+.priest-note-status {
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.priest-note-status.is-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.priest-note-status.is-scheduled {
+  background: #ccfbf1;
+  color: #0f766e;
+}
+
+.priest-note-status.is-reviewed {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.priest-note-hours {
+  margin: 0;
+  color: var(--ff-text);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.priest-note-message {
+  margin: 0;
+  color: var(--ff-text);
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.priest-note-form {
+  display: grid;
+  gap: 12px;
+}
+
+.priest-note-field {
+  display: grid;
+  gap: 6px;
+}
+
+.priest-note-field > span,
+.priest-note-slots-head > span {
+  color: var(--ff-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.priest-note-reason {
+  position: relative;
+}
+
+.priest-note-reason-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 12px;
+  background: #fffdf8;
+  color: var(--ff-text);
+  font: inherit;
+  font-size: 0.86rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.priest-note-reason-trigger span {
+  color: var(--ff-text);
+}
+
+.priest-note-reason.is-open .priest-note-reason-trigger,
+.priest-note-reason-trigger:hover {
+  border-color: var(--ff-primary);
+}
+
+.priest-note-reason-menu {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 12px 28px rgba(28, 25, 23, 0.12);
+}
+
+.priest-note-reason-menu button {
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ff-text);
+  font: inherit;
+  font-size: 0.84rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.priest-note-reason-menu button:hover,
+.priest-note-reason-menu button.is-selected {
+  background: var(--ff-primary);
+  color: #fff;
+}
+
+.priest-note-field input,
+.priest-note-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 11px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 10px;
+  background: var(--ff-surface);
+  color: var(--ff-text);
+  font: inherit;
+  font-size: 0.84rem;
+}
+
+.priest-note-field textarea {
+  resize: vertical;
+}
+
+.priest-note-slots-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.priest-note-link-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--ff-primary);
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.priest-note-link-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.priest-note-slot-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ff-primary) 5%, #fff8f1 95%);
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 36%, #e8dcc8);
+}
+
+.priest-note-slot {
+  display: grid;
+  gap: 2px;
+  padding: 8px 10px;
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 40%, #e7d8c2);
+  border-radius: 12px;
+  background: #fffdf8;
+  color: var(--ff-text);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: 0 1px 0 rgba(143, 29, 29, 0.04);
+}
+
+.priest-note-slot-time {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.priest-note-slot-time svg {
+  flex-shrink: 0;
+  color: var(--ff-primary);
+}
+
+.priest-note-slot-time span {
+  display: grid;
+  line-height: 1.15;
+}
+
+.priest-note-slot-time em {
+  font-style: normal;
+  color: var(--ff-text-muted);
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.priest-note-slot small {
+  color: #b45309;
+  font-size: 0.66rem;
+  font-weight: 600;
+}
+
+.priest-note-slot:hover {
+  border-color: var(--ff-primary);
+}
+
+.priest-note-slot.is-selected {
+  border-color: var(--ff-primary);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--ff-primary) 92%, white 8%), var(--ff-primary));
+  color: #fffdf7;
+  box-shadow: 0 8px 16px color-mix(in srgb, var(--ff-primary) 28%, transparent);
+}
+
+.priest-note-slot.is-selected small,
+.priest-note-slot.is-selected .priest-note-slot-time em,
+.priest-note-slot.is-selected .priest-note-slot-time svg {
+  color: #f8e7b4;
+}
+
+.priest-note-slot.is-locked,
+.priest-note-slot.is-locked:hover,
+.priest-note-slot.has-schedule,
+.priest-note-slot.has-schedule:hover {
+  border-color: var(--ff-container-border);
+  background: color-mix(in srgb, var(--ff-container) 70%, var(--ff-background) 30%);
+  color: var(--ff-text-muted);
+  cursor: not-allowed;
+  opacity: 0.72;
+}
+
+.priest-note-slot.is-locked small {
+  color: var(--ff-text-muted);
+}
+
+.priest-note-closed-notice {
+  border-color: color-mix(in srgb, #b45309 34%, var(--ff-container-border) 66%);
+}
+
+.priest-note-primary-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.priest-note-error {
+  margin: 0;
+  color: #b91c1c;
+  font-size: 0.8rem;
+}
+
+.priest-note-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.priest-note-actions .priest-note-hint {
+  flex: 1 1 100%;
+  text-align: left;
+}
+
+.priest-notes-open-button,
+.priest-note-primary-button,
+.priest-note-secondary-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.76rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.priest-notes-open-button,
+.priest-note-primary-button {
+  border: 1px solid var(--ff-primary);
+  background: var(--ff-primary);
+  color: #ffffff;
+}
+
+.priest-note-secondary-button {
+  border: 1px solid var(--ff-container-border);
+  background: var(--ff-surface);
+  color: var(--ff-text);
+}
+
+.priest-notes-open-button:disabled,
+.priest-note-primary-button:disabled,
+.priest-note-secondary-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.admin-calendar-date.has-priest-note {
+  position: relative;
+}
+
+.admin-calendar-note-count {
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border: 1px solid #94a3b8;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #1f2937;
+  font-size: 0.66rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.admin-calendar-note-count svg {
+  width: 10px;
+  height: 10px;
+}

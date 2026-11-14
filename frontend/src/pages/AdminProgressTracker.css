@@ -1,0 +1,688 @@
+.progress-tracker-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progress-tracker-hero-copy {
+  max-width: 760px;
+}
+
+.progress-tracker-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  align-self: center;
+}
+
+.progress-tracker-hero-action,
+.progress-tracker-cancelled-button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ffffff;
+  color: #7f1717;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.progress-tracker-hero-action {
+  min-width: 180px;
+}
+
+.progress-tracker-hero-action:hover,
+.progress-tracker-cancelled-button:hover {
+  background: #fff8e7;
+}
+
+.progress-tracker-cancelled-button.is-active {
+  background: #fff8e7;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.35);
+}
+
+.progress-tracker-back-icon {
+  min-height: 42px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #ffffff;
+  color: var(--ff-primary, #7f1717);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+}
+
+.progress-tracker-back-icon:hover {
+  background: #fff8e7;
+}
+
+.progress-tracker-cancelled-count {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ff-primary);
+  color: var(--ff-modal-on-header, #ffffff);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.progress-restore-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 120px;
+  white-space: nowrap;
+}
+
+.progress-tracker-panel {
+  margin-top: 16px;
+  border-color: var(--ff-container-border);
+  border-top: 4px solid color-mix(in srgb, var(--ff-primary) 72%, var(--ff-third) 28%);
+  background: linear-gradient(180deg, var(--ff-container-elevated) 0%, var(--ff-container-progress) 100%);
+  box-shadow: 0 10px 24px var(--ff-container-shadow);
+  color: var(--ff-text);
+}
+
+.progress-tracker-toolbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(180px, 230px) minmax(160px, 220px);
+  gap: 10px;
+  align-items: end;
+  margin-bottom: 12px;
+}
+
+.progress-tracker-panel .appointment-requests-header h3 {
+  color: color-mix(in srgb, var(--ff-primary) 88%, #1f2937);
+}
+
+.progress-tracker-panel .appointment-filter-field span {
+  color: color-mix(in srgb, var(--ff-primary) 72%, #1f2937);
+}
+
+.progress-tracker-search-field span {
+  display: none;
+}
+
+.progress-summary-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.progress-summary-item {
+  margin: 0;
+  border: 1px solid color-mix(in srgb, var(--ff-secondary) 42%, #cbd5e1);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--ff-secondary) 12%, #ffffff);
+  color: color-mix(in srgb, var(--ff-primary) 88%, #1f2937);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 10px;
+  text-align: center;
+  cursor: pointer;
+  font: inherit;
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.progress-summary-item:hover:not(.is-active) {
+  background: color-mix(in srgb, var(--ff-secondary) 20%, #ffffff);
+  border-color: color-mix(in srgb, var(--ff-secondary) 62%, #94a3b8);
+  color: #1f2937;
+}
+
+.progress-summary-item.is-active {
+  background: color-mix(in srgb, var(--ff-primary) 82%, black 18%);
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 8px 16px color-mix(in srgb, var(--ff-primary) 28%, transparent 72%);
+}
+
+.progress-tracker-search-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #d9d2bf;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0 10px;
+}
+
+.progress-tracker-search-wrapper svg {
+  color: #8b6517;
+  flex: 0 0 auto;
+}
+
+.progress-tracker-search-wrapper .appointment-search-input {
+  border: 0;
+  padding: 9px 0;
+  outline: 0;
+}
+
+.progress-tracker-search-wrapper:focus-within {
+  outline: 2px solid #c5a424;
+  outline-offset: 1px;
+}
+
+.progress-tracker-item {
+  --request-accent: var(--ff-secondary);
+  --progress-accent: var(--ff-primary);
+}
+
+.progress-tracker-item:not(.history-record-item) {
+  align-items: stretch;
+  gap: 14px;
+  min-height: 168px;
+  padding: 16px 16px 16px 22px;
+  border-radius: 13px;
+  border: 1px solid var(--ff-container-border);
+  background: var(--ff-surface);
+  box-shadow: none;
+}
+
+.progress-tracker-panel .progress-tracker-item:not([role="button"]),
+.progress-tracker-panel .progress-tracker-item:not([role="button"]) * {
+  cursor: default;
+}
+
+.progress-tracker-panel .progress-tracker-item:not([role="button"]):hover {
+  transform: none;
+}
+
+.progress-tracker-panel .progress-tracker-item .view-details-button {
+  cursor: pointer;
+}
+
+.progress-tracker-item:not(.history-record-item)::before {
+  content: "";
+  position: absolute;
+  inset: 12px auto 12px 0;
+  width: 4px;
+  border-radius: 0 6px 6px 0;
+  background: color-mix(in srgb, var(--ff-primary) 82%, black 18%);
+}
+
+.progress-tracker-item:not(.history-record-item)::after {
+  height: 0;
+}
+
+.progress-tracker-item:not(.history-record-item):hover {
+  border-color: color-mix(in srgb, var(--ff-primary) 34%, var(--ff-container-border) 66%);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--ff-primary) 7%, transparent 93%);
+}
+
+.progress-tracker-item .appointment-request-top strong {
+  color: #1f2937;
+  font-size: 1.16rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.progress-tracker-item.is-review {
+  --request-accent: color-mix(in srgb, var(--ff-secondary) 78%, black 22%);
+}
+
+.progress-tracker-item.is-scheduled {
+  --request-accent: var(--ff-primary);
+}
+
+.progress-tracker-item.is-completed {
+  --request-accent: color-mix(in srgb, var(--ff-primary) 42%, #1f8f43 58%);
+  --progress-accent: color-mix(in srgb, var(--ff-primary) 48%, #1f8f43 52%);
+}
+
+.progress-tracker-item.is-declined {
+  --request-accent: #b91c1c;
+  --progress-accent: color-mix(in srgb, var(--ff-primary) 35%, #b91c1c 65%);
+}
+
+.progress-state-badge {
+  background: color-mix(in srgb, var(--request-accent) 14%, var(--ff-container-elevated));
+  border-color: color-mix(in srgb, var(--request-accent) 36%, var(--ff-container-border));
+  color: color-mix(in srgb, var(--request-accent) 78%, var(--ff-text));
+}
+
+.progress-payment-badge.is-paid {
+  background: color-mix(in srgb, #166534 10%, var(--ff-container-elevated));
+  border-color: color-mix(in srgb, #166534 28%, var(--ff-container-border));
+  color: #166534;
+}
+
+.progress-payment-badge.is-unpaid {
+  background: color-mix(in srgb, var(--ff-secondary) 16%, var(--ff-container-elevated));
+  border-color: color-mix(in srgb, var(--ff-secondary) 42%, var(--ff-container-border));
+  color: color-mix(in srgb, var(--ff-secondary) 62%, black 38%);
+}
+
+.progress-payment-badge.is-free {
+  background: color-mix(in srgb, var(--ff-third) 12%, var(--ff-container-elevated));
+  border-color: color-mix(in srgb, var(--ff-third) 32%, var(--ff-container-border));
+  color: color-mix(in srgb, var(--ff-third) 72%, black 28%);
+}
+
+.progress-tracker-item .appointment-request-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--ff-primary) 10%, #ffffff 90%);
+  border-color: color-mix(in srgb, var(--ff-primary) 22%, var(--ff-container-border));
+  color: color-mix(in srgb, var(--ff-primary) 80%, black 20%);
+  box-shadow: none;
+}
+
+.progress-tracker-item .appointment-request-actions {
+  align-self: center;
+  justify-content: center;
+  min-width: 180px;
+}
+
+.progress-tracker-item .view-details-button {
+  width: 100%;
+  min-height: 44px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  border-width: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--ff-primary) 82%, black 18%);
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 8px 16px color-mix(in srgb, var(--ff-primary) 28%, transparent 72%);
+}
+
+.progress-tracker-item .view-details-button:hover {
+  background: linear-gradient(180deg, #b42323 0%, #8f1919 100%);
+  border-color: #7a1414;
+  box-shadow: 0 12px 22px rgba(127, 23, 23, 0.36);
+}
+
+.progress-tracker-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.progress-tracker-meta p {
+  margin: 0;
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid color-mix(in srgb, var(--ff-primary) 12%, var(--ff-container-border));
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.progress-tracker-meta span {
+  color: #6b7280;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.progress-tracker-meta strong {
+  color: #1f2937;
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.progress-tracker-item .progress-tracker-note {
+  margin: 2px 0 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px dashed color-mix(in srgb, var(--ff-primary) 28%, var(--ff-container-border));
+  background: color-mix(in srgb, var(--ff-primary) 6%, var(--ff-container-elevated));
+  color: var(--ff-text);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.progress-tracker-note span {
+  display: block;
+  margin-bottom: 3px;
+  color: color-mix(in srgb, var(--ff-primary) 72%, var(--ff-text));
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.progress-tracker-percent-block {
+  display: grid;
+  gap: 7px;
+  margin-top: 4px;
+  padding: 10px 12px;
+  border-radius: 11px;
+  border: 1px solid var(--ff-container-border);
+  background: var(--ff-surface);
+}
+
+.progress-tracker-percent-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progress-tracker-percent-block .progress-tracker-percent-label {
+  margin: 0;
+  color: color-mix(in srgb, var(--ff-text-muted) 80%, var(--ff-primary) 20%);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.progress-tracker-percent-label span {
+  font-weight: 800;
+}
+
+.progress-tracker-percent-value {
+  color: color-mix(in srgb, var(--ff-primary) 78%, black 22%);
+  font-size: 1.08rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+
+.progress-tracker-percent-track {
+  width: 100%;
+  height: 9px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--ff-border) 78%, var(--ff-surface) 22%);
+  overflow: hidden;
+}
+
+.progress-tracker-percent-fill {
+  display: block;
+  height: 100%;
+  border-radius: 0 6px 6px 0;
+  background: var(--progress-accent, var(--ff-primary));
+  box-shadow: none;
+  transition: width 180ms ease;
+}
+
+.progress-tracker-percent-hint {
+  margin: 0;
+  color: var(--ff-text-muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .progress-tracker-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .progress-tracker-hero-actions,
+  .progress-tracker-hero-action,
+  .progress-tracker-cancelled-button {
+    align-self: stretch;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .progress-tracker-back-icon {
+    width: 100%;
+    align-self: stretch;
+  }
+
+  .progress-tracker-toolbar {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-summary-row {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .progress-tracker-item .appointment-request-actions {
+    min-width: 0;
+  }
+
+  .progress-tracker-item:not(.history-record-item) {
+    flex-wrap: wrap;
+    min-height: 0;
+  }
+
+  .progress-tracker-item:not(.history-record-item) .appointment-request-actions {
+    width: 100%;
+  }
+}
+
+/* Theme-aware overrides for shared tracker/history UI */
+.progress-tracker-panel {
+  border-color: var(--ff-container-border);
+  border-top-color: color-mix(in srgb, var(--ff-primary) 72%, var(--ff-third) 28%);
+  background: linear-gradient(180deg, var(--ff-container-elevated) 0%, var(--ff-container-progress) 100%);
+}
+
+.progress-tracker-hero-action,
+.progress-tracker-cancelled-button,
+.progress-tracker-back-icon {
+  color: var(--ff-primary);
+}
+
+.dashboard-panel.dashboard-hero.admin-list-hero .progress-tracker-back-icon {
+  min-width: 0;
+  padding: 0 22px;
+  justify-content: center;
+}
+
+.progress-summary-item.is-active {
+  background: color-mix(in srgb, var(--ff-primary) 82%, black 18%);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.progress-tracker-search-wrapper svg {
+  color: var(--ff-text-muted);
+}
+
+.progress-tracker-search-wrapper:focus-within {
+  outline-color: color-mix(in srgb, var(--ff-primary) 55%, white 45%);
+}
+
+.progress-tracker-item .view-details-button {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ff-primary) 90%, black 10%) 0%,
+    color-mix(in srgb, var(--ff-primary) 78%, black 22%) 100%
+  );
+  border-color: color-mix(in srgb, var(--ff-primary) 68%, black 32%);
+  box-shadow: 0 10px 20px color-mix(in srgb, var(--ff-primary) 32%, transparent 68%);
+}
+
+.progress-tracker-item .view-details-button:hover {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--ff-primary) 82%, black 18%) 0%,
+    color-mix(in srgb, var(--ff-primary) 72%, black 28%) 100%
+  );
+  border-color: color-mix(in srgb, var(--ff-primary) 62%, black 38%);
+}
+
+.progress-tracker-item .appointment-type-badge,
+.progress-tracker-item .appointment-category-badge {
+  background: color-mix(in srgb, var(--ff-primary) 8%, var(--ff-container-elevated));
+  border-color: color-mix(in srgb, var(--ff-primary) 24%, var(--ff-container-border));
+  color: var(--ff-primary);
+}
+
+.progress-tracker-item .appointment-category-badge {
+  background: color-mix(in srgb, var(--ff-secondary) 14%, var(--ff-container-elevated));
+  border-color: color-mix(in srgb, var(--ff-secondary) 36%, var(--ff-container-border));
+  color: color-mix(in srgb, var(--ff-secondary) 58%, black 42%);
+}
+
+body[data-faithflow-theme="dark"] .progress-tracker-item:not(.history-record-item) {
+  background: var(--ff-container) !important;
+  border-color: var(--ff-container-border) !important;
+}
+
+body[data-faithflow-theme="dark"] .progress-tracker-meta p,
+body[data-faithflow-theme="dark"] .progress-tracker-percent-block {
+  background: var(--ff-container-elevated);
+  border-color: var(--ff-container-border);
+}
+
+body[data-faithflow-theme="dark"] .progress-tracker-percent-track {
+  background: color-mix(in srgb, var(--ff-container) 72%, var(--ff-text) 28%);
+}
+
+body[data-faithflow-theme="dark"] .progress-tracker-percent-fill {
+  background: var(--progress-accent, var(--ff-primary));
+}
+
+.progress-tracker-item:not(.history-record-item) {
+  padding-left: 0;
+  overflow: hidden;
+}
+
+.progress-tracker-item:not(.history-record-item)::before {
+  display: none;
+}
+
+.progress-tracker-item:not(.history-record-item) .appointment-request-icon {
+  align-self: stretch;
+  width: 84px;
+  height: auto;
+  margin: -18px 4px -18px 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--ff-primary);
+  color: #ffffff;
+  box-shadow: none;
+}
+
+.progress-tracker-item:not(.history-record-item) .appointment-request-icon {
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 6px;
+  text-align: center;
+}
+
+.progress-tracker-item:not(.history-record-item) .appointment-request-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.progress-tracker-icon-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9;
+}
+
+.progress-tracker-icon-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  line-height: 1;
+}
+
+.progress-tracker-icon-date span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.progress-tracker-icon-date strong {
+  font-size: 1.75rem;
+  font-weight: 700;
+}
+
+.progress-tracker-icon-date small {
+  font-size: 0.72rem;
+  opacity: 0.75;
+}
+
+.appointment-request-list.is-grid > .progress-tracker-item:not(.history-record-item) .appointment-request-icon {
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 10px 16px;
+}
+
+.appointment-request-list.is-grid .progress-tracker-icon-date {
+  flex-direction: row;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.appointment-request-list.is-grid .progress-tracker-icon-date strong {
+  font-size: 1.25rem;
+}
+
+body[data-faithflow-theme="dark"] .progress-tracker-item:not(.history-record-item) .appointment-request-icon {
+  background: var(--ff-primary);
+  color: #ffffff;
+}
+
+.appointment-request-list.is-grid > .progress-tracker-item:not(.history-record-item) {
+  padding: 0 16px 16px;
+}
+
+.appointment-request-list.is-grid > .progress-tracker-item:not(.history-record-item) .appointment-request-icon {
+  align-self: stretch;
+  width: auto;
+  height: 64px;
+  margin: 0 -16px;
+  border-radius: 0;
+}
+
+@media (max-width: 720px) {
+  .progress-tracker-item:not(.history-record-item) {
+    padding: 0 16px 16px;
+  }
+
+  .progress-tracker-item:not(.history-record-item) .appointment-request-icon {
+    flex: 0 0 calc(100% + 32px);
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    width: auto;
+    height: 56px;
+    margin: 0 -16px;
+    padding: 10px 16px;
+  }
+
+  .progress-tracker-icon-date {
+    flex-direction: row;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .progress-tracker-icon-date strong {
+    font-size: 1.2rem;
+  }
+}

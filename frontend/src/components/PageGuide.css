@@ -1,0 +1,333 @@
+.page-guide-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  margin-left: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.page-guide-trigger:hover,
+.page-guide-trigger:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  outline: none;
+}
+
+.page-guide-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.46);
+  animation: page-guide-overlay-enter 180ms ease-out both;
+}
+
+.page-guide-modal {
+  width: min(1200px, 100%);
+  max-height: min(88vh, 860px);
+  max-height: min(88dvh, 860px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 16px;
+  background: var(--ff-surface);
+  box-shadow: 0 28px 56px var(--ff-modal-shadow);
+  font-family: var(--ff-font-family, "Poppins", Arial, sans-serif);
+  color: var(--ff-text);
+  animation: page-guide-modal-enter 260ms cubic-bezier(0.2, 0.75, 0.25, 1) both;
+}
+
+@keyframes page-guide-overlay-enter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes page-guide-modal-enter {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.page-guide-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px 14px;
+  background: var(--ff-primary);
+}
+
+.page-guide-kicker {
+  margin: 0 0 4px;
+  color: #f6e7b2;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.page-guide-modal .page-guide-bar h3 {
+  margin: 0;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.page-guide-hint {
+  margin: 5px 0 0;
+  color: rgba(255, 255, 255, 0.84);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
+.page-guide-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  border: 1px solid #ffffff;
+  background: #ffffff;
+  color: var(--ff-primary);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: none;
+  padding: 0;
+}
+
+.page-guide-close svg {
+  color: var(--ff-primary);
+  stroke: var(--ff-primary);
+}
+
+.page-guide-close:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.page-guide-content {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 0fr;
+  gap: 0;
+  overflow: auto;
+  padding: 18px;
+  transition: grid-template-columns 260ms ease, gap 260ms ease;
+}
+
+.page-guide-content.has-selection {
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 310px);
+  gap: 18px;
+}
+
+.page-guide-preview {
+  min-width: 0;
+  align-self: start;
+  overflow: hidden;
+  transition: border-color 180ms ease;
+  border: 1px solid #e4d8cb;
+  border-radius: 10px;
+  background: #f8f4ee;
+}
+
+.page-guide-preview-viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background: #f8f4ee;
+  transition: height 360ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-guide-preview-frame {
+  display: block;
+  max-width: none;
+  border: 0;
+  opacity: 0;
+  transform-origin: top left;
+  will-change: transform, opacity;
+  transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1), opacity 240ms ease-out;
+}
+
+.page-guide-preview-frame.is-loaded {
+  opacity: 1;
+}
+
+.page-guide-hotspots {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease-out;
+}
+
+.page-guide-preview-frame.is-loaded + .page-guide-hotspots {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.page-guide-hotspot {
+  position: absolute;
+  min-width: 12px;
+  min-height: 12px;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  box-shadow: none;
+  transition: left 360ms cubic-bezier(0.16, 1, 0.3, 1), top 360ms cubic-bezier(0.16, 1, 0.3, 1), width 360ms cubic-bezier(0.16, 1, 0.3, 1), height 360ms cubic-bezier(0.16, 1, 0.3, 1), border-color 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+}
+
+.page-guide-hotspot:hover,
+.page-guide-hotspot:focus-visible,
+.page-guide-hotspot.is-selected {
+  border-color: #8f2442;
+  outline: none;
+  background: rgba(143, 36, 66, 0.14);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.86);
+}
+
+.page-guide-preview-unavailable {
+  margin: 0;
+  padding: 24px 14px;
+  color: var(--ff-text);
+  font-size: 0.8rem;
+}
+
+.page-guide-preview-caption {
+  margin: 0;
+  padding: 7px 10px;
+  border-top: 1px solid #e4d8cb;
+  color: #74645b;
+  font-size: 0.65rem;
+}
+
+.page-guide-instructions {
+  min-width: 0;
+  min-height: 0;
+  display: grid;
+  align-content: start;
+  align-self: stretch;
+  padding: 24px 20px;
+  overflow-y: auto;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 8px;
+  background: var(--ff-surface);
+  animation: page-guide-instruction-enter 360ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.page-guide-instruction-kicker {
+  margin: 0 0 8px;
+  color: var(--ff-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.page-guide-instructions h4 {
+  margin: 0 0 12px;
+  color: var(--ff-text);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.page-guide-instruction-copy {
+  margin: 0;
+  color: var(--ff-text);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.page-guide-back {
+  justify-self: start;
+  min-height: 36px;
+  margin-top: 22px;
+  padding: 7px 12px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 6px;
+  background: var(--ff-surface);
+  color: var(--ff-primary);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@keyframes page-guide-instruction-enter {
+  from {
+    opacity: 0;
+    transform: translateX(-32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: 720px) {
+  .page-guide-overlay {
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .page-guide-modal {
+    max-height: 94vh;
+    max-height: 94dvh;
+    border-radius: 12px;
+  }
+
+  .page-guide-content {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+    padding: 12px;
+    transition: none;
+  }
+
+  .page-guide-content.has-selection {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page-guide-instructions {
+    padding: 18px 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-guide-overlay,
+  .page-guide-modal,
+  .page-guide-instructions {
+    animation-duration: 1ms;
+  }
+
+  .page-guide-preview-frame {
+    transition-duration: 1ms;
+  }
+
+  .page-guide-preview-viewport,
+  .page-guide-hotspot {
+    transition-duration: 1ms;
+  }
+}

@@ -1,0 +1,225 @@
+.priest-history-print-button {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  border: 1px solid color-mix(in srgb, white 70%, var(--ff-primary) 30%);
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--ff-primary);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 9px 16px;
+  cursor: pointer;
+  box-shadow: 0 6px 14px color-mix(in srgb, var(--ff-primary) 18%, transparent 82%);
+  transition: background-color 140ms ease, color 140ms ease, transform 120ms ease;
+}
+
+.priest-history-print-button:hover:not(:disabled) {
+  background: var(--ff-primary);
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+.priest-history-print-button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.priest-history-print-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.priest-history-print-panel {
+  margin: 0;
+}
+
+.priest-print-modal {
+  width: min(100%, 520px);
+}
+
+.priest-print-body {
+  overflow: auto;
+  padding: 16px 18px 8px;
+  display: grid;
+  gap: 14px;
+}
+
+.priest-print-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.priest-print-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.priest-print-field.is-wide {
+  grid-column: 1 / -1;
+}
+
+.priest-print-field span,
+.priest-print-modal .reports-print-file-type legend {
+  color: var(--ff-text-muted);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.priest-print-field select {
+  width: 100%;
+  box-sizing: border-box;
+  height: 40px;
+  border: 1px solid var(--ff-container-border);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ff-text);
+  font: inherit;
+  font-size: 0.88rem;
+  padding: 0 32px 0 12px;
+}
+
+.priest-print-field select:focus {
+  outline: none;
+  border-color: var(--ff-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ff-primary) 14%, transparent 86%);
+}
+
+.priest-print-modal .reports-print-radio {
+  border-radius: 10px;
+}
+
+.priest-print-modal .reports-print-radio:focus-within {
+  outline: 2px solid color-mix(in srgb, var(--ff-primary) 45%, transparent 55%);
+}
+
+.priest-print-summary {
+  margin: 0;
+  padding: 10px 12px;
+  border: 1px solid var(--ff-container-border);
+  border-left: 3px solid var(--ff-primary);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--ff-primary) 4%, white 96%);
+  color: var(--ff-primary);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.priest-print-error {
+  margin: 0;
+  color: #9b3434;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.priest-print-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px 18px 16px;
+  border-top: 1px solid var(--ff-container-border);
+}
+
+.priest-print-primary,
+.priest-print-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  border-radius: 8px;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  padding: 9px 18px;
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.priest-print-primary {
+  border: 1px solid var(--ff-primary);
+  background: var(--ff-primary);
+  color: #ffffff;
+}
+
+.priest-print-primary:hover {
+  background: #ffffff;
+  color: var(--ff-primary);
+}
+
+.priest-print-secondary {
+  border: 1px solid var(--ff-container-border);
+  background: #ffffff;
+  color: var(--ff-text);
+}
+
+.priest-print-secondary:hover {
+  border-color: var(--ff-primary);
+  color: var(--ff-primary);
+}
+
+body[data-faithflow-theme="dark"] :is(.priest-print-field select, .priest-print-secondary) {
+  background: var(--ff-container);
+  color: var(--ff-text);
+}
+
+body[data-faithflow-theme="dark"] .priest-print-summary {
+  background: var(--ff-container-soft);
+  color: var(--ff-text);
+}
+
+@media (max-width: 720px) {
+  .priest-print-form,
+  .priest-print-modal .reports-print-file-type-options {
+    grid-template-columns: 1fr;
+  }
+
+  .priest-print-footer > button {
+    flex: 1 1 140px;
+  }
+}
+
+@media print {
+  .priest-history-panel,
+  .priest-details-modal-overlay {
+    display: none !important;
+  }
+
+  .priest-history-print-table th.is-number,
+  .priest-history-print-table td.is-number {
+    width: 9%;
+  }
+
+  .priest-history-print-table th.is-date,
+  .priest-history-print-table td.is-date {
+    width: 19%;
+  }
+
+  .priest-history-print-table th.is-sacrament,
+  .priest-history-print-table td.is-sacrament {
+    width: 18%;
+  }
+
+  .priest-history-print-table th.is-requester,
+  .priest-history-print-table td.is-requester {
+    width: 20%;
+  }
+
+  .priest-history-print-table th.is-status,
+  .priest-history-print-table td.is-status {
+    width: 12%;
+  }
+
+  .priest-history-print-table th.is-comments,
+  .priest-history-print-table td.is-comments {
+    width: 22%;
+    overflow-wrap: anywhere;
+  }
+}
