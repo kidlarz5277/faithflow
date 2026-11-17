@@ -1548,6 +1548,7 @@ function AdminProgressDetails() {
       syncTemplate = false,
       successNotice = "Checklist saved.",
       taskUncheck = null,
+      markAllStepIndex = null,
     } = {},
   ) => {
     if (!appointmentID) return { ok: false };
@@ -1568,6 +1569,9 @@ function AdminProgressDetails() {
       };
       if (taskUncheck && typeof taskUncheck === "object") {
         requestBody.taskUncheck = taskUncheck;
+      }
+      if (Number.isInteger(markAllStepIndex) && markAllStepIndex >= 0) {
+        requestBody.markAllStepIndex = markAllStepIndex;
       }
       if (includeFinalDetails) {
         requestBody.finalDetails = sanitizedFinalDetails;
@@ -1894,6 +1898,7 @@ function AdminProgressDetails() {
     const saveResult = await markProgressSaved(appointmentID, true, {
       checkedTasksOverride: nextCheckedTasks,
       successNotice: "All tasks in this step marked as completed.",
+      markAllStepIndex: safeActiveStepIndex,
     });
     if (!saveResult?.ok) {
       setCheckedTasks(previousCheckedTasks);

@@ -75,6 +75,9 @@
   background: var(--ff-primary);
   color: #fffdf7;
 }
+
+/* Full-screen settings layout: the header stays put and only .profile-main scrolls. */
+.settings-page {
   height: 100vh;
   height: 100dvh;
   overflow: hidden;

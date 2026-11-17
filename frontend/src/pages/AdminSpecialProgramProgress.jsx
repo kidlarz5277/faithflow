@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { AlertTriangle, CalendarClock, ChevronDown, CircleCheckBig, Users, X } from "lucide-react";
+import { AlertTriangle, CalendarClock, ChevronDown, ChevronRight, CircleCheckBig, Users, X } from "lucide-react";
 import Header from "../components/Header";
 import Sidebar from "../components/Sidebar";
 import { getInitialSidebarOpen, toggleSidebarOpen } from "../utils/sidebarState";
@@ -381,6 +381,24 @@ function AdminSpecialProgramProgress() {
     pushUiNotice("Task marked complete for all applicants.");
   };
 
+  // Opens one applicant's own Progress Checklist page (used by the Applicants dropdown and "Open checklist").
+  const openApplicantChecklist = (applicant) => {
+    const appointmentID = Number(applicant?.appointmentID);
+    if (!Number.isInteger(appointmentID) || appointmentID <= 0) return;
+    setIsApplicantsOpen(false);
+    navigate(`/admin/progress-tracker/${appointmentID}`, {
+      state: {
+        progressItem: {
+          ...applicant,
+          sacramentName: programName,
+          sacramentalType,
+          s_sacramentID: programID,
+        },
+        fromProgram: programID,
+      },
+    });
+  };
+
   if (!user || accountType !== "admin") return null;
 
   const handleLogout = () => {
@@ -499,16 +517,24 @@ function AdminSpecialProgramProgress() {
                         ) : (
                           applicants.map((applicant, index) => (
                             <li key={applicant.appointmentID || `applicant-${index}`}>
-                              <span className="program-applicants-index">{index + 1}</span>
-                              <span>
-                                <strong>{applicant.requesterFullName}</strong>
-                                {applicant.conductedPersonValue && applicant.conductedPersonValue !== "Not provided" ? (
-                                  <small>
-                                    {applicant.conductedPersonLabel}: {applicant.conductedPersonValue}
-                                  </small>
-                                ) : null}
-                                {applicant.userID ? <span className="program-applicants-id">User ID {applicant.userID}</span> : null}
-                              </span>
+                              <button
+                                type="button"
+                                className="program-applicants-item"
+                                onClick={() => openApplicantChecklist(applicant)}
+                                title={`Open ${applicant.requesterFullName || "this applicant"}'s progress checklist`}
+                              >
+                                <span className="program-applicants-index">{index + 1}</span>
+                                <span>
+                                  <strong>{applicant.requesterFullName}</strong>
+                                  {applicant.conductedPersonValue && applicant.conductedPersonValue !== "Not provided" ? (
+                                    <small>
+                                      {applicant.conductedPersonLabel}: {applicant.conductedPersonValue}
+                                    </small>
+                                  ) : null}
+                                  {applicant.userID ? <span className="program-applicants-id">User ID {applicant.userID}</span> : null}
+                                </span>
+                                <ChevronRight size={16} className="program-applicants-go" aria-hidden="true" />
+                              </button>
                             </li>
                           ))
                         )}
@@ -696,19 +722,7 @@ function AdminSpecialProgramProgress() {
                       <button
                         type="button"
                         className="program-task-applicant-link"
-                        onClick={() =>
-                          navigate(`/admin/progress-tracker/${applicant.appointmentID}`, {
-                            state: {
-                              progressItem: {
-                                ...applicant,
-                                sacramentName: programName,
-                                sacramentalType,
-                                s_sacramentID: programID,
-                              },
-                              fromProgram: programID,
-                            },
-                          })
-                        }
+                        onClick={() => openApplicantChecklist(applicant)}
                       >
                         Open checklist
                       </button>

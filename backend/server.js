@@ -3573,6 +3573,62 @@ const deletePriestAccountCompletely = async ({ priestID, adminID }) => {
   }
 };
 
+// Every string value anywhere in the appointment's credentials that is a Philippine mobile number:
+// starts with "09" and is exactly 11 digits (e.g. "09171234567"), whatever the question was called.
+const getAppointmentCredentialPhoneNumbers = (credentials) => {
+  const found = [];
+  const visit = (value) => {
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      if (/^09\d{9}$/.test(trimmed)) found.push(trimmed);
+    } else if (Array.isArray(value)) {
+      value.forEach(visit);
+    } else if (value && typeof value === "object") {
+      Object.values(value).forEach(visit);
+    }
+  };
+  visit(credentials);
+  return found;
+};
+
+// Texts the same message once to each distinct number (account contactNumber + every 09XXXXXXXXX value in
+// the appointment credentials). Fire-and-forget so a slow or failing SMS gateway never blocks or breaks the
+// admin action that triggered it; results go to the backend log.
+const sendAppointmentRequesterSms = ({ appointmentID, label, message, phoneNumbers = [], logSubject = "" }) => {
+  const subject = logSubject || `Appointment ${appointmentID}`;
+  const recipients = [];
+  const seen = new Set();
+  for (const value of phoneNumbers) {
+    const international = toInternationalPhone(value);
+    if (!international || seen.has(international)) continue;
+    seen.add(international);
+    recipients.push(String(value).trim());
+  }
+  if (recipients.length === 0 || !String(message || "").trim()) return;
+
+  for (const phoneNumber of recipients) {
+    sendSms({ phoneNumber, message })
+      .then(() => console.log(`${subject} ${label} SMS accepted for ${phoneNumber}.`))
+      .catch((error) => console.error(`${subject} ${label} SMS failed for ${phoneNumber}:`, error.message));
+  }
+};
+
+const sendAppointmentDecisionSms = ({ appointmentID, action, serviceName, declineReason = "", phoneNumbers = [] }) => {
+  const reason = toSmsSafeText(declineReason).replace(/[.\s]+$/, "");
+  const smsServiceName = toSmsSafeText(serviceName) || "appointment";
+  const messageByAction = {
+    approved: `Faithflow: Your ${smsServiceName} appointment request was approved. Check your Status page for the next steps.`,
+    declined: `Faithflow: Your ${smsServiceName} appointment request was declined.${reason ? ` Reason: ${reason}.` : ""} Contact the parish office for questions.`,
+    // "Cancel Appointment" on a confirmed appointment (Progress Tracker / Report Generation).
+    cancelled: `Faithflow: Your appointment for ${smsServiceName} is cancelled${reason ? `, because ${reason}` : ""}.`,
+    // "Restore" on a cancelled appointment in Progress Tracker (back to CONFIRMED).
+    restored: `Faithflow: Good news! Your appointment for ${smsServiceName} has been restored by the parish office. Check your Status page to continue.`,
+  };
+  const message = messageByAction[action];
+  if (!message) return;
+  sendAppointmentRequesterSms({ appointmentID, label: action, message, phoneNumbers });
+};
+
 const notifyAppointmentRequester = async ({ appointmentID, action, declineReason = "" }) => {
   const normalizedAppointmentID = Number(appointmentID);
   if (!Number.isInteger(normalizedAppointmentID) || normalizedAppointmentID <= 0) return null;
@@ -3582,16 +3638,31 @@ const notifyAppointmentRequester = async ({ appointmentID, action, declineReason
       SELECT
         a."appointmentID",
         a."userID",
-        COALESCE(s."sacramentName", ss."s_sacramentName", 'appointment') AS "serviceName"
+        COALESCE(s."sacramentName", ss."s_sacramentName", 'appointment') AS "serviceName",
+        u."contactNumber" AS "userContactNumber",
+        a.credentials
       FROM appointments a
       LEFT JOIN sacraments s ON s."sacramentID" = a."sacramentID"
       LEFT JOIN special_sacraments ss ON ss."s_sacramentID" = a."s_sacramentID"
+      LEFT JOIN users u ON u."userID" = a."userID"
       WHERE a."appointmentID" = $1
       LIMIT 1
     `,
     [normalizedAppointmentID],
   );
   const appointment = appointmentResult.rows[0];
+  if (appointment && ["approved", "declined", "cancelled", "restored"].includes(action)) {
+    sendAppointmentDecisionSms({
+      appointmentID: normalizedAppointmentID,
+      action,
+      serviceName: String(appointment.serviceName || "appointment").trim() || "appointment",
+      declineReason,
+      phoneNumbers: [
+        appointment.userContactNumber,
+        ...getAppointmentCredentialPhoneNumbers(appointment.credentials),
+      ],
+    });
+  }
   const userID = Number(appointment?.userID);
   if (!appointment || !Number.isInteger(userID) || userID <= 0) return null;
 
@@ -3797,21 +3868,54 @@ const notifyCertificateRequester = async ({
       SELECT
         cr."certID",
         cr."userID",
-        COALESCE(ct."formSchema"->>'label', 'certificate') AS "certificateType"
+        COALESCE(ct."formSchema"->>'label', 'certificate') AS "certificateType",
+        u."contactNumber" AS "userContactNumber",
+        cr.credentials
       FROM cert_request cr
       LEFT JOIN certificate_type ct ON ct."certificateTypeID" = cr."certificateTypeID"
+      LEFT JOIN users u ON u."userID" = cr."userID"
       WHERE cr."certID" = $1
       LIMIT 1
     `,
     [normalizedCertID],
   );
   const certificateRequest = requestResult.rows[0];
+  const certificateType = String(certificateRequest?.certificateType || "certificate").trim() || "certificate";
+  const pickupLabel = formatCertificatePickupLabel(pickupDate, pickupTime);
+
+  // Text the requester (account number + 09XXXXXXXXX values in the request) for each certificate action:
+  // Approve Request, Decline, marked picked up (Completed), and Restore to pending.
+  if (certificateRequest) {
+    const smsCertificateType = toSmsSafeText(certificateType) || "certificate";
+    const smsReason = toSmsSafeText(declineReason).replace(/[.\s]+$/, "");
+    const smsByAction = {
+      approved: `Faithflow: Your ${smsCertificateType} request is approved.${
+        pickupLabel ? ` You may pick it up at the parish office on ${pickupLabel}.` : " The parish office will tell you when to pick it up."
+      }`,
+      declined: `Faithflow: Your ${smsCertificateType} request was declined${
+        smsReason ? `, because ${smsReason}` : ""
+      }. Contact the parish office for questions.`,
+      completed: `Faithflow: Your ${smsCertificateType} has been picked up. Thank you! You can find it in your History page.`,
+      pending: `Faithflow: Your ${smsCertificateType} request was restored and is pending again. The parish office will review it soon.`,
+    };
+    if (smsByAction[action]) {
+      sendAppointmentRequesterSms({
+        appointmentID: normalizedCertID,
+        logSubject: `Certificate request ${normalizedCertID}`,
+        label: action,
+        message: smsByAction[action],
+        phoneNumbers: [
+          certificateRequest.userContactNumber,
+          ...getAppointmentCredentialPhoneNumbers(certificateRequest.credentials),
+        ],
+      });
+    }
+  }
+
   const userID = Number(certificateRequest?.userID);
   if (!certificateRequest || !Number.isInteger(userID) || userID <= 0) return null;
 
-  const certificateType = String(certificateRequest.certificateType || "certificate").trim() || "certificate";
   const normalizedDeclineReason = String(declineReason || "").trim();
-  const pickupLabel = formatCertificatePickupLabel(pickupDate, pickupTime);
   const notificationByAction = {
     approved: {
       type: "certificate_approved",
@@ -3902,6 +4006,81 @@ const notifyProgressTaskUnchecked = async ({ appointmentID, taskLabel, stepTitle
       stepTitle: normalizedStepTitle,
       reason: normalizedReason,
     },
+  });
+};
+
+// "Nov 25, 2026, 9:00 AM - 10:00 AM" in parish time (1-hour slots).
+const formatEventScheduleForSms = (value) => {
+  if (!value) return "";
+  const start = new Date(value);
+  if (Number.isNaN(start.getTime())) return "";
+  const end = new Date(start.getTime() + 60 * 60 * 1000);
+  const dateLabel = start.toLocaleDateString("en-US", {
+    timeZone: "Asia/Manila",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
+  const timeOptions = { timeZone: "Asia/Manila", hour: "numeric", minute: "2-digit" };
+  return `${dateLabel}, ${start.toLocaleTimeString("en-US", timeOptions)} - ${end.toLocaleTimeString("en-US", timeOptions)}`;
+};
+
+// Confirm on "Set Next Event Schedule": text the requester (account + form numbers) and the assigned priest
+// whenever the event date/time or the priest changes and a schedule is set.
+const sendProgressScheduleSms = async ({
+  appointmentID,
+  previousSchedule = null,
+  nextSchedule = null,
+  previousPriestID = null,
+  nextPriestID = null,
+}) => {
+  const normalizedAppointmentID = Number(appointmentID);
+  if (!Number.isInteger(normalizedAppointmentID) || normalizedAppointmentID <= 0) return;
+  const scheduleLabel = formatEventScheduleForSms(nextSchedule);
+  if (!scheduleLabel) return;
+  // Compare instants, not strings: the stored value (DB) and the incoming value (request) may be formatted
+  // differently, and a string compare would re-send the SMS on every save.
+  const toInstant = (value) => {
+    const time = value ? new Date(value).getTime() : NaN;
+    return Number.isNaN(time) ? null : time;
+  };
+  const scheduleChanged = toInstant(previousSchedule) !== toInstant(nextSchedule);
+  const priestChanged = Number(previousPriestID || 0) !== Number(nextPriestID || 0);
+  if (!scheduleChanged && !priestChanged) return;
+
+  const appointmentResult = await query(
+    `
+      SELECT
+        COALESCE(s."sacramentName", ss."s_sacramentName", 'appointment') AS "serviceName",
+        u."contactNumber" AS "userContactNumber",
+        a.credentials,
+        p."phoneNumber" AS "priestPhoneNumber"
+      FROM appointments a
+      LEFT JOIN sacraments s ON s."sacramentID" = a."sacramentID"
+      LEFT JOIN special_sacraments ss ON ss."s_sacramentID" = a."s_sacramentID"
+      LEFT JOIN users u ON u."userID" = a."userID"
+      LEFT JOIN priests p ON p."priestID" = $2
+      WHERE a."appointmentID" = $1
+      LIMIT 1
+    `,
+    [normalizedAppointmentID, Number(nextPriestID) > 0 ? Number(nextPriestID) : null],
+  );
+  const appointment = appointmentResult.rows[0];
+  if (!appointment) return;
+
+  const serviceName = toSmsSafeText(appointment.serviceName) || "appointment";
+  const message = `Faithflow: Your event schedule for ${serviceName} is ${scheduleLabel}.`;
+  sendAppointmentRequesterSms({
+    appointmentID: normalizedAppointmentID,
+    label: "schedule (requester)",
+    message,
+    phoneNumbers: [appointment.userContactNumber, ...getAppointmentCredentialPhoneNumbers(appointment.credentials)],
+  });
+  sendAppointmentRequesterSms({
+    appointmentID: normalizedAppointmentID,
+    label: "schedule (priest)",
+    message,
+    phoneNumbers: [appointment.priestPhoneNumber],
   });
 };
 
@@ -4314,7 +4493,96 @@ const summarizeProgressChecklist = (checklist) => {
   return { totalTasks, doneTasks, completedStepIndexes };
 };
 
-const notifyProgressTasksChecked = async ({ appointmentID, checkedTasks, previousChecklist, nextChecklist }) => {
+// First task still not done, in checklist order (step by step, task by task), starting at fromStepIndex.
+const findNextOpenProgressTask = (checklist, fromStepIndex = 0) => {
+  const steps = Array.isArray(checklist) ? checklist : [];
+  for (let stepIndex = Math.max(0, fromStepIndex); stepIndex < steps.length; stepIndex += 1) {
+    const step = steps[stepIndex];
+    const tasks = Array.isArray(step?.tasks) ? step.tasks : [];
+    for (const task of tasks) {
+      if (isProgressTaskDone(task)) continue;
+      const taskLabel = readProgressTaskLabel(task);
+      if (taskLabel) return { stepIndex, stepTitle: String(step?.title || "").trim() || `Step ${stepIndex + 1}`, taskLabel };
+    }
+  }
+  return null;
+};
+
+const isProgressStepComplete = (step) => {
+  const tasks = Array.isArray(step?.tasks) ? step.tasks : [];
+  return tasks.length > 0 && tasks.every(isProgressTaskDone);
+};
+
+// SMS text: the task(s) just checked, then what comes next.
+// - Step still has open tasks -> "Next: <task>."
+// - The check finished the step -> "Next step: <next step title>. First task: <its first open task>."
+// The SMS Sender ID rejects anything that looks like a link ("Links are prohibited under this SenderID").
+// Task names such as "Priest//Clergy" or "St.Joseph" trip that filter, so space them out for SMS only.
+const toSmsSafeText = (value) =>
+  String(value || "")
+    .replace(/\s*\/+\s*/g, " / ")
+    .replace(/\.(?=[A-Za-z])/g, ". ")
+    .replace(/\b(https?|www)\b:?/gi, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+
+const buildProgressTasksCheckedSms = ({
+  serviceName: rawServiceName,
+  checkedTasks,
+  nextChecklist,
+  markAllStepIndex = null,
+  specialEventLabel = "",
+}) => {
+  const serviceName = toSmsSafeText(rawServiceName);
+  // Last message once every step is done. Special programs get their shared event date.
+  const allCompleteText = specialEventLabel
+    ? `All steps are complete! Your ${serviceName} event is on ${specialEventLabel}. See you there!`
+    : "All checklist tasks are complete.";
+
+  // "Mark All as Done" on a step: "You completed <step>." then the next step and its first task.
+  const markAllSteps = Array.isArray(nextChecklist) ? nextChecklist : [];
+  if (Number.isInteger(markAllStepIndex) && isProgressStepComplete(markAllSteps[markAllStepIndex])) {
+    const completedStepTitle =
+      toSmsSafeText(markAllSteps[markAllStepIndex]?.title) || `Step ${markAllStepIndex + 1}`;
+    const upcomingStep =
+      findNextOpenProgressTask(markAllSteps, markAllStepIndex + 1) || findNextOpenProgressTask(markAllSteps);
+    const upcomingText = !upcomingStep
+      ? allCompleteText
+      : upcomingStep.stepIndex > markAllStepIndex
+        ? `Next step: ${toSmsSafeText(upcomingStep.stepTitle)}. First task: ${toSmsSafeText(upcomingStep.taskLabel)}.`
+        : `Next: ${toSmsSafeText(upcomingStep.taskLabel)}.`;
+    return `Faithflow: Your ${serviceName} request update. You completed ${completedStepTitle}. ${upcomingText}`;
+  }
+
+  const labels = checkedTasks.map((task) => toSmsSafeText(task.taskLabel));
+  const doneText =
+    labels.length <= 3
+      ? labels.join(", ")
+      : `${labels.slice(0, 3).join(", ")} and ${labels.length - 3} more`;
+
+  const steps = Array.isArray(nextChecklist) ? nextChecklist : [];
+  const lastCheckedStepIndex = Math.max(...checkedTasks.map((task) => task.stepIndex));
+  const finishedStep = isProgressStepComplete(steps[lastCheckedStepIndex]);
+  const upcoming = finishedStep
+    ? findNextOpenProgressTask(steps, lastCheckedStepIndex + 1) || findNextOpenProgressTask(steps)
+    : findNextOpenProgressTask(steps, lastCheckedStepIndex) || findNextOpenProgressTask(steps);
+
+  let nextText = allCompleteText;
+  if (upcoming && finishedStep && upcoming.stepIndex > lastCheckedStepIndex) {
+    nextText = `Next step: ${toSmsSafeText(upcoming.stepTitle)}. First task: ${toSmsSafeText(upcoming.taskLabel)}.`;
+  } else if (upcoming) {
+    nextText = `Next: ${toSmsSafeText(upcoming.taskLabel)}.`;
+  }
+  return `Faithflow: Your ${serviceName} request update. Done: ${doneText}. ${nextText}`;
+};
+
+const notifyProgressTasksChecked = async ({
+  appointmentID,
+  checkedTasks,
+  previousChecklist,
+  nextChecklist,
+  markAllStepIndex = null,
+}) => {
   const normalizedAppointmentID = Number(appointmentID);
   if (!Number.isInteger(normalizedAppointmentID) || normalizedAppointmentID <= 0) return null;
   if (!Array.isArray(checkedTasks) || checkedTasks.length === 0) return null;
@@ -4324,20 +4592,43 @@ const notifyProgressTasksChecked = async ({ appointmentID, checkedTasks, previou
       SELECT
         a."appointmentID",
         a."userID",
-        COALESCE(s."sacramentName", ss."s_sacramentName", 'appointment') AS "serviceName"
+        COALESCE(s."sacramentName", ss."s_sacramentName", 'appointment') AS "serviceName",
+        u."contactNumber" AS "userContactNumber",
+        a.credentials,
+        -- Special program event, formatted as stored (timeDate has no time zone): "December 9, 2026, 8:00 AM - 12:00 PM"
+        CASE WHEN ss."timeDate" IS NOT NULL THEN
+          to_char(ss."timeDate", 'FMMonth FMDD, YYYY, FMHH12:MI AM') || ' - ' ||
+          to_char(ss."timeDate" + make_interval(hours => GREATEST(COALESCE(ss."durationHours", 1), 1)), 'FMHH12:MI AM')
+        END AS "specialEventLabel"
       FROM appointments a
       LEFT JOIN sacraments s ON s."sacramentID" = a."sacramentID"
       LEFT JOIN special_sacraments ss ON ss."s_sacramentID" = a."s_sacramentID"
+      LEFT JOIN users u ON u."userID" = a."userID"
       WHERE a."appointmentID" = $1
       LIMIT 1
     `,
     [normalizedAppointmentID],
   );
   const appointment = appointmentResult.rows[0];
-  const userID = Number(appointment?.userID);
-  if (!appointment || !Number.isInteger(userID) || userID <= 0) return null;
+  if (!appointment) return null;
 
   const serviceName = String(appointment.serviceName || "appointment").trim() || "appointment";
+  sendAppointmentRequesterSms({
+    appointmentID: normalizedAppointmentID,
+    label: "checklist",
+    message: buildProgressTasksCheckedSms({
+      serviceName,
+      checkedTasks,
+      nextChecklist,
+      markAllStepIndex,
+      specialEventLabel: appointment.specialEventLabel || "",
+    }),
+    phoneNumbers: [appointment.userContactNumber, ...getAppointmentCredentialPhoneNumbers(appointment.credentials)],
+  });
+
+  const userID = Number(appointment?.userID);
+  if (!Number.isInteger(userID) || userID <= 0) return null;
+
   const previousSummary = summarizeProgressChecklist(previousChecklist);
   const nextSummary = summarizeProgressChecklist(nextChecklist);
   const newlyCompletedSteps = [...nextSummary.completedStepIndexes]
@@ -17153,7 +17444,14 @@ app.patch("/appointments/:id/progress", async (req, res) => {
     const checkedTasks = hasChecklist ? findProgressTaskChecks(previousChecklist, nextChecklist) : [];
     if (checkedTasks.length > 0) {
       try {
-        await notifyProgressTasksChecked({ appointmentID, checkedTasks, previousChecklist, nextChecklist });
+        const markAllStepIndex = Number(req.body?.markAllStepIndex);
+        await notifyProgressTasksChecked({
+          appointmentID,
+          checkedTasks,
+          previousChecklist,
+          nextChecklist,
+          markAllStepIndex: Number.isInteger(markAllStepIndex) && markAllStepIndex >= 0 ? markAllStepIndex : null,
+        });
       } catch (notificationError) {
         console.error("Progress checklist notification error:", notificationError);
       }
@@ -17176,6 +17474,17 @@ app.patch("/appointments/:id/progress", async (req, res) => {
         previousPriestID,
         nextPriestID: nextConductedPriestID,
       });
+      try {
+        await sendProgressScheduleSms({
+          appointmentID,
+          previousSchedule: previousScheduledEventDateTime,
+          nextSchedule: nextScheduledEventDateTime,
+          previousPriestID,
+          nextPriestID: nextConductedPriestID,
+        });
+      } catch (smsError) {
+        console.error("Event schedule SMS error:", smsError);
+      }
       await notifyPriestAppointmentAssignment({
         appointmentID,
         previousPriestID,
@@ -17821,6 +18130,18 @@ app.patch("/appointments/:id/schedule-remarks/:remarkID/review", async (req, res
         nextPriestID: remark.preferredPriestID,
       });
       resolvedAdminDecision = "updated";
+      try {
+        // Same SMS as "Set Next Event Schedule" -> Confirm, to the requester and the (preferred) priest.
+        await sendProgressScheduleSms({
+          appointmentID,
+          previousSchedule: appointment.scheduledEventDateTime,
+          nextSchedule: nextScheduledEventDateTime,
+          previousPriestID: appointment.priestID,
+          nextPriestID: remark.preferredPriestID,
+        });
+      } catch (smsError) {
+        console.error("Preferred schedule SMS error:", smsError);
+      }
     } else if (!resolvedAdminDecision) {
       resolvedAdminDecision = remark.decision === "accepted" ? "kept" : "kept";
     }
@@ -18558,7 +18879,7 @@ app.patch("/certificate-requests/:id/status", async (req, res) => {
               WHEN $1::certificate_request_status = 'Cancelled' AND NULLIF($4, '') IS NOT NULL
                 THEN COALESCE(credentials, '{}'::jsonb) || jsonb_build_object('declineReason', $4)
               WHEN $1::certificate_request_status = 'Completed' AND NULLIF($5, '') IS NOT NULL
-                THEN COALESCE(credentials, '{}'::jsonb) || jsonb_build_object('receiptNumber', $5, 'invoiceNumber', $5, 'paymentDate', $7)
+                THEN COALESCE(credentials, '{}'::jsonb) || jsonb_build_object('receiptNumber', $5, 'invoiceNumber', $5, 'paymentDate', $7::text)
               ELSE credentials
             END,
             "updatedAt" = NOW()
