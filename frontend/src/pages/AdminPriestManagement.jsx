@@ -46,6 +46,14 @@ const normalizePriestParishRole = (value) => {
 };
 const getPriestParishRoleLabel = (value) =>
   PRIEST_PARISH_ROLE_OPTIONS.find((option) => option.value === normalizePriestParishRole(value))?.label || "Not set";
+const PriestParishRoleBadge = ({ parishRole }) => {
+  const hasRole = Boolean(normalizePriestParishRole(parishRole));
+  return (
+    <span className={`priest-directory-role-badge${hasRole ? "" : " is-unset"}`}>
+      {hasRole ? getPriestParishRoleLabel(parishRole) : "Role not set"}
+    </span>
+  );
+};
 const EMAIL_INPUT_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_INPUT_REGEX = /^09\d{9}$/;
 const isGmailAddress = (email) => String(email || "").trim().toLowerCase().endsWith("@gmail.com");
@@ -1706,6 +1714,7 @@ function AdminPriestManagement() {
                                         <span className="priest-directory-card-copy">
                                           <strong>{priest.fullName || "Priest"}</strong>
                                           <small>{clergyLabel}</small>
+                                          <PriestParishRoleBadge parishRole={priest.parishRole} />
                                         </span>
                                         <span className="priest-directory-card-status is-active">Active</span>
                                       </button>
@@ -1735,6 +1744,7 @@ function AdminPriestManagement() {
                                       <span className="priest-directory-card-copy">
                                         <strong>{priest.fullName || "Priest"}</strong>
                                         <small>Inactive account</small>
+                                        <PriestParishRoleBadge parishRole={priest.parishRole} />
                                       </span>
                                       <span className="priest-directory-card-status is-inactive">Inactive</span>
                                     </button>

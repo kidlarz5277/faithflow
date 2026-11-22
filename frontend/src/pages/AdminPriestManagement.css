@@ -1404,6 +1404,27 @@
   font-size: 0.78rem;
 }
 
+.priest-directory-role-badge {
+  justify-self: start;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid #f3d6a1;
+  border-radius: 999px;
+  background: #fff7e6;
+  color: #92400e;
+  padding: 3px 9px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.priest-directory-role-badge.is-unset {
+  border-color: var(--ff-container-border);
+  background: transparent;
+  color: var(--ff-text-muted);
+}
+
 .priest-directory-card-status {
   flex: 0 0 auto;
   border-radius: 999px;
