@@ -35,6 +35,17 @@ const normalizePriestClergyType = (value) => {
 };
 
 const normalizeReligiousOrderCode = (value) => String(value || "").trim().toUpperCase();
+const PRIEST_PARISH_ROLE_OPTIONS = [
+  { value: "PARISH_PRIEST", label: "Parish Priest" },
+  { value: "PAROCHIAL_VICAR", label: "Parochial Vicar" },
+  { value: "GUEST_PRIEST", label: "Guest Priest" },
+];
+const normalizePriestParishRole = (value) => {
+  const normalizedValue = String(value || "").trim().toUpperCase();
+  return PRIEST_PARISH_ROLE_OPTIONS.some((option) => option.value === normalizedValue) ? normalizedValue : "";
+};
+const getPriestParishRoleLabel = (value) =>
+  PRIEST_PARISH_ROLE_OPTIONS.find((option) => option.value === normalizePriestParishRole(value))?.label || "Not set";
 const EMAIL_INPUT_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_INPUT_REGEX = /^09\d{9}$/;
 const isGmailAddress = (email) => String(email || "").trim().toLowerCase().endsWith("@gmail.com");
@@ -282,9 +293,11 @@ function AdminPriestManagement() {
   const [editPriestPhoneNumber, setEditPriestPhoneNumber] = useState("");
   const [newPriestClergyType, setNewPriestClergyType] = useState(PRIEST_CLERGY_TYPES.DIOCESAN);
   const [newPriestReligiousOrderCode, setNewPriestReligiousOrderCode] = useState("");
+  const [newPriestParishRole, setNewPriestParishRole] = useState("");
   const [isAddPriestModalOpen, setIsAddPriestModalOpen] = useState(false);
   const [editPriestClergyType, setEditPriestClergyType] = useState(PRIEST_CLERGY_TYPES.DIOCESAN);
   const [editPriestReligiousOrderCode, setEditPriestReligiousOrderCode] = useState("");
+  const [editPriestParishRole, setEditPriestParishRole] = useState("");
   const [religiousOrderOptions, setReligiousOrderOptions] = useState([]);
   const [isSavingPriestName, setIsSavingPriestName] = useState(false);
   const [isSaveConfirmOpen, setIsSaveConfirmOpen] = useState(false);
@@ -928,6 +941,7 @@ function AdminPriestManagement() {
     setNewPriestPhoneNumber("");
     setNewPriestClergyType(PRIEST_CLERGY_TYPES.DIOCESAN);
     setNewPriestReligiousOrderCode("");
+    setNewPriestParishRole("");
     setFeedbackMessage("");
     setCreatedPriestResult(null);
     setCopiedPassword(false);
@@ -991,6 +1005,7 @@ function AdminPriestManagement() {
           adminID,
           clergyType,
           religiousOrderCode: clergyType === PRIEST_CLERGY_TYPES.RELIGIOUS ? religiousOrderCode : null,
+          parishRole: normalizePriestParishRole(newPriestParishRole) || null,
         }),
       });
       const responseData = await response.json().catch(() => ({}));
@@ -1010,6 +1025,7 @@ function AdminPriestManagement() {
       setNewPriestPhoneNumber("");
       setNewPriestClergyType(PRIEST_CLERGY_TYPES.DIOCESAN);
       setNewPriestReligiousOrderCode("");
+      setNewPriestParishRole("");
       setCopiedPassword(false);
       setCreatedPriestResult({
         fullName: createdPriest.fullName || fullName,
@@ -1053,6 +1069,11 @@ function AdminPriestManagement() {
     setEditPriestReligiousOrderCode(normalizeReligiousOrderCode(selectedPriest.religiousOrderCode));
   }, [selectedPriest]);
 
+  // Reset the role field whenever the priest changes or the edit form opens or closes.
+  useEffect(() => {
+    setEditPriestParishRole(normalizePriestParishRole(selectedPriest?.parishRole));
+  }, [selectedPriest, isEditingPriestName]);
+
   useEffect(() => {
     setPriestPasswordDeliveryMethod("");
     setIsPriestPasswordResetConfirmOpen(false);
@@ -1095,6 +1116,7 @@ function AdminPriestManagement() {
           adminID,
           clergyType,
           religiousOrderCode: clergyType === PRIEST_CLERGY_TYPES.RELIGIOUS ? religiousOrderCode : null,
+          parishRole: normalizePriestParishRole(editPriestParishRole) || null,
         }),
       });
       const responseData = await response.json().catch(() => ({}));
@@ -1291,6 +1313,9 @@ function AdminPriestManagement() {
                             <div className="priest-profile-tags priest-selected-meta-tags">
                               <span className={`priest-type-chip ${selectedPriestClergyType === PRIEST_CLERGY_TYPES.RELIGIOUS ? "is-religious" : "is-diocesan"}`}>
                                 {selectedPriestClergyLabel}
+                              </span>
+                              <span className="priest-order-chip">
+                                Parish Role: {getPriestParishRoleLabel(selectedPriest.parishRole)}
                               </span>
                               <span className="priest-order-chip">
                                 Email: {String(selectedPriest.email || "").trim() || "Not set"}
@@ -2194,6 +2219,21 @@ function AdminPriestManagement() {
                       </select>
                     </div>
                   ) : null}
+                  <div className="priest-account-field">
+                    <label htmlFor="newPriestParishRole">Parish Role</label>
+                    <select
+                      id="newPriestParishRole"
+                      value={newPriestParishRole}
+                      onChange={(event) => setNewPriestParishRole(event.target.value)}
+                    >
+                      <option value="">Select parish role</option>
+                      {PRIEST_PARISH_ROLE_OPTIONS.map((option) => (
+                        <option key={`parish-role-new-${option.value}`} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                   {feedbackMessage ? <p className="priest-feedback-message">{feedbackMessage}</p> : null}
                 </div>
                 <div className="priest-modal-actions">
@@ -2405,6 +2445,21 @@ function AdminPriestManagement() {
                     </select>
                   </div>
                 ) : null}
+                <div className="priest-account-field">
+                  <label htmlFor="editPriestParishRole">Parish Role</label>
+                  <select
+                    id="editPriestParishRole"
+                    value={editPriestParishRole}
+                    onChange={(event) => setEditPriestParishRole(event.target.value)}
+                  >
+                    <option value="">Select parish role</option>
+                    {PRIEST_PARISH_ROLE_OPTIONS.map((option) => (
+                      <option key={`parish-role-edit-${option.value}`} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 {feedbackMessage ? <p className="priest-feedback-message">{feedbackMessage}</p> : null}
               </div>
               <div className="priest-modal-actions">

@@ -150,6 +150,7 @@ Stores clergy records assignable to appointments and calendar schedules.
 - `password`: priest credential hash (when priest login is enabled). `POST /forgot-password` emails a generated password to this Gmail and updates the hash.
 - `clergyType`: priest type (`DIOCESAN` or `RELIGIOUS`).
 - `religiousOrderCode`: required only for `RELIGIOUS` clergy type.
+- `parishRole`: optional job in the parish (`PARISH_PRIEST`, `PAROCHIAL_VICAR`, or `GUEST_PRIEST`), for either clergy type.
 - `photo`: filepath to the priest profile picture, stored as `/uploads/priest-photos/{filename}`.
 - `isActive`: priest account availability. `true` shows that priest's calendar entries. `false` hides them from live calendar queries without deleting the rows. Activating the priest shows those entries again and recreates any missing confirmed appointment schedules. Inactive priests cannot log in or receive new calendar assignments.
 

@@ -2296,6 +2296,15 @@ const normalizeReligiousOrderCode = (value) => {
   return normalizedValue || null;
 };
 
+// The priest's job in the parish. Separate from clergy type, since diocesan and religious priests can hold any role.
+const PRIEST_PARISH_ROLES = new Set(["PARISH_PRIEST", "PAROCHIAL_VICAR", "GUEST_PRIEST"]);
+
+const normalizePriestParishRole = (value) => {
+  const normalizedValue = String(value || "").trim().toUpperCase();
+  if (!normalizedValue) return { ok: true, value: null };
+  return PRIEST_PARISH_ROLES.has(normalizedValue) ? { ok: true, value: normalizedValue } : { ok: false, value: null };
+};
+
 const normalizeEmail = (value) => String(value || "").trim().toLowerCase();
 const isGmailAddress = (email) => String(email || "").trim().toLowerCase().endsWith("@gmail.com");
 const normalizeGmailAppPassword = (value) => String(value || "").replace(/\s+/g, "").trim();
@@ -8836,6 +8845,13 @@ const initializeDatabase = async () => {
   await query('ALTER TABLE priests ADD COLUMN IF NOT EXISTS "phoneNumber" VARCHAR(40)');
   await query(`ALTER TABLE priests ADD COLUMN IF NOT EXISTS "clergyType" VARCHAR(20) NOT NULL DEFAULT 'DIOCESAN'`);
   await query(`ALTER TABLE priests ADD COLUMN IF NOT EXISTS "religiousOrderCode" VARCHAR(30)`);
+  await query(`ALTER TABLE priests ADD COLUMN IF NOT EXISTS "parishRole" VARCHAR(30)`);
+  await query(`ALTER TABLE priests DROP CONSTRAINT IF EXISTS chk_priests_parish_role`);
+  await query(`
+    ALTER TABLE priests
+    ADD CONSTRAINT chk_priests_parish_role
+    CHECK ("parishRole" IS NULL OR "parishRole" IN ('PARISH_PRIEST', 'PAROCHIAL_VICAR', 'GUEST_PRIEST'))
+  `);
   await query(`ALTER TABLE priests ADD COLUMN IF NOT EXISTS "isActive" BOOLEAN NOT NULL DEFAULT TRUE`);
   await query("ALTER TABLE priests ADD COLUMN IF NOT EXISTS photo TEXT");
   await query('ALTER TABLE priests ADD COLUMN IF NOT EXISTS "firstName" VARCHAR(120)');
@@ -10884,6 +10900,7 @@ app.get("/priests", async (req, res) => {
           p."phoneNumber",
           p."clergyType",
           p."religiousOrderCode",
+          p."parishRole",
           COALESCE(p."isActive", TRUE) AS "isActive",
           COALESCE(NULLIF(BTRIM(p.photo), ''), linked_user.photo) AS photo,
           linked_user."updatedAt" AS "linkedUserUpdatedAt"
@@ -21658,6 +21675,7 @@ app.post("/priests", async (req, res) => {
     const clergyType = normalizePriestClergyType(req.body?.clergyType, { fallbackToDiocesan: true });
     const religiousOrderCodeInput = normalizeReligiousOrderCode(req.body?.religiousOrderCode);
     const religiousOrderCode = clergyType === PRIEST_CLERGY_TYPES.RELIGIOUS ? religiousOrderCodeInput : null;
+    const parishRole = normalizePriestParishRole(req.body?.parishRole);
 
     if (!personName.firstName || !personName.lastName) {
       return res.status(400).json({ message: "Enter the priest's first name and last name." });
@@ -21672,6 +21690,9 @@ app.post("/priests", async (req, res) => {
     if (!clergyType) {
       return res.status(400).json({ message: "Clergy type must be DIOCESAN or RELIGIOUS." });
     }
+    if (!parishRole.ok) {
+      return res.status(400).json({ message: "Please select a valid parish role." });
+    }
     if (clergyType === PRIEST_CLERGY_TYPES.RELIGIOUS && !religiousOrderCode) {
       return res.status(400).json({ message: "Please select a religious order for religious clergy." });
     }
@@ -21683,11 +21704,11 @@ app.post("/priests", async (req, res) => {
     await client.query("BEGIN");
     const insertResult = await client.query(
       `
-        INSERT INTO priests ("firstName", "lastName", "adminID", email, "phoneNumber", password, "clergyType", "religiousOrderCode", "isActive", photo)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, TRUE, $9)
-        RETURNING "priestID", "firstName", "lastName", "fullName", "adminID", email, "phoneNumber", "clergyType", "religiousOrderCode", "isActive", photo
+        INSERT INTO priests ("firstName", "lastName", "adminID", email, "phoneNumber", password, "clergyType", "religiousOrderCode", "isActive", photo, "parishRole")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, TRUE, $9, $10)
+        RETURNING "priestID", "firstName", "lastName", "fullName", "adminID", email, "phoneNumber", "clergyType", "religiousOrderCode", "parishRole", "isActive", photo
       `,
-      [personName.firstName, personName.lastName, adminID, identifiers.storedEmail, identifiers.storedPhoneNumber, passwordHash, clergyType, religiousOrderCode, String(req.body?.photo || "").trim() || null],
+      [personName.firstName, personName.lastName, adminID, identifiers.storedEmail, identifiers.storedPhoneNumber, passwordHash, clergyType, religiousOrderCode, String(req.body?.photo || "").trim() || null, parishRole.value],
     );
     createdPriest = insertResult.rows[0] || null;
     await client.query("COMMIT");
@@ -21775,7 +21796,13 @@ app.patch("/priests/:id", async (req, res) => {
     const clergyType = normalizePriestClergyType(req.body?.clergyType, { fallbackToDiocesan: true });
     const religiousOrderCodeInput = normalizeReligiousOrderCode(req.body?.religiousOrderCode);
     const religiousOrderCode = clergyType === PRIEST_CLERGY_TYPES.RELIGIOUS ? religiousOrderCodeInput : null;
+    // A request without this field (such as an older page) keeps the saved role.
+    const hasParishRole = Object.prototype.hasOwnProperty.call(req.body || {}, "parishRole");
+    const parishRole = normalizePriestParishRole(req.body?.parishRole);
 
+    if (!parishRole.ok) {
+      return res.status(400).json({ message: "Please select a valid parish role." });
+    }
     if (!Number.isInteger(priestID) || priestID <= 0) {
       return res.status(400).json({ message: "A valid priestID is required." });
     }
@@ -21836,11 +21863,12 @@ app.patch("/priests/:id", async (req, res) => {
           email = $3,
           "phoneNumber" = $4,
           "clergyType" = $5,
-          "religiousOrderCode" = $6
+          "religiousOrderCode" = $6,
+          "parishRole" = CASE WHEN $9::boolean THEN $10::varchar ELSE "parishRole" END
         WHERE "priestID" = $7 AND "adminID" = $8
-        RETURNING "priestID", "firstName", "lastName", "fullName", "adminID", email, "phoneNumber", "clergyType", "religiousOrderCode", "isActive", photo
+        RETURNING "priestID", "firstName", "lastName", "fullName", "adminID", email, "phoneNumber", "clergyType", "religiousOrderCode", "parishRole", "isActive", photo
       `,
-      [personName.firstName, personName.lastName, identifiers.storedEmail, identifiers.storedPhoneNumber, clergyType, religiousOrderCode, priestID, adminID],
+      [personName.firstName, personName.lastName, identifiers.storedEmail, identifiers.storedPhoneNumber, clergyType, religiousOrderCode, priestID, adminID, hasParishRole, parishRole.value],
     );
     if (linkedUser) {
       await client.query(
