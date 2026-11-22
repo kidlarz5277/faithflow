@@ -20024,7 +20024,8 @@ const resolveSpecialProgramSchedule = (reqBody) => {
 };
 
 app.post("/special-sacraments", async (req, res) => {
-  const dbClient = await pool.connect();
+  // Hold a connection only for the transaction, so the checks around it can use the pool.
+  let dbClient = null;
   try {
     const title = String(req.body?.calendarTitle || req.body?.s_sacramentName || req.body?.title || "").trim();
     const { eventDate, startTime, endTime, durationHours, occupiedSlots, slotCheck } = resolveSpecialProgramSchedule(req.body);
@@ -20083,6 +20084,7 @@ app.post("/special-sacraments", async (req, res) => {
     const formSchema = await getSpecialSacramentSchemaByName(title);
     const timeDate = `${eventDate}T${startTime}:00`;
 
+    dbClient = await pool.connect();
     await dbClient.query("BEGIN");
     const sacramentResult = await dbClient.query(
       `
@@ -20145,6 +20147,8 @@ app.post("/special-sacraments", async (req, res) => {
       );
     }
     await dbClient.query("COMMIT");
+    dbClient.release();
+    dbClient = null;
 
     const createdEntry = mapSpecialProgramEntry(resolvedCalendarRow, sacramentRow);
     await notifyPriestScheduleAssignment({
@@ -20156,7 +20160,7 @@ app.post("/special-sacraments", async (req, res) => {
     return res.status(201).json(createdEntry);
   } catch (error) {
     try {
-      await dbClient.query("ROLLBACK");
+      await dbClient?.query("ROLLBACK");
     } catch {
       // The transaction may already be closed.
     }
@@ -20166,7 +20170,7 @@ app.post("/special-sacraments", async (req, res) => {
     }
     return res.status(500).json({ message: "Unable to save calendar entry." });
   } finally {
-    dbClient.release();
+    dbClient?.release();
   }
 });
 
@@ -20377,7 +20381,8 @@ app.patch("/special-sacraments/:id/name", async (req, res) => {
 });
 
 app.patch("/special-sacraments/:id", async (req, res) => {
-  const dbClient = await pool.connect();
+  // Hold a connection only for the transaction, so the checks around it can use the pool.
+  let dbClient = null;
   try {
     const sSacramentID = Number(req.params.id);
     const title = String(req.body?.calendarTitle || req.body?.s_sacramentName || req.body?.title || "").trim();
@@ -20463,6 +20468,7 @@ app.patch("/special-sacraments/:id", async (req, res) => {
     const formSchema = await getSpecialSacramentSchemaByName(title);
     const timeDate = `${eventDate}T${startTime}:00`;
 
+    dbClient = await pool.connect();
     await dbClient.query("BEGIN");
     const sacramentResult = await dbClient.query(
       `
@@ -20562,6 +20568,8 @@ app.patch("/special-sacraments/:id", async (req, res) => {
     }
     const resolvedCalendarRow = await loadResolvedCalendarEntry(calendarResult.rows[0]?.id, dbClient);
     await dbClient.query("COMMIT");
+    dbClient.release();
+    dbClient = null;
 
     const updatedEntry = mapSpecialProgramEntry(resolvedCalendarRow, { ...sacramentResult.rows[0], formSchema });
     await cascadeSpecialProgramScheduleToAppointments(sSacramentID, {
@@ -20579,7 +20587,7 @@ app.patch("/special-sacraments/:id", async (req, res) => {
     return res.json(updatedEntry);
   } catch (error) {
     try {
-      await dbClient.query("ROLLBACK");
+      await dbClient?.query("ROLLBACK");
     } catch {
       // The transaction may already be closed.
     }
@@ -20589,7 +20597,7 @@ app.patch("/special-sacraments/:id", async (req, res) => {
     }
     return res.status(500).json({ message: "Unable to save calendar entry." });
   } finally {
-    dbClient.release();
+    dbClient?.release();
   }
 });
 

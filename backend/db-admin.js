@@ -10,6 +10,8 @@ const pool = new Pool({
   user: process.env.ADMIN_PGUSER || process.env.PGUSER || "postgres",
   password: process.env.ADMIN_PGPASSWORD || process.env.PGPASSWORD || "postgres",
   ssl: process.env.ADMIN_PGSSL === "true" ? { rejectUnauthorized: false } : false,
+  max: 5,
+  connectionTimeoutMillis: 10000,
 });
 
 const query = (text, params = []) => pool.query(text, params);
