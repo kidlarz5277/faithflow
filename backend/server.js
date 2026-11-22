@@ -2014,6 +2014,17 @@ const parseTimestampPartsInManila = (value) => {
   return { eventDate: "", startTime: "" };
 };
 
+// Slot times are parish (Manila) times, whatever time zone the server runs in.
+const getManilaOneHourSlot = (value) => {
+  const start = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(start.getTime())) return null;
+  const end = new Date(start.getTime() + 60 * 60 * 1000);
+  return {
+    startTime: parseTimestampPartsInManila(start).startTime,
+    endTime: parseTimestampPartsInManila(end).startTime,
+  };
+};
+
 const APPOINTMENT_CREDENTIAL_SCHEDULE_KEYS = [
   "scheduledEventDateTime",
   "finalSchedule",
@@ -17357,12 +17368,9 @@ app.patch("/appointments/:id/progress", async (req, res) => {
       if (!scheduleDateCheck.ok) {
         return res.status(400).json({ message: scheduleDateCheck.message });
       }
-      const parsedSchedule = new Date(nextScheduledEventDateTime);
-      if (!Number.isNaN(parsedSchedule.getTime())) {
-        const startTime = `${String(parsedSchedule.getHours()).padStart(2, "0")}:${String(parsedSchedule.getMinutes()).padStart(2, "0")}`;
-        const endDate = new Date(parsedSchedule.getTime());
-        endDate.setHours(endDate.getHours() + 1);
-        const endTime = `${String(endDate.getHours()).padStart(2, "0")}:${String(endDate.getMinutes()).padStart(2, "0")}`;
+      const scheduleSlot = getManilaOneHourSlot(nextScheduledEventDateTime);
+      if (scheduleSlot) {
+        const { startTime, endTime } = scheduleSlot;
         const slotCheck = assertScheduleTimeSlotAllowed(startTime, endTime);
         if (!slotCheck.ok) {
           return res.status(400).json({ message: slotCheck.message });
@@ -18019,9 +18027,7 @@ app.post("/appointments/:id/schedule-remarks", async (req, res) => {
         excludeCalendarEntryID,
         advanceDays: await resolveAppointmentScheduleAdvanceDays(appointment.adminID, appointment),
       });
-      const endDate = new Date(`${preferredDate}T${preferredTime}:00+08:00`);
-      endDate.setHours(endDate.getHours() + 1);
-      const endTime = `${String(endDate.getHours()).padStart(2, "0")}:${String(endDate.getMinutes()).padStart(2, "0")}`;
+      const endTime = getManilaOneHourSlot(preferredDateTime)?.endTime;
       const selectedSlot = (availability.slots || []).find(
         (slot) => slot.startTime === preferredTime && slot.endTime === endTime,
       );
