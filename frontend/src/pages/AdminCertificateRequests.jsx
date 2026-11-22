@@ -182,6 +182,34 @@ const isOfficeDayOffDate = (dateKey, dayOffWeekday, dayOffSpecificDates) => {
   return Number.isInteger(dayOffWeekday) && Number.isInteger(weekday) && dayOffWeekday === weekday;
 };
 
+const normalizePickupClock = (value) => {
+  const match = String(value || "").trim().match(/^(\d{1,2}):(\d{2})/);
+  return match ? `${match[1].padStart(2, "0")}:${match[2]}` : "";
+};
+
+const normalizeOfficeHalfDay = (value) => {
+  const weekday = Number(value?.weekday);
+  const startTime = normalizePickupClock(value?.startTime);
+  const endTime = normalizePickupClock(value?.endTime);
+  if (value === null || value === undefined) return null;
+  if (!Number.isInteger(weekday) || weekday < 0 || weekday > 6 || !startTime || !endTime) return null;
+  return { weekday, startTime, endTime };
+};
+
+const isOfficeHalfDayDate = (dateKey, halfDay) => Boolean(halfDay) && getDateKeyWeekday(dateKey) === halfDay.weekday;
+
+const isPickupSlotOutsideHalfDay = (dateKey, slot, halfDay) => {
+  if (!isOfficeHalfDayDate(dateKey, halfDay)) return false;
+  const startTime = normalizePickupClock(slot?.startTime);
+  const endTime = normalizePickupClock(slot?.endTime);
+  return !startTime || !endTime || startTime < halfDay.startTime || endTime > halfDay.endTime;
+};
+
+const formatPickupClockLabel = (value) => {
+  const [hours, minutes] = normalizePickupClock(value).split(":").map(Number);
+  return `${hours % 12 || 12}:${String(minutes).padStart(2, "0")} ${hours >= 12 ? "PM" : "AM"}`;
+};
+
 const getNextOpenPickupDateKey = (fromDate, dayOffWeekday, dayOffSpecificDates) => {
   const cursor = fromDate instanceof Date ? new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate()) : new Date();
   for (let offset = 0; offset < 21; offset += 1) {
@@ -234,6 +262,7 @@ function AdminCertificateRequests() {
   const [selectedRestoreRequest, setSelectedRestoreRequest] = useState(null);
   const [dayOffWeekday, setDayOffWeekday] = useState(null);
   const [dayOffSpecificDates, setDayOffSpecificDates] = useState([]);
+  const [officeHalfDay, setOfficeHalfDay] = useState(null);
 
   const authRaw =
     typeof window !== "undefined"
@@ -352,9 +381,11 @@ function AdminCertificateRequests() {
               .filter((date) => /^\d{4}-\d{2}-\d{2}$/.test(date))
           : [],
       );
+      setOfficeHalfDay(normalizeOfficeHalfDay(responseData?.halfDay));
     } catch {
       setDayOffWeekday(null);
       setDayOffSpecificDates([]);
+      setOfficeHalfDay(null);
     }
   }, [adminID]);
 
@@ -405,6 +436,19 @@ function AdminCertificateRequests() {
       calendarMonth: new Date(year, month - 1, 1),
     }));
   }, [approveModalState.isOpen, approveModalState.pickupDate, dayOffSpecificDates, dayOffWeekday]);
+
+  useEffect(() => {
+    if (!approveModalState.isOpen || !approveModalState.pickupTime) return;
+    const selectedSlot = { startTime: approveModalState.pickupTime, endTime: approveModalState.pickupEndTime };
+    if (!isPickupSlotOutsideHalfDay(approveModalState.pickupDate, selectedSlot, officeHalfDay)) return;
+    setApproveModalState((current) => ({ ...current, pickupTime: "", pickupEndTime: "" }));
+  }, [
+    approveModalState.isOpen,
+    approveModalState.pickupDate,
+    approveModalState.pickupEndTime,
+    approveModalState.pickupTime,
+    officeHalfDay,
+  ]);
 
   useEffect(() => {
     if (accountType !== "admin") return undefined;
@@ -543,7 +587,12 @@ function AdminCertificateRequests() {
     approveModalState.pickupDate &&
       approveModalState.pickupTime &&
       approveModalState.pickupEndTime &&
-      !isOfficeDayOffDate(approveModalState.pickupDate, dayOffWeekday, dayOffSpecificDates),
+      !isOfficeDayOffDate(approveModalState.pickupDate, dayOffWeekday, dayOffSpecificDates) &&
+      !isPickupSlotOutsideHalfDay(
+        approveModalState.pickupDate,
+        { startTime: approveModalState.pickupTime, endTime: approveModalState.pickupEndTime },
+        officeHalfDay,
+      ),
   );
   const isApprovingPickup = actionStateByRequestId[Number(pickupRequest?.id)] === "approve";
   const officeDayOffLabel = Number.isInteger(dayOffWeekday) ? OFFICE_WEEKDAY_LABELS[dayOffWeekday] : "";
@@ -552,6 +601,11 @@ function AdminCertificateRequests() {
     dayOffWeekday,
     dayOffSpecificDates,
   );
+  const isSelectedPickupHalfDay =
+    !isSelectedPickupDayOff && isOfficeHalfDayDate(approveModalState.pickupDate, officeHalfDay);
+  const selectedHalfDayHours = isSelectedPickupHalfDay
+    ? `${formatPickupClockLabel(officeHalfDay.startTime)} to ${formatPickupClockLabel(officeHalfDay.endTime)}`
+    : "";
 
   const handleLogout = () => {
     localStorage.removeItem("faithflow_auth");
@@ -730,6 +784,13 @@ function AdminCertificateRequests() {
       setApproveModalState((current) => ({
         ...current,
         error: "Choose a pickup time slot.",
+      }));
+      return;
+    }
+    if (isPickupSlotOutsideHalfDay(pickupDate, { startTime: pickupTime, endTime: pickupEndTime }, officeHalfDay)) {
+      setApproveModalState((current) => ({
+        ...current,
+        error: `This day is a half day. The parish is open ${formatPickupClockLabel(officeHalfDay.startTime)} to ${formatPickupClockLabel(officeHalfDay.endTime)} only.`,
       }));
       return;
     }
@@ -1390,6 +1451,7 @@ function AdminCertificateRequests() {
                     const isUpcomingDayOff =
                       !isPastDate && isOfficeDayOffDate(dateKey, dayOffWeekday, dayOffSpecificDates);
                     const isUnavailableDate = isPastDate || isUpcomingDayOff;
+                    const isHalfDayDate = !isUnavailableDate && isOfficeHalfDayDate(dateKey, officeHalfDay);
                     const isSelected = !isUnavailableDate && approveModalState.pickupDate === dateKey;
                     const isToday = todayDateKey === dateKey;
                     return (
@@ -1398,7 +1460,7 @@ function AdminCertificateRequests() {
                         type="button"
                         className={`certificate-pickup-date-cell${
                           isUpcomingDayOff ? " is-day-off" : isPastDate ? " is-past" : " is-open"
-                        }${isSelected ? " is-selected" : ""}${isToday ? " is-today" : ""}`}
+                        }${isHalfDayDate ? " is-half-day" : ""}${isSelected ? " is-selected" : ""}${isToday ? " is-today" : ""}`}
                         disabled={isUnavailableDate || isApprovingPickup}
                         aria-pressed={isSelected}
                         aria-label={
@@ -1406,13 +1468,19 @@ function AdminCertificateRequests() {
                             ? `${formatLongDate(dateKey)}, office day off`
                             : isPastDate
                               ? `${dayNumber}, unavailable`
-                              : `${formatLongDate(dateKey)}${isToday ? ", today" : ""}${isSelected ? ", selected" : ""}`
+                              : `${formatLongDate(dateKey)}${isHalfDayDate ? ", half day" : ""}${isToday ? ", today" : ""}${isSelected ? ", selected" : ""}`
                         }
                         onClick={() => {
                           if (isUnavailableDate) return;
                           setApproveModalState((current) => {
                             const stillValidSlot =
-                              current.pickupTime && !isPickupSlotPassedToday(dateKey, current.pickupTime);
+                              current.pickupTime &&
+                              !isPickupSlotPassedToday(dateKey, current.pickupTime) &&
+                              !isPickupSlotOutsideHalfDay(
+                                dateKey,
+                                { startTime: current.pickupTime, endTime: current.pickupEndTime },
+                                officeHalfDay,
+                              );
                             return {
                               ...current,
                               pickupDate: dateKey,
@@ -1424,7 +1492,7 @@ function AdminCertificateRequests() {
                         }}
                       >
                         <span>{dayNumber}</span>
-                        {isUpcomingDayOff ? <small>Off</small> : null}
+                        {isUpcomingDayOff ? <small>Off</small> : isHalfDayDate ? <small>Half</small> : null}
                       </button>
                     );
                   })}
@@ -1442,6 +1510,11 @@ function AdminCertificateRequests() {
                   <span>
                     <i className="is-day-off" /> Day off
                   </span>
+                  {officeHalfDay ? (
+                    <span>
+                      <i className="is-half-day" /> Half day
+                    </span>
+                  ) : null}
                 </div>
               </section>
               <section className="certificate-pickup-panel" aria-label="Pickup time slots">
@@ -1451,7 +1524,11 @@ function AdminCertificateRequests() {
                   </span>
                   <div>
                     <h4>Choose a 1-hour window</h4>
-                    <p>Parish hours are 8:00 AM to 5:00 PM.</p>
+                    <p>
+                      {isSelectedPickupHalfDay
+                        ? `Half day: open ${selectedHalfDayHours} only.`
+                        : "Parish hours are 8:00 AM to 5:00 PM."}
+                    </p>
                   </div>
                 </div>
                 <p className="certificate-pickup-selected-date">
@@ -1469,7 +1546,8 @@ function AdminCertificateRequests() {
                     const isUnavailable =
                       isSelectedPickupDayOff ||
                       !approveModalState.pickupDate ||
-                      isPickupSlotPassedToday(approveModalState.pickupDate, slot.startTime);
+                      isPickupSlotPassedToday(approveModalState.pickupDate, slot.startTime) ||
+                      isPickupSlotOutsideHalfDay(approveModalState.pickupDate, slot, officeHalfDay);
                     const isSelected =
                       !isUnavailable &&
                       approveModalState.pickupTime === slot.startTime &&

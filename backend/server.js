@@ -19024,6 +19024,13 @@ app.patch("/certificate-requests/:id/status", async (req, res) => {
       if (!resolvedPickupSlot) {
         return res.status(400).json({ message: "Choose a pickup time slot from 8:00 AM to 5:00 PM." });
       }
+      const halfDay = await fetchRecurringHalfDay(1);
+      const pickupWeekday = getOfficeDayWeekdayFromDateKey(resolvedPickupDate);
+      if (!isSlotWithinHalfDayHours(halfDay, pickupWeekday, resolvedPickupSlot.startTime, resolvedPickupSlot.endTime)) {
+        return res.status(400).json({
+          message: `This day is a half day. The parish is open ${formatClockRange(halfDay.startTime, halfDay.endTime)} only.`,
+        });
+      }
     }
 
     const paymentDate = resolvedStatus === "Completed"
