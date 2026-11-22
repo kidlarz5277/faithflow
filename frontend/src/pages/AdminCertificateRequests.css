@@ -293,7 +293,8 @@
   box-shadow: 0 24px 48px var(--ff-modal-shadow);
 }
 
-.certificate-pickup-modal {
+/* Stays wide even when the shared confirm-modal stylesheet loads after this one. */
+.appointment-confirm-modal.certificate-pickup-modal {
   width: min(860px, calc(100vw - 24px));
   max-height: calc(100vh - 32px);
   padding: 0;
