@@ -4,6 +4,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import App from "./App";
 import { enableGlobalTitleCaseInputs } from "./utils/autoTitleCaseInputs";
 import { startParishClock } from "./utils/parishClock";
+import { installSessionLogoutBridge } from "./utils/sessionLogout";
 import {
   fetchAccountTextStyle,
   fetchGlobalThemeSettings,
@@ -54,6 +55,7 @@ const FaqPage = lazy(() => import("./pages/FaqPage"));
 const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
 
 enableGlobalTitleCaseInputs();
+installSessionLogoutBridge();
 const bootstrapAppSettings = async () => {
   const localSettings = parseStoredSettings();
   let globalTheme = getStoredGlobalThemeSettings();

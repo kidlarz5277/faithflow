@@ -11,6 +11,14 @@ const path = require("path");
 const dotenv = require("dotenv");
 const { query, pool } = require("./db");
 const { query: adminQuery } = require("./db-admin");
+const { createAdminServiceProxy } = require("./adminProxy");
+const {
+  attachSession,
+  clearSessionCookie,
+  internalServiceHeaders,
+  isInternalServiceRequest,
+  setSessionCookie,
+} = require("./session");
 
 const sqlPersonFullName = (alias = "") => {
   const column = (name) => (alias ? `${alias}."${name}"` : `"${name}"`);
@@ -112,29 +120,11 @@ const ALLOWED_COLOR_PRESETS = new Set([
 
 app.use(cors({ origin: CLIENT_ORIGIN }));
 
-// In production only this server's port is public, so requests for the admin
-// server arrive here as /admin-api/* and are streamed to it unchanged (bodies
-// included, so file uploads work). Mounted before express.json() on purpose.
+// Mounted before express.json() so uploads stream through unchanged.
 // In local dev the Vite proxy sends /admin-api straight to port 3002 instead.
-app.use("/admin-api", (req, res) => {
-  const target = new URL(req.url, `${ADMIN_SERVICE_BASE_URL}/`);
-  const transport = target.protocol === "https:" ? require("https") : require("http");
-  const proxyReq = transport.request(
-    target,
-    { method: req.method, headers: { ...req.headers, host: target.host } },
-    (proxyRes) => {
-      res.writeHead(proxyRes.statusCode || 502, proxyRes.headers);
-      proxyRes.pipe(res);
-    },
-  );
-  proxyReq.on("error", (error) => {
-    console.error("Admin service proxy error:", error.message);
-    if (!res.headersSent) res.status(502).json({ message: "Admin service is unavailable." });
-    else res.end();
-  });
-  req.pipe(proxyReq);
-});
+app.use("/admin-api", createAdminServiceProxy(ADMIN_SERVICE_BASE_URL));
 
+app.use(attachSession);
 app.use(express.json({ limit: "15mb" }));
 app.use((error, _req, res, next) => {
   if (error?.type === "entity.too.large") {
@@ -2355,7 +2345,7 @@ const getParishSecretaryProfileEmail = async () => {
 const getAdminGmailSender = async () => {
   try {
     const result = await forwardJsonRequestToAdminService("/internal/gmail-sender", {
-      headers: { "X-Faithflow-Internal-Mailer": "faithflow-mailer" },
+      headers: internalServiceHeaders(),
     });
     if (!result.ok) return { email: "", gmailAppPassword: "" };
     return {
@@ -2958,12 +2948,6 @@ const sendFaithflowPasswordReset = async ({
     throw error;
   }
   return "email";
-};
-
-const isTrustedLocalMailRequest = (req) => {
-  const forwarded = String(req.headers["x-forwarded-for"] || "").split(",")[0].trim();
-  const ip = forwarded || String(req.socket?.remoteAddress || req.ip || "");
-  return ip === "127.0.0.1" || ip === "::1" || ip === "::ffff:127.0.0.1" || ip.endsWith("127.0.0.1");
 };
 
 const parseAndNormalizeReligiousOrderOptions = (options) => {
@@ -22793,7 +22777,7 @@ app.post("/profile/photo", (req, res, next) => {
 
 app.post("/mail/password-reset", async (req, res) => {
   try {
-    if (!isTrustedLocalMailRequest(req)) {
+    if (!isInternalServiceRequest(req)) {
       return res.status(403).json({ message: "This mail endpoint is only available to the parish servers." });
     }
     const email = normalizeEmail(req.body?.email || req.body?.to || "");
@@ -23002,6 +22986,7 @@ app.post("/login", async (req, res) => {
         ...sanitizePriestSession(linkedPriest),
         accountType: "priest",
       };
+      setSessionCookie(req, res, { accountType: "priest", accountID: linkedPriest.priestID });
       return res.json({
         message: "Login successful.",
         token,
@@ -23052,6 +23037,10 @@ app.post("/login", async (req, res) => {
           accountType: "priest",
         }
       : sanitizeUser(foundUser);
+    setSessionCookie(req, res, {
+      accountType,
+      accountID: linkedPriest ? linkedPriest.priestID : foundUser.userID,
+    });
     return res.json({
       message: "Login successful.",
       token,
@@ -23062,6 +23051,23 @@ app.post("/login", async (req, res) => {
     console.error("Login error:", error);
     return res.status(500).json({ message: "Unable to log in right now." });
   }
+});
+
+app.get("/session", (req, res) => {
+  res.setHeader("Cache-Control", "no-store");
+  if (!req.auth) return res.json({ authenticated: false });
+  return res.json({
+    authenticated: true,
+    accountType: req.auth.accountType,
+    accountID: req.auth.accountID,
+    expiresAt: new Date(req.auth.expiresAt * 1000).toISOString(),
+  });
+});
+
+app.post("/logout", (req, res) => {
+  clearSessionCookie(req, res);
+  res.setHeader("Cache-Control", "no-store");
+  return res.json({ message: "Signed out." });
 });
 
 const startServer = async () => {

@@ -1,5 +1,10 @@
 const { fork } = require("child_process");
+const crypto = require("crypto");
 const path = require("path");
+
+// Shared only by the two servers started here, so internal routes cannot be called from outside.
+process.env.INTERNAL_SERVICE_TOKEN =
+  String(process.env.INTERNAL_SERVICE_TOKEN || "").trim() || crypto.randomBytes(32).toString("hex");
 
 const services = [
   { name: "user-server", file: "server.js" },

@@ -7,6 +7,12 @@ const fs = require("fs/promises");
 const fsSync = require("fs");
 const path = require("path");
 const { query, pool } = require("./db-admin");
+const {
+  attachSession,
+  isInternalServiceRequest,
+  sessionCookieHeaders,
+  setSessionCookie,
+} = require("./session");
 
 const app = express();
 const PORT = Number(process.env.ADMIN_SERVER_PORT || 3002);
@@ -27,8 +33,6 @@ const normalizeLoginPhone = (value) => {
 };
 const normalizeGmailAppPassword = (value) => String(value || "").replace(/\s+/g, "").trim();
 const isValidGmailAppPassword = (value) => /^[a-zA-Z0-9]{16}$/.test(normalizeGmailAppPassword(value));
-const INTERNAL_MAILER_HEADER = "x-faithflow-internal-mailer";
-const INTERNAL_MAILER_TOKEN = "faithflow-mailer";
 
 const syncPriestMailerSender = async ({ senderEmail, smtpAppPassword }) => {
   const response = await fetch(`${MAIN_SERVER_BASE_URL}/settings/priest-email`, {
@@ -49,6 +53,7 @@ const syncPriestMailerSender = async ({ senderEmail, smtpAppPassword }) => {
 const adminPhotoUploadsDirectory = path.join(__dirname, "uploads", "admin-photos");
 const adminPhotoPublicBasePath = "/uploads/admin-photos/";
 app.use(cors({ origin: CLIENT_ORIGIN }));
+app.use(attachSession);
 app.use(express.json({ limit: "15mb" }));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -197,7 +202,7 @@ const forwardMultipartRequestToMainServer = async (req, res) => {
     const response = await fetch(requestUrl, {
       method: "POST",
       body: formData,
-      headers: { "X-Faithflow-Write-Source": "admin" },
+      headers: { ...sessionCookieHeaders(req), "X-Faithflow-Write-Source": "admin" },
     });
     const contentType = String(response.headers.get("content-type") || "").toLowerCase();
     if (contentType.includes("application/json")) {
@@ -437,7 +442,7 @@ const forwardRequestToMainServer = async (req, res) => {
     const requestUrl = `${MAIN_SERVER_BASE_URL}${requestPath}`;
     const method = String(req.method || "GET").toUpperCase();
 
-    const headers = {};
+    const headers = { ...sessionCookieHeaders(req) };
     const options = { method, headers };
     if (!["GET", "HEAD"].includes(method)) {
       headers["X-Faithflow-Write-Source"] = "admin";
@@ -466,7 +471,7 @@ const forwardRequestToMainServer = async (req, res) => {
 };
 
 app.get("/internal/gmail-sender", async (req, res) => {
-  if (req.get(INTERNAL_MAILER_HEADER) !== INTERNAL_MAILER_TOKEN) {
+  if (!isInternalServiceRequest(req)) {
     return res.status(404).json({ message: "Not found." });
   }
   try {
@@ -608,6 +613,7 @@ app.post("/login", async (req, res) => {
 
     const token = crypto.randomBytes(24).toString("hex");
     await recordAuditLog("admin_login", req, { targetType: "admin", targetID: "1" });
+    setSessionCookie(req, res, { accountType: "admin", accountID: 1 });
     return res.json({ message: "Login successful.", token, accountType: "admin", user: sanitizeAdmin(foundAdmin) });
   } catch (error) {
     console.error("Admin login error:", error);
@@ -1103,7 +1109,7 @@ app.get("/calendar-entries/print/month", async (req, res) => {
     const resolvedParishName = String(adminProfileResult.rows[0]?.parishName || "").trim() || "Parish";
     const requestQuery = new URLSearchParams({ adminID: "1", month: monthInput, parishName: resolvedParishName });
     if (hasPriestIdInput) requestQuery.set("priestID", String(parsedPriestID));
-    const response = await fetch(`${MAIN_SERVER_BASE_URL}/calendar-entries/print/month?${requestQuery.toString()}`, { method: "GET" });
+    const response = await fetch(`${MAIN_SERVER_BASE_URL}/calendar-entries/print/month?${requestQuery.toString()}`, { method: "GET", headers: sessionCookieHeaders(req) });
 
     const contentType = String(response.headers.get("content-type") || "").toLowerCase();
     if (contentType.includes("application/json")) {
@@ -1191,6 +1197,7 @@ app.post("/parish-activities/upload-image", async (req, res) => {
     const response = await fetch(`${MAIN_SERVER_BASE_URL}/parish-activities/upload-image`, {
       method: "POST",
       headers: {
+        ...sessionCookieHeaders(req),
         "Content-Type": req.headers["content-type"] || "",
         "Content-Length": req.headers["content-length"] || String(Buffer.concat(chunks).length),
       },
