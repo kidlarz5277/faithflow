@@ -492,7 +492,7 @@ function AdminHistoryPage() {
   };
 
   const openHistoryDetails = async (historyItem) => {
-    if (historyItem?.typeLabel === "Certificate") {
+    if (historyItem?.requestTypeKey === "certificate") {
       await openCertificateDetails(historyItem);
       return;
     }
