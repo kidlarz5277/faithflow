@@ -2080,6 +2080,33 @@
   border-color: color-mix(in srgb, var(--ff-primary) 20%, var(--ff-container-border));
 }
 
+.priest-schedule-card.is-priest_activity {
+  border-color: #d7b08a;
+  border-left-color: #a87345;
+}
+
+.priest-schedule-card.is-priest_activity .priest-card-date {
+  background: #a87345;
+}
+
+.priest-schedule-card.is-priest_activity .priest-schedule-card-kind {
+  color: #a87345;
+  font-weight: 700;
+}
+
+.priest-schedule-card .priest-card-date.is-range span,
+.priest-schedule-card .priest-card-date.is-range small {
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.priest-schedule-card .priest-card-date.is-range strong {
+  font-size: 1.12rem;
+  line-height: 1.15;
+  white-space: nowrap;
+}
+
 .priest-schedule-card.is-past {
   opacity: 0.78;
 }

@@ -8,6 +8,7 @@ import Sidebar from "../components/Sidebar";
 import defaultPriestAvatar from "../assets/default-priest-avatar.svg";
 import { getInitialSidebarOpen, toggleSidebarOpen } from "../utils/sidebarState";
 import {
+  formatOccupiedSlotsLabel,
   getCalendarEntryDisplayTitle,
   getCalendarEntryLocationLabel,
   getManilaDateKeyAndMinutes,
@@ -184,13 +185,17 @@ const resolvePriestPhotoSource = (photoValue, versionValue) => {
 
 const PRIEST_LIST_PAGE_SIZE = 7;
 
+const isPriestUnavailabilityEntry = (entry) =>
+  String(entry?.scheduleType || "").trim().toLowerCase() === "priest_activity";
+
 const getScheduleStatus = (entryOrDate, todayKey) => {
   if (entryOrDate && typeof entryOrDate === "object") {
     const tone = String(entryOrDate.statusKey || "").trim();
-    if (tone === "today" || tone === "upcoming" || tone === "past" || tone === "unknown") {
-      return { label: entryOrDate.statusLabel || (tone === "past" ? "Completed" : tone === "today" ? "Today" : "Upcoming"), tone };
-    }
-    return getScheduleStatus(entryOrDate.eventDate, todayKey);
+    const status =
+      tone === "today" || tone === "upcoming" || tone === "past" || tone === "unknown"
+        ? { label: entryOrDate.statusLabel || (tone === "past" ? "Completed" : tone === "today" ? "Today" : "Upcoming"), tone }
+        : getScheduleStatus(entryOrDate.eventDate, todayKey);
+    return isPriestUnavailabilityEntry(entryOrDate) && status.tone === "past" ? { ...status, label: "Ended" } : status;
   }
   const normalizedDate = String(entryOrDate || "");
   if (!normalizedDate) return { label: "Date not set", tone: "unknown" };
@@ -199,9 +204,89 @@ const getScheduleStatus = (entryOrDate, todayKey) => {
   return { label: "Completed", tone: "past" };
 };
 
+// Consecutive unavailability days with the same details display as one card.
+const addDaysToDateKey = (dateKey, days) => {
+  const date = new Date(`${dateKey}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+};
+
+const getDateRangeDayCount = (startDate, endDate) =>
+  Math.round((Date.parse(`${endDate}T00:00:00Z`) - Date.parse(`${startDate}T00:00:00Z`)) / 86400000) + 1;
+
+const formatDateRangeLabel = (startDate, endDate) => {
+  const start = new Date(`${startDate}T00:00:00`);
+  const end = new Date(`${endDate}T00:00:00`);
+  const startMonth = start.toLocaleDateString("en-US", { month: "long" });
+  const endMonth = end.toLocaleDateString("en-US", { month: "long" });
+  if (start.getFullYear() !== end.getFullYear()) {
+    return `${startMonth} ${start.getDate()}, ${start.getFullYear()} – ${endMonth} ${end.getDate()}, ${end.getFullYear()}`;
+  }
+  if (start.getMonth() !== end.getMonth()) {
+    return `${startMonth} ${start.getDate()} – ${endMonth} ${end.getDate()}, ${end.getFullYear()}`;
+  }
+  return `${startMonth} ${start.getDate()}–${end.getDate()}, ${end.getFullYear()}`;
+};
+
+const formatScheduleDateLabel = (entry) =>
+  entry?.rangeEndDate
+    ? `${formatDateRangeLabel(entry.eventDate, entry.rangeEndDate)} (${getDateRangeDayCount(entry.eventDate, entry.rangeEndDate)} days)`
+    : formatLongDate(entry?.eventDate);
+
+const getScheduleMemberIds = (entry) => entry?.memberIds || [entry?.id];
+
+const getUnavailabilitySignature = (entry) =>
+  JSON.stringify([
+    Number(entry.priestID),
+    getCalendarEntryDisplayTitle(entry),
+    sanitizeScheduleNotes(entry.notes),
+    String(entry.location || "").trim(),
+    formatOccupiedSlotsLabel(entry.occupiedSlots, entry.startTime, entry.endTime),
+  ]);
+
+const combineConsecutiveUnavailability = (entries, todayKey) => {
+  const isDatedUnavailability = (entry) =>
+    isPriestUnavailabilityEntry(entry) && /^\d{4}-\d{2}-\d{2}$/.test(String(entry.eventDate || "").slice(0, 10));
+  const otherEntries = entries.filter((entry) => !isDatedUnavailability(entry));
+  const sortedUnavailability = entries
+    .filter(isDatedUnavailability)
+    .map((entry) => ({ ...entry, eventDate: String(entry.eventDate).slice(0, 10) }))
+    .sort((a, b) => a.eventDate.localeCompare(b.eventDate) || Number(a.id) - Number(b.id));
+  const openGroups = new Map();
+  const groups = [];
+  sortedUnavailability.forEach((entry) => {
+    const signature = getUnavailabilitySignature(entry);
+    const group = openGroups.get(signature);
+    if (group && entry.eventDate <= addDaysToDateKey(group.endDate, 1)) {
+      group.endDate = entry.eventDate;
+      group.entries.push(entry);
+      return;
+    }
+    const nextGroup = { endDate: entry.eventDate, entries: [entry] };
+    openGroups.set(signature, nextGroup);
+    groups.push(nextGroup);
+  });
+  const combinedEntries = groups.map(({ endDate, entries: groupEntries }) => {
+    const first = groupEntries[0];
+    if (endDate === first.eventDate) return first;
+    const statusKey = endDate < todayKey ? "past" : first.eventDate <= todayKey ? "today" : "upcoming";
+    return {
+      ...first,
+      rangeEndDate: endDate,
+      memberIds: groupEntries.map((entry) => entry.id),
+      statusKey,
+      statusLabel: statusKey === "past" ? "Ended" : statusKey === "today" ? "Ongoing" : "Upcoming",
+    };
+  });
+  return [...otherEntries, ...combinedEntries];
+};
+
 const formatFormalScheduleWhen = (entry) => {
   const dateLabel = formatLongDate(entry?.eventDate);
-  const timeLabel = `${to12HourTime(entry?.startTime)} – ${to12HourTime(entry?.endTime)}`;
+  const timeLabel = isPriestUnavailabilityEntry(entry)
+    ? formatOccupiedSlotsLabel(entry?.occupiedSlots, entry?.startTime, entry?.endTime) || "Time not set"
+    : `${to12HourTime(entry?.startTime)} – ${to12HourTime(entry?.endTime)}`;
+  if (entry?.rangeEndDate) return `${formatScheduleDateLabel(entry)} · ${timeLabel}`;
   const normalized = String(entry?.eventDate || "").trim();
   if (!/^\d{4}-\d{2}-\d{2}$/.test(normalized)) return timeLabel;
   const weekday = new Date(`${normalized}T00:00:00`).toLocaleDateString("en-US", { weekday: "long" });
@@ -223,15 +308,16 @@ const getScheduleDateParts = (value) => {
   };
 };
 
-function ScheduleDateBlock({ value }) {
+function ScheduleDateBlock({ value, endValue }) {
   const dateParts = getScheduleDateParts(value);
+  const endParts = endValue ? getScheduleDateParts(endValue) : null;
   return (
-    <div className="priest-card-date" aria-hidden="true">
+    <div className={`priest-card-date${endParts ? " is-range" : ""}`} aria-hidden="true">
       {dateParts ? (
         <>
-          <span>{dateParts.month}</span>
-          <strong>{dateParts.day}</strong>
-          <small>{dateParts.year}</small>
+          <span>{endParts && endParts.month !== dateParts.month ? `${dateParts.month}–${endParts.month}` : dateParts.month}</span>
+          <strong>{endParts ? `${dateParts.day}–${endParts.day}` : dateParts.day}</strong>
+          <small>{endParts && endParts.year !== dateParts.year ? `${dateParts.year}–${endParts.year}` : dateParts.year}</small>
         </>
       ) : (
         <CalendarDays size={22} />
@@ -259,6 +345,7 @@ const resolvePriestDetailViewFromSearch = (searchParams) => {
 const getScheduleKindLabel = (entry) => {
   const scheduleType = String(entry?.scheduleType || "").trim().toLowerCase();
   if (scheduleType === "parish_event") return "Parish Event";
+  if (scheduleType === "priest_activity") return "Priest Unavailability";
   if (isAppointmentCalendarEntry(entry)) return "Appointment";
   return "Priest Event";
 };
@@ -485,7 +572,9 @@ function AdminPriestManagement() {
     setSelectedScheduleEntry(entry);
     setSelectedScheduleAppointments([]);
     setScheduleAppointmentsError("");
-    void loadScheduleAppointmentDetails(entry);
+    if (!isPriestUnavailabilityEntry(entry)) {
+      void loadScheduleAppointmentDetails(entry);
+    }
   };
 
   const handleMarkRemarkReviewed = async (remark) => {
@@ -604,7 +693,7 @@ function AdminPriestManagement() {
     const entry = calendarEntries.find((item) => Number(item.id) === scheduleID);
     if (!entry) return;
     deepLinkAppliedRef.current = deepLinkKey;
-    const node = document.getElementById(`priest-schedule-${scheduleID}`);
+    const node = document.querySelector(`[data-schedule-ids~="${scheduleID}"]`);
     if (node) {
       node.scrollIntoView({ behavior: "smooth", block: "center" });
     }
@@ -626,7 +715,7 @@ function AdminPriestManagement() {
     const scheduleID = Number(searchParams.get("scheduleID"));
     if (detailView !== "schedule") return;
     if (!Number.isInteger(scheduleID) || scheduleID <= 0) return;
-    const node = document.getElementById(`priest-schedule-${scheduleID}`);
+    const node = document.querySelector(`[data-schedule-ids~="${scheduleID}"]`);
     if (!node) return;
     node.scrollIntoView({ behavior: "smooth", block: "center" });
   }, [calendarEntries, detailView, searchParams]);
@@ -698,7 +787,7 @@ function AdminPriestManagement() {
   const priestSchedules = calendarEntries
     .filter((entry) => {
       const scheduleType = String(entry.scheduleType || "").trim().toLowerCase();
-      if (scheduleType !== "priest_schedule" && scheduleType !== "parish_event") return false;
+      if (!["priest_schedule", "parish_event", "priest_activity"].includes(scheduleType)) return false;
       if (!(Number(entry.priestID) > 0)) return false;
       const assignedPriest = priests.find((priest) => Number(priest.priestID) === Number(entry.priestID));
       return assignedPriest?.isActive !== false;
@@ -739,7 +828,7 @@ function AdminPriestManagement() {
       : "Clergy Type: Diocesan";
   const todayKey = getManilaDateKeyAndMinutes().dateKey;
   const selectedPriestSchedules = selectedPriest
-    ? [...(schedulesByPriest[selectedPriest.priestID] || [])].sort((a, b) => {
+    ? combineConsecutiveUnavailability(schedulesByPriest[selectedPriest.priestID] || [], todayKey).sort((a, b) => {
         const dateA = String(a.eventDate || "");
         const dateB = String(b.eventDate || "");
         const dateTimeA = `${dateA}T${a.startTime || "00:00"}:00`;
@@ -769,7 +858,9 @@ function AdminPriestManagement() {
     (safeSchedulePage - 1) * PRIEST_LIST_PAGE_SIZE,
     safeSchedulePage * PRIEST_LIST_PAGE_SIZE,
   );
-  const selectedCompletedSchedulesCount = completedSchedules.length;
+  // Unavailability appears in the lists, but it is not an assigned schedule in the priest's totals.
+  const selectedAssignedSchedulesCount = selectedPriestSchedules.filter((entry) => !isPriestUnavailabilityEntry(entry)).length;
+  const selectedCompletedSchedulesCount = completedSchedules.filter((entry) => !isPriestUnavailabilityEntry(entry)).length;
   const unreviewedRemarks = priestScheduleRemarks.filter((item) => !item.reviewedBySecretary);
   const reviewedRemarks = priestScheduleRemarks.filter((item) => item.reviewedBySecretary);
   const visibleRemarks = remarksListView === "reviewed" ? reviewedRemarks : unreviewedRemarks;
@@ -784,10 +875,13 @@ function AdminPriestManagement() {
     : unreviewedRemarks.length;
   const selectedScheduleStatus = selectedScheduleEntry ? getScheduleStatus(selectedScheduleEntry, todayKey) : null;
   const selectedScheduleTheme = selectedScheduleEntry ? getScheduleEventTheme(selectedScheduleEntry) : null;
+  const selectedScheduleIsUnavailability = isPriestUnavailabilityEntry(selectedScheduleEntry);
   const selectedScheduleTypeLabel = selectedScheduleEntry
-    ? String(selectedScheduleEntry.scheduleType || "") === "priest_schedule"
-      ? "Priest Schedule"
-      : "Parish Event"
+    ? selectedScheduleIsUnavailability
+      ? "Priest Unavailability"
+      : String(selectedScheduleEntry.scheduleType || "") === "priest_schedule"
+        ? "Priest Schedule"
+        : "Parish Event"
     : "N/A";
   const toTimeInputValue = (value) => {
     const match = String(value || "").trim().match(/^(\d{1,2}):(\d{2})/);
@@ -1344,7 +1438,7 @@ function AdminPriestManagement() {
                               </span>
                               <div>
                                 <p>Total Schedules</p>
-                                <h5>{selectedPriestSchedules.length}</h5>
+                                <h5>{selectedAssignedSchedulesCount}</h5>
                               </div>
                             </button>
                             <button
@@ -1449,16 +1543,20 @@ function AdminPriestManagement() {
                                         const status = getScheduleStatus(entry, todayKey);
                                         const kindLabel = entry.kindLabel || getScheduleKindLabel(entry);
                                         const notesLabel = cleanScheduleNotes(entry.notes);
-                                        const locationLabel =
-                                          String(entry.locationLabel || "").trim() ||
-                                          getCalendarEntryLocationLabel(entry, { emptyLabel: "Parish" });
+                                        const locationLabel = isPriestUnavailabilityEntry(entry)
+                                          ? String(entry.location || "").trim()
+                                          : String(entry.locationLabel || "").trim() ||
+                                            getCalendarEntryLocationLabel(entry, { emptyLabel: "Parish" });
                                         const requesterName = String(entry.requesterFullName || "").trim();
                                         return (
                                           <li
                                             key={`priest-schedule-${entry.id}`}
                                             id={`priest-schedule-${entry.id}`}
+                                            data-schedule-ids={getScheduleMemberIds(entry).join(" ")}
                                             className={`priest-schedule-card is-${status.tone} is-${entry.kind || "priest_schedule"}${
-                                              Number(searchParams.get("scheduleID")) === Number(entry.id) ? " is-focus" : ""
+                                              getScheduleMemberIds(entry).some((id) => Number(id) === Number(searchParams.get("scheduleID")))
+                                                ? " is-focus"
+                                                : ""
                                             }`}
                                             role="button"
                                             tabIndex={0}
@@ -1471,7 +1569,7 @@ function AdminPriestManagement() {
                                               }
                                             }}
                                           >
-                                            <ScheduleDateBlock value={entry.eventDate} />
+                                            <ScheduleDateBlock value={entry.eventDate} endValue={entry.rangeEndDate} />
                                             <div className="priest-card-body">
                                             <div className="priest-schedule-card-head">
                                               <div>
@@ -1482,10 +1580,12 @@ function AdminPriestManagement() {
                                             </div>
                                             <p className="priest-schedule-card-when">{formatFormalScheduleWhen(entry)}</p>
                                             <div className="priest-schedule-card-meta">
-                                              <span>
-                                                <MapPin size={14} aria-hidden="true" />
-                                                {locationLabel}
-                                              </span>
+                                              {locationLabel ? (
+                                                <span>
+                                                  <MapPin size={14} aria-hidden="true" />
+                                                  {locationLabel}
+                                                </span>
+                                              ) : null}
                                               {requesterName ? (
                                                 <span>
                                                   <UserRound size={14} aria-hidden="true" />
@@ -1853,9 +1953,11 @@ function AdminPriestManagement() {
           >
             <header className="priest-schedule-detail-header">
               <div>
-                <p className="priest-schedule-detail-kicker">Parish event</p>
+                <p className="priest-schedule-detail-kicker">
+                  {selectedScheduleIsUnavailability ? "Priest unavailability" : "Parish event"}
+                </p>
                 <h3>{getCalendarEntryDisplayTitle(selectedScheduleEntry)}</h3>
-                <p>Complete event details</p>
+                <p>{selectedScheduleIsUnavailability ? "Complete unavailability details" : "Complete event details"}</p>
               </div>
               <div className="priest-schedule-detail-header-side">
                 <span className={`priest-schedule-status is-${selectedScheduleStatus?.tone || "unknown"}`}>
@@ -1913,6 +2015,7 @@ function AdminPriestManagement() {
               <p>
                 <span>Reference ID</span>
                 #{selectedScheduleEntry.id || "N/A"}
+                {selectedScheduleEntry.memberIds?.length > 1 ? ` + ${selectedScheduleEntry.memberIds.length - 1} more` : ""}
               </p>
               <p>
                 <span>Event Type</span>
@@ -1920,20 +2023,30 @@ function AdminPriestManagement() {
               </p>
               <p>
                 <span>Date</span>
-                {formatLongDate(selectedScheduleEntry.eventDate)}
+                {formatScheduleDateLabel(selectedScheduleEntry)}
               </p>
               <p>
                 <span>Time</span>
-                {to12HourTime(selectedScheduleEntry.startTime)} - {to12HourTime(selectedScheduleEntry.endTime)}
+                {selectedScheduleIsUnavailability
+                  ? formatOccupiedSlotsLabel(
+                      selectedScheduleEntry.occupiedSlots,
+                      selectedScheduleEntry.startTime,
+                      selectedScheduleEntry.endTime,
+                    ) || "Time not set"
+                  : `${to12HourTime(selectedScheduleEntry.startTime)} - ${to12HourTime(selectedScheduleEntry.endTime)}`}
               </p>
-              <p>
-                <span>Start Time</span>
-                {to12HourTime(selectedScheduleEntry.startTime)}
-              </p>
-              <p>
-                <span>End Time</span>
-                {to12HourTime(selectedScheduleEntry.endTime)}
-              </p>
+              {!selectedScheduleIsUnavailability ? (
+                <>
+                  <p>
+                    <span>Start Time</span>
+                    {to12HourTime(selectedScheduleEntry.startTime)}
+                  </p>
+                  <p>
+                    <span>End Time</span>
+                    {to12HourTime(selectedScheduleEntry.endTime)}
+                  </p>
+                </>
+              ) : null}
               <p>
                 <span>Location</span>
                 {selectedScheduleEntry.location || "Location not set"}
@@ -1947,6 +2060,7 @@ function AdminPriestManagement() {
                 {sanitizeScheduleNotes(selectedScheduleEntry.notes) || "N/A"}
               </p>
             </div>
+            {!selectedScheduleIsUnavailability ? (
             <section className={`priest-schedule-appointments-section${isEditingScheduleTime ? " is-hidden-while-editing" : ""}`}>
               <h4>Appointment Submissions</h4>
               {isLoadingScheduleAppointments ? (
@@ -2001,6 +2115,7 @@ function AdminPriestManagement() {
                 <p className="priest-empty">No linked appointment submissions found for this event date.</p>
               )}
             </section>
+            ) : null}
             <div className="priest-modal-actions">
               {isEditingScheduleTime ? (
                 <>
