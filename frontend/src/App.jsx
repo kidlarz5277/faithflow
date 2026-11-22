@@ -14,6 +14,7 @@ import {
   splitParagraphs,
   splitParishHeroLines,
 } from "./utils/aboutPageContent";
+import { fetchAccountTextStyle, parseStoredSettings, saveAppSettings } from "./utils/appSettings";
 import "./App.css";
 
 const resolveParishActivityImageSrc = (value) => {
@@ -326,7 +327,6 @@ function App({ initialPage = "about" }) {
         const accountID = Number(normalizedAccountType === "priest" ? authData.user?.priestID : authData.user?.userID);
         if (Number.isInteger(accountID) && accountID > 0) {
           try {
-            const { fetchAccountTextStyle, parseStoredSettings, saveAppSettings } = await import("./utils/appSettings");
             const textStyle = await fetchAccountTextStyle({ accountType: normalizedAccountType, accountID });
             saveAppSettings({ ...parseStoredSettings(), textStyle });
           } catch {

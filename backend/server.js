@@ -111,6 +111,30 @@ const ALLOWED_COLOR_PRESETS = new Set([
 ]);
 
 app.use(cors({ origin: CLIENT_ORIGIN }));
+
+// In production only this server's port is public, so requests for the admin
+// server arrive here as /admin-api/* and are streamed to it unchanged (bodies
+// included, so file uploads work). Mounted before express.json() on purpose.
+// In local dev the Vite proxy sends /admin-api straight to port 3002 instead.
+app.use("/admin-api", (req, res) => {
+  const target = new URL(req.url, `${ADMIN_SERVICE_BASE_URL}/`);
+  const transport = target.protocol === "https:" ? require("https") : require("http");
+  const proxyReq = transport.request(
+    target,
+    { method: req.method, headers: { ...req.headers, host: target.host } },
+    (proxyRes) => {
+      res.writeHead(proxyRes.statusCode || 502, proxyRes.headers);
+      proxyRes.pipe(res);
+    },
+  );
+  proxyReq.on("error", (error) => {
+    console.error("Admin service proxy error:", error.message);
+    if (!res.headersSent) res.status(502).json({ message: "Admin service is unavailable." });
+    else res.end();
+  });
+  req.pipe(proxyReq);
+});
+
 app.use(express.json({ limit: "15mb" }));
 app.use((error, _req, res, next) => {
   if (error?.type === "entity.too.large") {
@@ -3963,7 +3987,27 @@ const notifyCertificateRequester = async ({
   });
 };
 
-const notifyProgressTaskUnchecked = async ({ appointmentID, taskLabel, stepTitle, reason }) => {
+const PROGRESS_UNCHECK_SMS_REASON_LIMIT = 100;
+
+// "Faithflow: Your Blessing request update. Step 1, Task 2 was unchecked on November 22, 2026, 4:27 PM. Reason: ..."
+const buildProgressTaskUncheckedSms = ({ serviceName, stepIndex, taskIndex, uncheckedAt, reason }) => {
+  const when = uncheckedAt.toLocaleString("en-US", {
+    timeZone: "Asia/Manila",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).replace(" at ", ", ");
+  const safeReason = toSmsSafeText(reason);
+  const shortReason =
+    safeReason.length > PROGRESS_UNCHECK_SMS_REASON_LIMIT
+      ? `${safeReason.slice(0, PROGRESS_UNCHECK_SMS_REASON_LIMIT).trimEnd()}...`
+      : safeReason;
+  return `Faithflow: Your ${toSmsSafeText(serviceName)} request update. Step ${stepIndex + 1}, Task ${taskIndex + 1} was unchecked on ${when}. Reason: ${shortReason}`;
+};
+
+const notifyProgressTaskUnchecked = async ({ appointmentID, taskLabel, stepTitle, stepIndex, taskIndex, reason }) => {
   const normalizedAppointmentID = Number(appointmentID);
   const normalizedReason = String(reason || "").trim();
   if (!Number.isInteger(normalizedAppointmentID) || normalizedAppointmentID <= 0 || !normalizedReason) {
@@ -3975,20 +4019,40 @@ const notifyProgressTaskUnchecked = async ({ appointmentID, taskLabel, stepTitle
       SELECT
         a."appointmentID",
         a."userID",
-        COALESCE(s."sacramentName", ss."s_sacramentName", 'appointment') AS "serviceName"
+        COALESCE(s."sacramentName", ss."s_sacramentName", 'appointment') AS "serviceName",
+        u."contactNumber" AS "userContactNumber",
+        a.credentials
       FROM appointments a
       LEFT JOIN sacraments s ON s."sacramentID" = a."sacramentID"
       LEFT JOIN special_sacraments ss ON ss."s_sacramentID" = a."s_sacramentID"
+      LEFT JOIN users u ON u."userID" = a."userID"
       WHERE a."appointmentID" = $1
       LIMIT 1
     `,
     [normalizedAppointmentID],
   );
   const appointment = appointmentResult.rows[0];
-  const userID = Number(appointment?.userID);
-  if (!appointment || !Number.isInteger(userID) || userID <= 0) return null;
+  if (!appointment) return null;
 
   const serviceName = String(appointment.serviceName || "appointment").trim() || "appointment";
+  if (Number.isInteger(stepIndex) && stepIndex >= 0 && Number.isInteger(taskIndex) && taskIndex >= 0) {
+    sendAppointmentRequesterSms({
+      appointmentID: normalizedAppointmentID,
+      label: "checklist uncheck",
+      message: buildProgressTaskUncheckedSms({
+        serviceName,
+        stepIndex,
+        taskIndex,
+        uncheckedAt: new Date(),
+        reason: normalizedReason,
+      }),
+      phoneNumbers: [appointment.userContactNumber, ...getAppointmentCredentialPhoneNumbers(appointment.credentials)],
+    });
+  }
+
+  const userID = Number(appointment.userID);
+  if (!Number.isInteger(userID) || userID <= 0) return null;
+
   const normalizedTaskLabel = String(taskLabel || "A checklist task").trim() || "A checklist task";
   const normalizedStepTitle = String(stepTitle || "").trim();
   const stepContext = normalizedStepTitle ? ` in "${normalizedStepTitle}"` : "";
@@ -17432,11 +17496,17 @@ app.patch("/appointments/:id/progress", async (req, res) => {
     }
 
     if (uncheckedTasks.length > 0 && taskUncheckReason) {
-      const notifyTarget = uncheckedTasks[0];
+      const notifyTarget =
+        uncheckedTasks.find(
+          (entry) =>
+            Number(rawTaskUncheck?.stepIndex) === entry.stepIndex && Number(rawTaskUncheck?.taskIndex) === entry.taskIndex,
+        ) || uncheckedTasks[0];
       await notifyProgressTaskUnchecked({
         appointmentID,
         taskLabel: String(rawTaskUncheck?.taskLabel || notifyTarget.taskLabel || "").trim() || "A checklist task",
         stepTitle: String(rawTaskUncheck?.stepTitle || notifyTarget.stepTitle || "").trim(),
+        stepIndex: notifyTarget.stepIndex,
+        taskIndex: notifyTarget.taskIndex,
         reason: taskUncheckReason,
       });
     }
