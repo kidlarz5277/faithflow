@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node start-backend.js",
     "dev": "node start-backend.js",
-    "reset-admin-password": "node reset-admin-password.js"
+    "reset-admin-password": "node reset-admin-password.js",
+    "gmail-auth": "node scripts/get-gmail-refresh-token.js"
   },
   "keywords": [],
   "author": "",

@@ -2368,11 +2368,93 @@ const getAdminGmailSender = async () => {
   }
 };
 
+const MAIL_TIMEOUT_MS = 15000;
+const SMTP_TIMEOUT_OPTIONS = {
+  connectionTimeout: MAIL_TIMEOUT_MS,
+  greetingTimeout: MAIL_TIMEOUT_MS,
+  socketTimeout: MAIL_TIMEOUT_MS,
+};
+
+// Builds the email without sending it, so the Gmail API can deliver it over HTTPS.
+const gmailMessageBuilder = nodemailer.createTransport({ streamTransport: true, buffer: true, newline: "windows" });
+let gmailAccessTokenCache = { key: "", token: "", expiresAt: 0 };
+
+const fetchGmail = async (url, options) => {
+  try {
+    return await fetch(url, { ...options, signal: AbortSignal.timeout(MAIL_TIMEOUT_MS) });
+  } catch (error) {
+    if (error?.name === "TimeoutError" || error?.name === "AbortError") {
+      throw new Error("Gmail did not respond in time. Please try again.");
+    }
+    throw new Error("Unable to reach Gmail. Please try again.");
+  }
+};
+
+const getGmailAccessToken = async (config) => {
+  const key = `${config.oauthClientId}|${config.oauthRefreshToken}`;
+  if (gmailAccessTokenCache.key === key && gmailAccessTokenCache.expiresAt > Date.now()) {
+    return gmailAccessTokenCache.token;
+  }
+  const response = await fetchGmail("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: config.oauthClientId,
+      client_secret: config.oauthClientSecret,
+      refresh_token: config.oauthRefreshToken,
+      grant_type: "refresh_token",
+    }),
+  });
+  const payload = await response.json().catch(() => ({}));
+  if (!response.ok || !payload.access_token) {
+    if (payload.error === "invalid_grant") {
+      throw new Error("Gmail authorization expired or was revoked. Create a new PRIEST_GMAIL_OAUTH_REFRESH_TOKEN.");
+    }
+    if (payload.error === "invalid_client" || payload.error === "unauthorized_client") {
+      throw new Error("Gmail rejected the OAuth client. Check PRIEST_GMAIL_OAUTH_CLIENT_ID and CLIENT_SECRET.");
+    }
+    throw new Error(`Gmail authorization failed (status ${response.status}).`);
+  }
+  const expiresInMs = Math.max(0, Number(payload.expires_in || 3600) - 60) * 1000;
+  gmailAccessTokenCache = { key, token: payload.access_token, expiresAt: Date.now() + expiresInMs };
+  return payload.access_token;
+};
+
+// Has the same sendMail shape as a Nodemailer transport, so the email senders work with either.
+const createGmailApiMailer = (config) => ({
+  sendMail: async (message) => {
+    const built = await gmailMessageBuilder.sendMail(message);
+    const raw = Buffer.from(built.message).toString("base64url");
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      const accessToken = await getGmailAccessToken(config);
+      const response = await fetchGmail("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${accessToken}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ raw }),
+      });
+      if (response.ok) {
+        const payload = await response.json().catch(() => ({}));
+        return { messageId: payload.id || "" };
+      }
+      if (response.status === 401 && attempt === 0) {
+        gmailAccessTokenCache = { key: "", token: "", expiresAt: 0 };
+        continue;
+      }
+      if (response.status === 403) {
+        throw new Error("Gmail denied permission to send. Enable the Gmail API and authorize the gmail.send scope.");
+      }
+      throw new Error(`Gmail could not send the email (status ${response.status}).`);
+    }
+    throw new Error("Gmail authorization failed. Create a new PRIEST_GMAIL_OAUTH_REFRESH_TOKEN.");
+  },
+});
+
 const verifyPriestSmtpCredentials = async ({ host, port, secure, user, pass }) => {
   const transporter = nodemailer.createTransport({
     host,
     port,
     secure,
+    ...SMTP_TIMEOUT_OPTIONS,
     auth: {
       user,
       pass,
@@ -2445,11 +2527,11 @@ const getPriestMailerConfig = async () => {
     && !isMissingOrPlaceholderValue(oauthClientId)
     && !isMissingOrPlaceholderValue(oauthClientSecret)
     && !isMissingOrPlaceholderValue(oauthRefreshToken);
-  const profileSmtpReady = Boolean(profileSender && user === profileSender && !isMissingOrPlaceholderValue(pass));
-  const authMode = !profileSmtpReady && canUseOAuth2 ? "oauth2" : "smtp-password";
+  // Render's free plan blocks SMTP ports, so the Gmail API takes priority once it is configured.
+  const authMode = canUseOAuth2 ? "oauth2" : "smtp-password";
   const from = String(
     authMode === "oauth2"
-      ? envFrom || oauthUser || user
+      ? oauthUser
       : profileSender || envFrom || user,
   ).trim();
   return {
@@ -2487,24 +2569,16 @@ const getPriestSmtpTransporter = async () => {
   }
 
   const transportKey = config.authMode === "oauth2"
-    ? `oauth2|${config.oauthUser}|${config.oauthClientId}|${config.from}`
-    : `smtp|${config.host}|${config.port}|${config.secure}|${config.user}|${config.from}`;
+    ? `oauth2|${config.oauthUser}|${config.oauthClientId}|${config.oauthClientSecret}|${config.oauthRefreshToken}|${config.from}`
+    : `smtp|${config.host}|${config.port}|${config.secure}|${config.user}|${config.pass}|${config.from}`;
   if (!priestSmtpTransporter || priestSmtpTransporterKey !== transportKey) {
     priestSmtpTransporter = config.authMode === "oauth2"
-      ? nodemailer.createTransport({
-          service: "gmail",
-          auth: {
-            type: "OAuth2",
-            user: config.oauthUser,
-            clientId: config.oauthClientId,
-            clientSecret: config.oauthClientSecret,
-            refreshToken: config.oauthRefreshToken,
-          },
-        })
+      ? createGmailApiMailer(config)
       : nodemailer.createTransport({
           host: config.host,
           port: config.port,
           secure: config.secure,
+          ...SMTP_TIMEOUT_OPTIONS,
           auth: {
             user: config.user,
             pass: config.pass,
@@ -10813,6 +10887,15 @@ app.put("/settings/priest-email", async (req, res) => {
     }
 
     refreshBackendEnv();
+    const mailerConfig = await getPriestMailerConfig();
+    if (mailerConfig.authMode === "oauth2") {
+      return res.json({
+        message: `Faithflow sends email through the Gmail API as ${mailerConfig.from}. No App Password is needed.`,
+        senderEmail: mailerConfig.from,
+        smtpUser: mailerConfig.oauthUser,
+        hasStoredPassword: Boolean(mailerConfig.hasStoredMailerSettings),
+      });
+    }
     const host = String(process.env.PRIEST_SMTP_HOST || process.env.SMTP_HOST || "smtp.gmail.com").trim();
     const parsedPort = Number(process.env.PRIEST_SMTP_PORT || process.env.SMTP_PORT || 465);
     const port = Number.isFinite(parsedPort) && parsedPort > 0 ? parsedPort : 465;
