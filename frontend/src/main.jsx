@@ -51,6 +51,7 @@ const UserCancelledAppointmentsPage = lazy(() => import("./pages/UserCancelledAp
 const AdminCancellationRequestsPage = lazy(() => import("./pages/AdminCancellationRequestsPage"));
 const UserSettingsPage = lazy(() => import("./pages/UserSettingsPage"));
 const FaqPage = lazy(() => import("./pages/FaqPage"));
+const PrivacyPolicyPage = lazy(() => import("./pages/PrivacyPolicyPage"));
 
 enableGlobalTitleCaseInputs();
 const bootstrapAppSettings = async () => {
@@ -93,6 +94,7 @@ function AppRoutes() {
         <Route path="/" element={<Navigate to="/about" replace />} />
         <Route path="/about" element={<App initialPage="about" />} />
         <Route path="/faqs" element={<FaqPage role="user" isPublic />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/login" element={<App initialPage="login" />} />
         <Route path="/dashboard" element={<UserParishDashboard />} />
         <Route path="/dashboard/parish/:parishId" element={<UserParishDashboard />} />

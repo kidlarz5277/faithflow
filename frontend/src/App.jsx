@@ -783,6 +783,7 @@ function App({ initialPage = "about" }) {
           <footer className="about-footer" aria-label="Faithflow general footer">
             <div className="about-footer-item">
               <span>© 2026 Faithflow. Parish Service System. All rights reserved.</span>
+              <a className="about-footer-link" href="/privacy-policy">Privacy Policy</a>
             </div>
           </footer>
           {isAboutParishActivityModalOpen && selectedAboutParishActivity ? (
