@@ -3675,9 +3675,14 @@ const deletePriestAccountCompletely = async ({ priestID, adminID }) => {
   }
 };
 
+// Form fields that list godparents (Ninong / Ninang). Their numbers only get the event schedule SMS;
+// approve/decline and Progress Tracker texts go to the requester and the people the form is about.
+const GODPARENT_CREDENTIAL_KEY_PATTERN = /ninong|ninang|godparent|godfather|godmother/i;
+
 // Every string value anywhere in the appointment's credentials that is a Philippine mobile number:
 // starts with "09" and is exactly 11 digits (e.g. "09171234567"), whatever the question was called.
-const getAppointmentCredentialPhoneNumbers = (credentials) => {
+// Godparent fields are skipped unless includeGodparents is true (only the event schedule SMS sets it).
+const getAppointmentCredentialPhoneNumbers = (credentials, { includeGodparents = false } = {}) => {
   const found = [];
   const visit = (value) => {
     if (typeof value === "string") {
@@ -3686,15 +3691,18 @@ const getAppointmentCredentialPhoneNumbers = (credentials) => {
     } else if (Array.isArray(value)) {
       value.forEach(visit);
     } else if (value && typeof value === "object") {
-      Object.values(value).forEach(visit);
+      Object.entries(value).forEach(([key, nested]) => {
+        if (!includeGodparents && GODPARENT_CREDENTIAL_KEY_PATTERN.test(key)) return;
+        visit(nested);
+      });
     }
   };
   visit(credentials);
   return found;
 };
 
-// Texts the same message once to each distinct number (account contactNumber + every 09XXXXXXXXX value in
-// the appointment credentials). Fire-and-forget so a slow or failing SMS gateway never blocks or breaks the
+// Texts the same message once to each distinct number the caller passes (usually the account contactNumber
+// + the 09XXXXXXXXX values in the appointment credentials). Fire-and-forget so a slow or failing SMS gateway never blocks or breaks the
 // admin action that triggered it; results go to the backend log.
 const sendAppointmentRequesterSms = ({ appointmentID, label, message, phoneNumbers = [], logSubject = "" }) => {
   const subject = logSubject || `Appointment ${appointmentID}`;
@@ -4216,7 +4224,11 @@ const sendProgressScheduleSms = async ({
     appointmentID: normalizedAppointmentID,
     label: "schedule (requester)",
     message,
-    phoneNumbers: [appointment.userContactNumber, ...getAppointmentCredentialPhoneNumbers(appointment.credentials)],
+    // The event schedule is the one SMS that also goes to the godparents (Ninong / Ninang).
+    phoneNumbers: [
+      appointment.userContactNumber,
+      ...getAppointmentCredentialPhoneNumbers(appointment.credentials, { includeGodparents: true }),
+    ],
   });
   sendAppointmentRequesterSms({
     appointmentID: normalizedAppointmentID,
