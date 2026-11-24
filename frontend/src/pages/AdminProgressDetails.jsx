@@ -686,6 +686,22 @@ const resolveFinalDetailsForSave = (rawDetails, selectedPriestForScheduling = ""
 };
 
 
+// Blessing type picked on the form, e.g. "House Blessing". For "Other Blessing" it returns what
+// the requester typed in the "if other" field instead.
+const getBlessingTypeDetail = (item) => {
+  const sacrament = String(item?.sacramentalType || item?.sacramentName || "").trim().toLowerCase();
+  if (!sacrament.includes("blessing")) return "";
+  const credentials = item?.credentials && typeof item.credentials === "object" ? item.credentials : {};
+  const blessingType = String(credentials.blessingType || "").trim();
+  if (!blessingType) return "";
+  if (!/other/i.test(blessingType)) return blessingType;
+  const otherKey = Object.keys(credentials).find((key) => /^ifother/i.test(key) && String(credentials[key] || "").trim());
+  const otherText = String(
+    (otherKey ? credentials[otherKey] : "") || credentials.blessingTarget || "",
+  ).trim();
+  return otherText || blessingType;
+};
+
 function AdminProgressDetails() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -908,6 +924,8 @@ function AdminProgressDetails() {
   }, [appointmentId, selectedProgressItem]);
 
   if (!user || accountType !== "admin") return null;
+
+  const blessingTypeDetail = getBlessingTypeDetail(selectedProgressItem);
 
   const handleLogout = () => {
     localStorage.removeItem("faithflow_auth");
@@ -2504,7 +2522,12 @@ function AdminProgressDetails() {
                           ) : null}
                         </>
                       ) : (
-                        <strong className="progress-service-name">{selectedProgressItem.sacramentalType}</strong>
+                        <>
+                          <strong className="progress-service-name">{selectedProgressItem.sacramentalType}</strong>
+                          {blessingTypeDetail ? (
+                            <span className="progress-service-alias"> ({blessingTypeDetail})</span>
+                          ) : null}
+                        </>
                       )}
                       {showsPaymentStatus ? (
                         <span
