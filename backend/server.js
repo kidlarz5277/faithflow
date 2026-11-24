@@ -3733,6 +3733,8 @@ const sendAppointmentDecisionSms = ({ appointmentID, action, serviceName, declin
     cancelled: `Faithflow: Your appointment for ${smsServiceName} is cancelled${reason ? `, because ${reason}` : ""}.`,
     // "Restore" on a cancelled appointment in Progress Tracker (back to CONFIRMED).
     restored: `Faithflow: Good news! Your appointment for ${smsServiceName} has been restored by the parish office. Check your Status page to continue.`,
+    // "Restore" on a declined request (Declined Requests page) or a withdrawn one (back to PENDING).
+    restored_to_review: `Faithflow: Good news! Your ${smsServiceName} appointment request has been restored by the parish office and is back under review. Check your Status page for updates.`,
   };
   const message = messageByAction[action];
   if (!message) return;
@@ -3761,7 +3763,7 @@ const notifyAppointmentRequester = async ({ appointmentID, action, declineReason
     [normalizedAppointmentID],
   );
   const appointment = appointmentResult.rows[0];
-  if (appointment && ["approved", "declined", "cancelled", "restored"].includes(action)) {
+  if (appointment && ["approved", "declined", "cancelled", "restored", "restored_to_review"].includes(action)) {
     sendAppointmentDecisionSms({
       appointmentID: normalizedAppointmentID,
       action,
@@ -3811,6 +3813,12 @@ const notifyAppointmentRequester = async ({ appointmentID, action, declineReason
       type: "appointment_restored",
       title: "Appointment restored",
       body: `Your ${serviceName} appointment was restored by the parish office. You can continue it on your Status page.`,
+      severity: "success",
+    },
+    restored_to_review: {
+      type: "appointment_restored",
+      title: "Appointment request restored",
+      body: `Your ${serviceName} appointment request was restored by the parish office and is back under review.`,
       severity: "success",
     },
   };
@@ -16983,7 +16991,7 @@ app.patch("/appointments/:id/status", async (req, res) => {
       if (isRestore) {
         await notifyAppointmentRequester({
           appointmentID,
-          action: status === "CONFIRMED" ? "restored" : "under_review",
+          action: status === "CONFIRMED" ? "restored" : "restored_to_review",
         });
       } else if (status === "CONFIRMED") {
         await notifyAppointmentRequester({ appointmentID, action: "approved" });
