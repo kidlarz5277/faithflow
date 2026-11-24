@@ -716,11 +716,6 @@ body .priest-details-modal .priest-details-modal-close:hover {
   justify-content: flex-start;
 }
 
-.priest-details-multiline {
-  white-space: pre-line;
-  overflow-wrap: anywhere;
-}
-
 .priest-assigned-card-id {
   margin: 4px 0 0;
   color: var(--ff-text-muted);

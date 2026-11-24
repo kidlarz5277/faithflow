@@ -9,6 +9,7 @@ import {
   ChevronRight,
   CircleCheckBig,
   MessageSquare,
+  Eye,
   Receipt,
   Upload,
   User,
@@ -27,6 +28,7 @@ import {
   isScheduleSlotInThePast,
   resolveFuneralMassAdvanceDays,
 } from "../utils/parishSchedule";
+import AppointmentDetailsModal, { getAppointmentDisplayName } from "../components/AppointmentDetailsModal";
 import "../components/Header.css";
 import "../components/Sidebar.css";
 import "./Dashboard.css";
@@ -749,6 +751,7 @@ function AdminProgressDetails() {
   const [paymentRecords, setPaymentRecords] = useState([]);
   const [paymentStatus, setPaymentStatus] = useState("unpaid");
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [isAppointmentDetailsOpen, setIsAppointmentDetailsOpen] = useState(false);
   const [isPaymentUndoConfirmOpen, setIsPaymentUndoConfirmOpen] = useState(false);
   const [isUndoingPayment, setIsUndoingPayment] = useState(false);
   const [paymentInvoiceInput, setPaymentInvoiceInput] = useState("");
@@ -926,6 +929,8 @@ function AdminProgressDetails() {
   if (!user || accountType !== "admin") return null;
 
   const blessingTypeDetail = getBlessingTypeDetail(selectedProgressItem);
+  const appointmentSubjectName = selectedProgressItem ? getAppointmentDisplayName(selectedProgressItem) : "";
+  const appointmentRequesterName = String(selectedProgressItem?.requesterFullName || "").trim();
 
   const handleLogout = () => {
     localStorage.removeItem("faithflow_auth");
@@ -2508,7 +2513,7 @@ function AdminProgressDetails() {
                     </button>
                   </div>
                 ) : null}
-                <header className={`progress-main-header${showsPaymentStatus ? " progress-main-header--with-actions" : ""}`}>
+                <header className="progress-main-header progress-main-header--with-actions">
                   <div className="progress-main-header-copy">
                     <p className="progress-main-header-service-row">
                       <span className="progress-service-type-label">Service Type :</span>{" "}
@@ -2573,6 +2578,15 @@ function AdminProgressDetails() {
                       </section>
                     ) : null}
                   </div>
+                  <div className="progress-main-header-actions">
+                  <button
+                    type="button"
+                    className="progress-record-payment-button progress-see-more-button is-paid-recorded"
+                    onClick={() => setIsAppointmentDetailsOpen(true)}
+                  >
+                    <Eye size={14} aria-hidden="true" />
+                    See More
+                  </button>
                   {canRecordPayment ? (
                     <button
                       type="button"
@@ -2594,6 +2608,7 @@ function AdminProgressDetails() {
                       {isPaymentMarkedPaid ? "Edit / Undo Payment" : "Record Payment"}
                     </button>
                   ) : null}
+                  </div>
                 </header>
                 {saveError ? <p className="appointment-requests-empty">{saveError}</p> : null}
 
@@ -3794,6 +3809,39 @@ function AdminProgressDetails() {
             </div>
           </section>
         </div>
+      ) : null}
+      {isAppointmentDetailsOpen && selectedProgressItem ? (
+        <AppointmentDetailsModal
+          kicker="Appointment details"
+          title={`${selectedProgressItem.sacramentName || selectedProgressItem.sacramentalType || "Appointment"}${
+            blessingTypeDetail ? ` (${blessingTypeDetail})` : ""
+          }`}
+          appointmentID={selectedProgressItem.appointmentID}
+          chips={[selectedProgressItem.status, showsPaymentStatus ? displayPaymentStatusLabel : ""]}
+          summaryItems={[
+            { label: "Name", value: appointmentSubjectName },
+            appointmentRequesterName && appointmentRequesterName !== appointmentSubjectName
+              ? { label: "Requested by", value: appointmentRequesterName }
+              : null,
+            { label: "Requested Date", value: formatDateTime(selectedProgressItem.createdAt) },
+            {
+              label: "Event Schedule",
+              value: hasScheduledDateTime
+                ? formatEventScheduleRange(
+                    finalDetails.scheduledEventDateTime,
+                    finalDetails.scheduledEventEndDateTime,
+                    finalDetails.programTimeSlots,
+                  )
+                : "Not scheduled yet",
+            },
+            { label: "Assigned Priest", value: assignedAppointmentPriestName || "Not assigned yet" },
+          ]}
+          note={selectedProgressItem.note}
+          noteLabel="Request note"
+          credentials={selectedProgressItem.credentials}
+          sacramentName={selectedProgressItem.sacramentName || selectedProgressItem.sacramentalType}
+          onClose={() => setIsAppointmentDetailsOpen(false)}
+        />
       ) : null}
     </main>
   );

@@ -3916,3 +3916,43 @@
   font-size: 0.82rem;
   font-weight: 600;
 }
+
+/* Header actions: "See More" and the payment button sit together in the top-right corner. */
+.progress-main-header .progress-main-header-actions {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.progress-main-header .progress-main-header-actions .progress-record-payment-button {
+  position: static;
+}
+
+.progress-main-header.progress-main-header--with-actions {
+  padding-right: 300px;
+}
+
+@media (max-width: 1100px) {
+  .progress-main-header.progress-main-header--with-actions {
+    padding-top: 54px;
+    padding-right: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-main-header .progress-main-header-actions {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+  }
+
+  .progress-main-header .progress-main-header-actions .progress-record-payment-button {
+    font-size: 0.72rem;
+    padding: 6px 10px;
+  }
+}
