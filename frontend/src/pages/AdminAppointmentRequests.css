@@ -1756,3 +1756,10 @@ body .declined-restore-modal .declined-restore-header h3 {
     font-size: 1.2rem;
   }
 }
+
+/* Declined Requests page: tag for requests the requester withdrew before approval. */
+.appointment-badge.declined-withdrawn-badge {
+  border: 1px solid #fcd34d;
+  background: #fffbeb;
+  color: #92400e;
+}

@@ -61,10 +61,13 @@ const getProgressStateFromStatus = (statusValue) => {
   return "For Review";
 };
 
+// CANCELLED = an approved appointment that was cancelled (by the parish or at the requester's request).
+// Requests withdrawn before approval are also CANCELLED but never reached the tracker: they are listed on
+// the Declined Requests page, as are DECLINED ones.
 const isProgressCancelledAppointment = (appointment) => {
   const status = String(appointment?.status || "").trim().toUpperCase();
   if (status !== "CANCELLED") return false;
-  return Boolean(appointment?.hasProgressTracker);
+  return !appointment?.withdrawnByRequester;
 };
 
 const readChecklistMetrics = (appointment) => {

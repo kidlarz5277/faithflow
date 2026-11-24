@@ -952,6 +952,15 @@ function AdminProgressDetails() {
     loadProgressItem();
   }, [appointmentId, selectedProgressItem]);
 
+  // A cancelled appointment has no checklist to work on (its calendar entry is already removed), so
+  // don't reopen it here from an old link, the back button or a notification. Restoring is done from
+  // the Progress Tracker's Cancelled view.
+  useEffect(() => {
+    if (!["CANCELLED", "DECLINED"].includes(String(selectedProgressItem?.status || "").trim().toUpperCase())) return;
+    pushUiNotice("This appointment was cancelled. Restore it from the Progress Tracker's Cancelled view to continue.", "error");
+    navigate("/admin/progress-tracker", { replace: true });
+  }, [selectedProgressItem?.status, navigate]);
+
   if (!user || accountType !== "admin") return null;
 
   const blessingTypeDetail = getBlessingTypeDetail(selectedProgressItem);
@@ -1152,6 +1161,12 @@ function AdminProgressDetails() {
         const payload = await response.json().catch(() => null);
         if (!response.ok) throw new Error(payload?.message || "Unable to load checklist progress.");
         if (isCancelled) return;
+        // The appointment may have been cancelled since this page's copy was taken (e.g. back button).
+        const liveStatus = String(payload?.appointmentStatus || "").toUpperCase();
+        if (liveStatus === "CANCELLED" || liveStatus === "DECLINED") {
+          setSelectedProgressItem((current) => (current ? { ...current, status: liveStatus } : current));
+          return;
+        }
         const hydrated = hydrateChecklistFromApi(payload?.checklist, selectedProgressItem.sacramentalType, appointmentID);
         const resolvedSteps = hydrated.steps;
         setChecklistSteps(resolvedSteps);

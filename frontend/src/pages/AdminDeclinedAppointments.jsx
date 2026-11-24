@@ -102,18 +102,27 @@ function AdminDeclinedAppointments() {
       if (!Number.isInteger(adminId) || adminId <= 0) {
         throw new Error("Unable to detect admin account.");
       }
-      const response = await fetch(`/admin-api/appointments?adminID=${adminId}&status=CANCELLED`);
-      const responseData = await response.json().catch(() => []);
-      if (!response.ok) {
-        throw new Error(responseData.message || "Unable to load declined appointments.");
+      // This page lists requests that never got past review: DECLINED (turned down by the parish office)
+      // and CANCELLED requests the requester withdrew while still pending. Approved appointments that
+      // were cancelled later live in the Progress Tracker's Cancelled view instead.
+      const [declinedResponse, cancelledResponse] = await Promise.all([
+        fetch(`/admin-api/appointments?adminID=${adminId}&status=DECLINED`),
+        fetch(`/admin-api/appointments?adminID=${adminId}&status=CANCELLED`),
+      ]);
+      const declinedData = await declinedResponse.json().catch(() => []);
+      const cancelledData = await cancelledResponse.json().catch(() => []);
+      if (!declinedResponse.ok) {
+        throw new Error(declinedData?.message || "Unable to load declined appointments.");
       }
-      const rows = Array.isArray(responseData) ? responseData : [];
-      const cancelledAppointments = rows.filter((item) => {
-        const status = String(item?.status || "").trim().toUpperCase();
-        const requestType = String(item?.requestType || "").trim().toLowerCase();
-        return status === "CANCELLED" && requestType !== "certificate";
-      });
-      setRequests(cancelledAppointments);
+      const isAppointment = (item) => String(item?.requestType || "").trim().toLowerCase() !== "certificate";
+      const declinedRows = (Array.isArray(declinedData) ? declinedData : []).filter(isAppointment);
+      const withdrawnRows = (cancelledResponse.ok && Array.isArray(cancelledData) ? cancelledData : []).filter(
+        (item) => isAppointment(item) && item?.withdrawnByRequester,
+      );
+      const merged = [...declinedRows, ...withdrawnRows].sort(
+        (a, b) => new Date(b?.finishedAt || b?.createdAt || 0).getTime() - new Date(a?.finishedAt || a?.createdAt || 0).getTime(),
+      );
+      setRequests(merged);
     } catch (error) {
       if (!silent) setRequests([]);
       setErrorMessage(error.message || "Unable to load declined appointments.");
@@ -264,7 +273,9 @@ function AdminDeclinedAppointments() {
                   <Inbox size={36} strokeWidth={1.5} />
                 </div>
                 <h3 className="appointment-requests-empty-state-title">No declined appointment requests</h3>
-                <p className="appointment-requests-empty-state-text">Requests with status CANCELLED will appear here.</p>
+                <p className="appointment-requests-empty-state-text">
+                  Declined requests, and requests the requester withdrew before approval, will appear here.
+                </p>
               </div>
             ) : filteredRequests.length === 0 ? (
               <div className="appointment-requests-empty-state appointment-requests-empty-state--search" role="status">
@@ -295,12 +306,16 @@ function AdminDeclinedAppointments() {
                         <div className="appointment-request-badges">
                           <span className="appointment-badge appointment-type-badge">Appointment</span>
                           <span className={`appointment-badge appointment-category-badge ${requestTypeClass}`}>{requestCategory}</span>
+                          {request.withdrawnByRequester ? (
+                            <span className="appointment-badge declined-withdrawn-badge">Cancelled by requester</span>
+                          ) : null}
                         </div>
                         <p className="appointment-request-row">
                           <span>Requested at:</span> {formatDateTime(request.createdAt)}
                         </p>
                         <p className="appointment-request-row">
-                          <span>Declined at:</span> {formatDateTime(request.finishedAt)}
+                          <span>{request.withdrawnByRequester ? "Cancelled at:" : "Declined at:"}</span>{" "}
+                          {formatDateTime(request.finishedAt)}
                         </p>
                         {request.note ? (
                           <p className="appointment-request-row">

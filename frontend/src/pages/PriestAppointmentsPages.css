@@ -1513,3 +1513,14 @@ body[data-faithflow-theme="dark"] .priest-history-summary button.is-active {
   color: var(--ff-text-muted);
   font-weight: 600;
 }
+
+/* DECLINED records look like cancelled ones on the priest's pages. */
+.priest-history-card.is-declined {
+  --history-accent: #9b3434;
+}
+
+.priest-page-status-chip.is-declined {
+  background: #fee2e2;
+  color: #991b1b;
+  border-color: #fca5a5;
+}

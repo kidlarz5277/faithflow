@@ -53,6 +53,7 @@ const APPOINTMENT_STATUS_FILTERS = [
   { id: "ongoing", label: "Ongoing" },
   { id: "completed", label: "Completed" },
   { id: "cancelled", label: "Cancelled" },
+  { id: "declined", label: "Declined" },
 ];
 
 const PAYMENT_STATUS_FILTERS = [
@@ -77,6 +78,7 @@ const formatCertificateTypeOption = (value) => {
 const getReportStatusKey = (value) => {
   const normalized = String(value || "").trim().toLowerCase();
   if (normalized === "cancelled" || normalized === "canceled") return "cancelled";
+  if (normalized === "declined") return "declined";
   if (normalized === "completed") return "completed";
   return "ongoing";
 };
@@ -298,6 +300,7 @@ const getAppointmentTypeLabel = (appointment) => {
 const getAppointmentStatusLabel = (appointment) => {
   const normalizedStatus = String(appointment?.status || "").trim().toUpperCase();
   if (normalizedStatus === "CANCELLED" || normalizedStatus === "CANCELED") return "Cancelled";
+  if (normalizedStatus === "DECLINED") return "Declined";
   const paymentStatus = String(appointment?.paymentStatus || "").trim().toLowerCase();
   const specialID = Number(appointment?.s_sacramentID);
   const isPaymentSatisfied =
@@ -753,7 +756,7 @@ function AdminReportsPage() {
           accumulator[statusKey] += 1;
           return accumulator;
         },
-        { total: 0, ongoing: 0, completed: 0, cancelled: 0 },
+        { total: 0, ongoing: 0, completed: 0, cancelled: 0, declined: 0 },
       ),
     [searchedAppointments],
   );
@@ -1012,9 +1015,9 @@ function AdminReportsPage() {
     sections.push({
       title: "Notes",
       rows: [
-        statusLabel === "Cancelled"
+        statusLabel === "Cancelled" || statusLabel === "Declined"
           ? {
-              label: "Cancellation Reason",
+              label: statusLabel === "Declined" ? "Decline Reason" : "Cancellation Reason",
               value:
                 String(selectedRecord.cancellationReason || selectedRecord.note || "").trim() || "No reason provided.",
               wide: true,
@@ -1443,6 +1446,15 @@ function AdminReportsPage() {
               >
                 <span>Cancelled</span>
                 <strong>{summaryCounts.cancelled}</strong>
+              </button>
+              <button
+                type="button"
+                className={`is-declined${appointmentStatusFilter === "declined" ? " is-active" : ""}`}
+                onClick={() => setAppointmentStatusFilter("declined")}
+                aria-pressed={appointmentStatusFilter === "declined"}
+              >
+                <span>Declined</span>
+                <strong>{summaryCounts.declined}</strong>
               </button>
             </div>
 

@@ -2216,7 +2216,7 @@ const cascadeSpecialProgramScheduleToAppointments = async (sSacramentID, program
       FROM appointments a
       LEFT JOIN progress_tracker pt ON pt."appointmentID" = a."appointmentID"
       WHERE a."s_sacramentID" = $1
-        AND a.status <> 'CANCELLED'
+        AND a.status NOT IN ('CANCELLED', 'DECLINED')
     `,
     [normalizedID],
   );
@@ -3060,7 +3060,7 @@ const refreshSpecialSacramentAppliedCounts = async (dbClient = { query }) => {
     SET "currentAppliedCount" = (
       SELECT COUNT(*)::INT
       FROM appointments a
-      WHERE a."s_sacramentID" = ss."s_sacramentID" AND a.status <> 'CANCELLED'
+      WHERE a."s_sacramentID" = ss."s_sacramentID" AND a.status NOT IN ('CANCELLED', 'DECLINED')
     )
   `);
 };
@@ -3362,7 +3362,7 @@ const restoreAppointmentCalendarEntry = async (appointmentID) => {
   const hasAssignedPriest = Boolean(resolvedPriestID);
   const hasCredentialSchedule = Boolean(credentialSchedule) && /^\d{4}-\d{2}-\d{2}$/.test(eventDate) && startTime && endTime;
   const isCancelledOrArchived =
-    appointment.isArchived === true || String(appointment.status || "").toUpperCase() === "CANCELLED";
+    appointment.isArchived === true || CLOSED_APPOINTMENT_STATUSES.has(String(appointment.status || "").toUpperCase());
 
   if (!hasAssignedPriest || !hasCredentialSchedule || isCancelledOrArchived || !Number.isInteger(adminID) || adminID <= 0) {
     await removeAppointmentCalendarEntry(normalizedAppointmentID);
@@ -8198,11 +8198,14 @@ const initializeDatabase = async () => {
     DO $$
     BEGIN
       IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'appointment_status') THEN
-        CREATE TYPE appointment_status AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED');
+        CREATE TYPE appointment_status AS ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'DECLINED');
       END IF;
     END
     $$;
   `);
+  // DECLINED = a pending request turned down by the parish office. CANCELLED = an approved appointment
+  // that was later cancelled, or a request the requester withdrew. (Both used to be stored as CANCELLED.)
+  await query(`ALTER TYPE appointment_status ADD VALUE IF NOT EXISTS 'DECLINED'`);
   await query(`
     DO $$
     BEGIN
@@ -10016,7 +10019,7 @@ const initializeDatabase = async () => {
     ) program_schedule ON TRUE
     WHERE pt."appointmentID" = a."appointmentID"
       AND a."s_sacramentID" IS NOT NULL
-      AND a.status <> 'CANCELLED'
+      AND a.status NOT IN ('CANCELLED', 'DECLINED')
       AND pt."scheduledEventDateTime" IS NULL
       AND program_schedule.scheduled_at IS NOT NULL
   `);
@@ -10030,7 +10033,7 @@ const initializeDatabase = async () => {
     FROM progress_tracker pt
     WHERE pt."appointmentID" = a."appointmentID"
       AND a."s_sacramentID" IS NOT NULL
-      AND a.status <> 'CANCELLED'
+      AND a.status NOT IN ('CANCELLED', 'DECLINED')
       AND pt."scheduledEventDateTime" IS NOT NULL
       AND NULLIF(BTRIM(COALESCE(a.credentials->>'scheduledEventDateTime', '')), '') IS NULL
   `);
@@ -10040,7 +10043,7 @@ const initializeDatabase = async () => {
     FROM calendar_entries ce
     WHERE ce."s_sacramentID" = a."s_sacramentID"
       AND COALESCE(ce."appointmentID", 0) = 0
-      AND a.status <> 'CANCELLED'
+      AND a.status NOT IN ('CANCELLED', 'DECLINED')
       AND a."priestID" IS NULL
       AND ce."priestID" IS NOT NULL
   `);
@@ -10183,6 +10186,41 @@ const initializeDatabase = async () => {
     CREATE INDEX IF NOT EXISTS idx_appointment_change_requests_admin_status
     ON appointment_change_requests ("adminID", status, "createdAt" DESC)
   `);
+  // One-time move of past declines out of CANCELLED: a CANCELLED appointment that never had a Progress
+  // Tracker and was not cancelled at the requester's request was declined by the parish office.
+  // Runs once only (recorded in app_migrations): a Progress Tracker row is created lazily, so after this
+  // release an approved-then-cancelled appointment may have none and must stay CANCELLED.
+  await query(`
+    CREATE TABLE IF NOT EXISTS app_migrations (
+      migration_key VARCHAR(150) PRIMARY KEY,
+      metadata JSONB NOT NULL DEFAULT '{}'::jsonb,
+      "executedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    )
+  `);
+  const declinedMigrationKey = "2026-11-24-appointments-declined-status";
+  const declinedMigrationDone = await query(`SELECT 1 FROM app_migrations WHERE migration_key = $1 LIMIT 1`, [
+    declinedMigrationKey,
+  ]);
+  if (declinedMigrationDone.rowCount === 0) {
+    const moved = await query(`
+      UPDATE appointments a
+      SET status = 'DECLINED'
+      WHERE a.status = 'CANCELLED'
+        AND NOT EXISTS (SELECT 1 FROM progress_tracker pt WHERE pt."appointmentID" = a."appointmentID")
+        AND NOT EXISTS (
+          SELECT 1
+          FROM appointment_change_requests acr
+          WHERE acr."appointmentID" = a."appointmentID"
+            AND acr."requestType" = 'cancel'
+            AND acr.status = 'approved'
+        )
+    `);
+    await query(
+      `INSERT INTO app_migrations (migration_key, metadata) VALUES ($1, $2::jsonb) ON CONFLICT (migration_key) DO NOTHING`,
+      [declinedMigrationKey, JSON.stringify({ movedToDeclined: moved.rowCount })],
+    );
+    console.log(`Marked ${moved.rowCount} previously declined appointment(s) as DECLINED.`);
+  }
   await query(`
     CREATE INDEX IF NOT EXISTS idx_priest_schedule_remarks_admin_sent_at
     ON priest_schedule_remarks ("adminID", "sentAt" DESC)
@@ -11115,8 +11153,8 @@ app.get("/priest/me/dashboard", async (req, res) => {
     }));
     const records = recordsResult.rows.map((row) => {
       const appointmentStatus = String(row.status || "").trim().toUpperCase();
-      const historyStatus = appointmentStatus === "CANCELLED"
-        ? "CANCELLED"
+      const historyStatus = CLOSED_APPOINTMENT_STATUSES.has(appointmentStatus)
+        ? appointmentStatus
         : row.finishedAt
           ? "COMPLETED"
           : appointmentStatus;
@@ -11149,7 +11187,7 @@ app.get("/priest/me/dashboard", async (req, res) => {
     const upcomingSchedules = Math.max(0, totalSchedules - completedSchedules);
     const totalRecords = records.length;
     const completedRecords = records.filter((entry) => entry.status === "COMPLETED").length;
-    const cancelledRecords = records.filter((entry) => entry.status === "CANCELLED").length;
+    const cancelledRecords = records.filter((entry) => CLOSED_APPOINTMENT_STATUSES.has(entry.status)).length;
     const pendingRecords = Math.max(0, totalRecords - completedRecords - cancelledRecords);
 
     return res.json({
@@ -14044,7 +14082,10 @@ app.get("/dashboard/office-status", async (req, res) => {
   }
 });
 
-const APPOINTMENT_ALLOWED_STATUSES = new Set(["PENDING", "CONFIRMED", "CANCELLED"]);
+const APPOINTMENT_ALLOWED_STATUSES = new Set(["PENDING", "CONFIRMED", "CANCELLED", "DECLINED"]);
+// Closed appointments: DECLINED (pending request turned down) and CANCELLED (approved appointment
+// cancelled, or a request the requester withdrew).
+const CLOSED_APPOINTMENT_STATUSES = new Set(["CANCELLED", "DECLINED"]);
 const DEFAULT_SPECIAL_PROGRAM_FIELD_SCHEMA = [
   { key: "address", label: "Address", type: "text", required: true, placeholder: "Enter complete address" },
   { key: "phoneNumber", label: "Phone Number", type: "tel", required: true, placeholder: "Enter contact number" },
@@ -14212,6 +14253,7 @@ const computeChecklistProgressMetrics = (checklist) => {
 const resolveListProgressState = (row) => {
   const normalizedStatus = String(row?.status || "").trim().toUpperCase();
   if (normalizedStatus === "CANCELLED") return "Cancelled";
+  if (normalizedStatus === "DECLINED") return "Declined";
   if (normalizedStatus === "CONFIRMED") return "Ongoing";
   return "For Review";
 };
@@ -14266,6 +14308,8 @@ const toAppointmentResponseRow = (row) => {
     note: row.note,
     declineReason: String(row.note || "").trim(),
     hasProgressTracker: Boolean(row.hasProgressTracker),
+    // CANCELLED by the requester's own request while it was still pending (never approved).
+    withdrawnByRequester: Boolean(row.withdrawnByRequester),
     createdAt: row.createdAt,
     finishedAt: row.finishedAt,
     sacramentName: row.sacramentName || row.specialSacramentName || "",
@@ -14820,6 +14864,9 @@ const toProgressResponse = (appointmentID, row = {}) => {
 
   return {
     appointmentID: Number(appointmentID),
+    // Live status, so the admin checklist page can close itself for a cancelled appointment even when
+    // it was opened with an older copy of the appointment (back button, cached navigation state).
+    appointmentStatus: row.appointmentStatus ? String(row.appointmentStatus).trim().toUpperCase() : null,
     progressID: row.progressID ? Number(row.progressID) : null,
     templateID: row.templateID ? Number(row.templateID) : null,
     checklist: Array.isArray(row.checklist_data) ? row.checklist_data : Array.isArray(row.checklist) ? row.checklist : [],
@@ -14925,7 +14972,18 @@ const fetchAppointmentResponseById = async (appointmentID, dbClient = { query })
         ars."underReviewAt" AS "reviewUnderReviewAt",
         pt.checklist_data,
         pt."eventDone",
-        (pt."progressID" IS NOT NULL) AS "hasProgressTracker"
+        (pt."progressID" IS NOT NULL) AS "hasProgressTracker",
+        (
+          a.status = 'CANCELLED'
+          AND EXISTS (
+            SELECT 1
+            FROM appointment_change_requests acr
+            WHERE acr."appointmentID" = a."appointmentID"
+              AND acr."requestType" = 'cancel'
+              AND acr.status = 'approved'
+              AND UPPER(COALESCE(acr."previousStatus", '')) = 'PENDING'
+          )
+        ) AS "withdrawnByRequester"
       FROM appointments a
       LEFT JOIN sacraments s ON s."sacramentID" = a."sacramentID"
       LEFT JOIN special_sacraments ss ON ss."s_sacramentID" = a."s_sacramentID"
@@ -15315,7 +15373,7 @@ const createAppointmentRequest = async (req, res, { createdByAdmin = false } = {
             SELECT COUNT(*)::INT AS count
             FROM appointments
             WHERE "s_sacramentID" = $1
-              AND status <> 'CANCELLED'
+              AND status NOT IN ('CANCELLED', 'DECLINED')
               AND "isArchived" = FALSE
           `,
           [resolvedSpecialSacramentID],
@@ -15533,7 +15591,7 @@ app.get("/appointments", async (req, res) => {
     const statusInput = String(req.query?.status || "").trim().toUpperCase();
     const hasStatus = Boolean(statusInput);
     if (hasStatus && !APPOINTMENT_ALLOWED_STATUSES.has(statusInput)) {
-      return res.status(400).json({ message: "status must be one of PENDING, CONFIRMED, or CANCELLED." });
+      return res.status(400).json({ message: "status must be one of PENDING, CONFIRMED, CANCELLED, or DECLINED." });
     }
 
     const result = await query(
@@ -15559,7 +15617,18 @@ app.get("/appointments", async (req, res) => {
         ars."underReviewAt" AS "reviewUnderReviewAt",
         pt."eventDone",
         pt.checklist_data,
-        (pt."progressID" IS NOT NULL) AS "hasProgressTracker"
+        (pt."progressID" IS NOT NULL) AS "hasProgressTracker",
+        (
+          a.status = 'CANCELLED'
+          AND EXISTS (
+            SELECT 1
+            FROM appointment_change_requests acr
+            WHERE acr."appointmentID" = a."appointmentID"
+              AND acr."requestType" = 'cancel'
+              AND acr.status = 'approved'
+              AND UPPER(COALESCE(acr."previousStatus", '')) = 'PENDING'
+          )
+        ) AS "withdrawnByRequester"
       FROM appointments a
       LEFT JOIN sacraments s ON s."sacramentID" = a."sacramentID"
       LEFT JOIN special_sacraments ss ON ss."s_sacramentID" = a."s_sacramentID"
@@ -15581,7 +15650,7 @@ app.get("/appointments", async (req, res) => {
   }
 });
 
-const REPORT_STATUS_FILTERS = new Set(["all", "ongoing", "completed", "cancelled", "finished"]);
+const REPORT_STATUS_FILTERS = new Set(["all", "ongoing", "completed", "cancelled", "declined", "finished"]);
 const REPORT_PAYMENT_FILTERS = new Set(["all", "paid", "unpaid", "free"]);
 const REPORT_SORT_FILTERS = new Set(["newest", "oldest"]);
 const REPORT_REQUEST_TYPE_FILTERS = new Set(["all", "appointment", "special_program", "certificate"]);
@@ -15784,6 +15853,7 @@ const getReportAppointmentTypeLabel = (appointment) => {
 const getReportAppointmentStatusLabel = (appointment) => {
   const normalizedStatus = String(appointment?.status || "").trim().toUpperCase();
   if (normalizedStatus === "CANCELLED" || normalizedStatus === "CANCELED") return "Cancelled";
+  if (normalizedStatus === "DECLINED") return "Declined";
   const paymentLabel = getReportPaymentStatusLabel(appointment);
   const paymentSatisfied = paymentLabel === "Paid" || paymentLabel === "Free";
   const hasSchedule = Boolean(appointment?.scheduledEventDateTime);
@@ -15830,7 +15900,7 @@ app.get("/reports/records", async (req, res) => {
       return res.status(400).json({ message: "requestType must be all, appointment, special_program, or certificate." });
     }
     if (!REPORT_STATUS_FILTERS.has(appointmentStatusRaw)) {
-      return res.status(400).json({ message: "appointmentStatus must be all, ongoing, completed, or cancelled." });
+      return res.status(400).json({ message: "appointmentStatus must be all, ongoing, completed, cancelled, or declined." });
     }
     if (!REPORT_PAYMENT_FILTERS.has(paymentStatus)) {
       return res.status(400).json({ message: "paymentStatus must be all, paid, unpaid, or free." });
@@ -15976,13 +16046,17 @@ app.get("/reports/records", async (req, res) => {
               AND a.status = 'CANCELLED'
             )
             OR (
+              $4 = 'declined'
+              AND a.status = 'DECLINED'
+            )
+            OR (
               $4 = 'completed'
-              AND a.status <> 'CANCELLED'
+              AND a.status NOT IN ('CANCELLED', 'DECLINED')
               AND a."finishedAt" IS NOT NULL
             )
             OR (
               $4 = 'ongoing'
-              AND a.status <> 'CANCELLED'
+              AND a.status NOT IN ('CANCELLED', 'DECLINED')
               AND a."finishedAt" IS NULL
             )
           )
@@ -16224,19 +16298,19 @@ const applyAppointmentStatusUpdate = async ({ appointmentID, status, declineReas
   );
   if (existingResult.rows.length === 0) return null;
   const previousStatus = String(existingResult.rows[0]?.status || "").trim().toUpperCase();
-  const isRestore = previousStatus === "CANCELLED" && (status === "CONFIRMED" || status === "PENDING");
+  const isRestore = CLOSED_APPOINTMENT_STATUSES.has(previousStatus) && (status === "CONFIRMED" || status === "PENDING");
 
   const updateResult = await query(
     `
       UPDATE appointments
       SET status = $1::appointment_status,
           note = CASE
-            WHEN $1::appointment_status = 'CANCELLED' THEN NULLIF($2, '')
+            WHEN $1::appointment_status IN ('CANCELLED', 'DECLINED') THEN NULLIF($2, '')
             WHEN $4::boolean THEN NULL
             ELSE note
           END,
           "finishedAt" = CASE
-            WHEN $1::appointment_status = 'CANCELLED' THEN NOW()
+            WHEN $1::appointment_status IN ('CANCELLED', 'DECLINED') THEN NOW()
             WHEN $4::boolean THEN NULL
             ELSE "finishedAt"
           END
@@ -16247,7 +16321,7 @@ const applyAppointmentStatusUpdate = async ({ appointmentID, status, declineReas
   );
   if (updateResult.rows.length === 0) return null;
 
-  if (status === "CANCELLED") {
+  if (CLOSED_APPOINTMENT_STATUSES.has(status)) {
     await query(
       `
         UPDATE appointments a
@@ -16337,12 +16411,10 @@ const isAppointmentSchedulePast = (context) => {
   return Number.isFinite(scheduledMs) && scheduledMs <= Date.now();
 };
 
-// Admin-declined requests are also stored as CANCELLED; only appointments that were
-// actually under way (or cancelled through a user request) count as cancelled appointments.
+// Only CANCELLED appointments (approved then cancelled, or withdrawn by the requester) can be restored by a
+// request. DECLINED requests are the parish office's decision and are not restorable from the user side.
 const isRestorableCancelledAppointment = (context) =>
-  String(context?.status || "").toUpperCase() === "CANCELLED" &&
-  !context?.isArchived &&
-  (Boolean(context?.wasCancelledByRequest) || Boolean(context?.progressID));
+  String(context?.status || "").toUpperCase() === "CANCELLED" && !context?.isArchived;
 
 const formatChangeRequestScheduleLabel = (value) => {
   const parsed = new Date(value || "");
@@ -16854,8 +16926,8 @@ app.patch("/appointments/:id/archive", async (req, res) => {
     if (existing.rows.length === 0) {
       return res.status(404).json({ message: "Appointment request not found." });
     }
-    if (String(existing.rows[0].status || "").toUpperCase() !== "CANCELLED") {
-      return res.status(400).json({ message: "Only a declined request can be removed from this list." });
+    if (!CLOSED_APPOINTMENT_STATUSES.has(String(existing.rows[0].status || "").toUpperCase())) {
+      return res.status(400).json({ message: "Only a declined or cancelled request can be removed from this list." });
     }
     await query(`UPDATE appointments SET "isArchived" = TRUE WHERE "appointmentID" = $1`, [appointmentID]);
     return res.json({ message: "Declined request removed." });
@@ -16868,18 +16940,35 @@ app.patch("/appointments/:id/archive", async (req, res) => {
 app.patch("/appointments/:id/status", async (req, res) => {
   try {
     const appointmentID = Number(req.params.id);
-    const status = String(req.body?.status || "").trim().toUpperCase();
+    const requestedStatus = String(req.body?.status || "").trim().toUpperCase();
     const declineReason = String(req.body?.declineReason || "").trim();
 
     if (!Number.isInteger(appointmentID) || appointmentID <= 0) {
       return res.status(400).json({ message: "Invalid appointment ID." });
     }
-    if (!APPOINTMENT_ALLOWED_STATUSES.has(status)) {
-      return res.status(400).json({ message: "status must be one of PENDING, CONFIRMED, or CANCELLED." });
+    if (!APPOINTMENT_ALLOWED_STATUSES.has(requestedStatus)) {
+      return res.status(400).json({ message: "status must be one of PENDING, CONFIRMED, CANCELLED, or DECLINED." });
     }
-    if (status === "CANCELLED" && declineReason.length < 3) {
-      return res.status(400).json({ message: "A cancellation reason is required." });
+    if (CLOSED_APPOINTMENT_STATUSES.has(requestedStatus) && declineReason.length < 3) {
+      return res.status(400).json({ message: "A reason is required." });
     }
+
+    // The parish office closing a PENDING request is a decline; closing an approved one is a cancel.
+    // (Older pages send CANCELLED for both, so decide from the current status.)
+    const currentResult = await query(`SELECT status::text AS status FROM appointments WHERE "appointmentID" = $1 LIMIT 1`, [
+      appointmentID,
+    ]);
+    if (currentResult.rows.length === 0) {
+      return res.status(404).json({ message: "Appointment request not found." });
+    }
+    const currentStatus = String(currentResult.rows[0].status || "").trim().toUpperCase();
+    const status = !CLOSED_APPOINTMENT_STATUSES.has(requestedStatus)
+      ? requestedStatus
+      : CLOSED_APPOINTMENT_STATUSES.has(currentStatus)
+        ? currentStatus
+        : currentStatus === "PENDING"
+          ? "DECLINED"
+          : "CANCELLED";
 
     const statusUpdate = await applyAppointmentStatusUpdate({ appointmentID, status, declineReason });
     if (!statusUpdate) {
@@ -16898,10 +16987,10 @@ app.patch("/appointments/:id/status", async (req, res) => {
         });
       } else if (status === "CONFIRMED") {
         await notifyAppointmentRequester({ appointmentID, action: "approved" });
-      } else if (status === "CANCELLED") {
+      } else if (CLOSED_APPOINTMENT_STATUSES.has(status) && !CLOSED_APPOINTMENT_STATUSES.has(previousStatus)) {
         await notifyAppointmentRequester({
           appointmentID,
-          action: previousStatus === "PENDING" ? "declined" : "cancelled",
+          action: status === "DECLINED" ? "declined" : "cancelled",
           declineReason,
         });
       }
@@ -20805,25 +20894,14 @@ app.get("/history/admin", async (req, res) => {
           COALESCE(a."finishedAt", a."createdAt") AS "resolvedAt",
           CASE WHEN COALESCE(a."s_sacramentID", 0) > 0 THEN 'Special Program' ELSE 'Appointment' END AS "typeLabel",
           CASE WHEN COALESCE(a."s_sacramentID", 0) > 0 THEN 'special_program' ELSE 'appointment' END AS "requestTypeKey",
-          (
-            a.status = 'CANCELLED'
-            AND (
-              EXISTS (SELECT 1 FROM progress_tracker pt WHERE pt."appointmentID" = a."appointmentID")
-              OR EXISTS (
-                SELECT 1
-                FROM appointment_change_requests acr
-                WHERE acr."appointmentID" = a."appointmentID"
-                  AND acr."requestType" = 'cancel'
-                  AND acr.status = 'approved'
-              )
-            )
-          ) AS "isCancelledAppointment"
+          -- CANCELLED = approved then cancelled / withdrawn by the requester; DECLINED = turned down.
+          (a.status = 'CANCELLED') AS "isCancelledAppointment"
         FROM appointments a
         LEFT JOIN sacraments s ON s."sacramentID" = a."sacramentID"
         LEFT JOIN special_sacraments ss ON ss."s_sacramentID" = a."s_sacramentID"
         WHERE a."isArchived" = FALSE
-          AND a.status IN ('CONFIRMED', 'CANCELLED')
-          AND (a."finishedAt" IS NOT NULL OR a.status = 'CANCELLED')
+          AND a.status IN ('CONFIRMED', 'CANCELLED', 'DECLINED')
+          AND (a."finishedAt" IS NOT NULL OR a.status IN ('CANCELLED', 'DECLINED'))
       `,
     );
 
@@ -20860,7 +20938,9 @@ app.get("/history/admin", async (req, res) => {
 
     const mergedRows = [...appointmentsResult.rows, ...certificateResult.rows].map((row, index) => {
       const normalizedStatus = String(row.status || "").trim().toLowerCase();
-      const status = normalizedStatus === "cancelled" || normalizedStatus === "canceled" ? "cancelled" : "completed";
+      // Closed rows (declined or cancelled) share the "cancelled" bucket here; isCancelledAppointment and
+      // appointmentStatus tell them apart.
+      const status = ["cancelled", "canceled", "declined"].includes(normalizedStatus) ? "cancelled" : "completed";
       const startAt = row.startAt || row.createdAt || null;
       const endAt = row.endAt || row.resolvedAt || startAt || null;
       let durationSeconds = null;
@@ -20881,6 +20961,7 @@ app.get("/history/admin", async (req, res) => {
         typeLabel: row.requestTypeKey === "certificate" ? "Certificate Request" : row.typeLabel,
         requestTypeKey: row.requestTypeKey,
         status,
+        appointmentStatus: row.requestTypeKey === "certificate" ? null : String(row.status || "").trim().toUpperCase(),
         isCancelledAppointment: Boolean(row.isCancelledAppointment),
         startAt,
         endAt,
@@ -21371,19 +21452,8 @@ app.get("/history/user", async (req, res) => {
           a."s_sacramentID",
           p."fullName" AS "priestName",
           pt."scheduledEventDateTime" AS "finalEventSchedule",
-          (
-            a.status = 'CANCELLED'
-            AND (
-              pt."progressID" IS NOT NULL
-              OR EXISTS (
-                SELECT 1
-                FROM appointment_change_requests acr
-                WHERE acr."appointmentID" = a."appointmentID"
-                  AND acr."requestType" = 'cancel'
-                  AND acr.status = 'approved'
-              )
-            )
-          ) AS "isCancelledAppointment"
+          -- CANCELLED = approved then cancelled / withdrawn by the requester; DECLINED = turned down.
+          (a.status = 'CANCELLED') AS "isCancelledAppointment"
         FROM appointments a
         LEFT JOIN sacraments s ON s."sacramentID" = a."sacramentID"
         LEFT JOIN special_sacraments ss ON ss."s_sacramentID" = a."s_sacramentID"
@@ -21391,7 +21461,7 @@ app.get("/history/user", async (req, res) => {
         LEFT JOIN progress_tracker pt ON pt."appointmentID" = a."appointmentID"
         WHERE a."userID" = $1
           AND a."isArchived" = FALSE
-          AND (a.status = 'CANCELLED' OR a."finishedAt" IS NOT NULL)
+          AND (a.status IN ('CANCELLED', 'DECLINED') OR a."finishedAt" IS NOT NULL)
       `,
       [userID],
     );
@@ -21426,7 +21496,9 @@ app.get("/history/user", async (req, res) => {
     );
 
     const appointmentItems = appointmentsResult.rows.map((row, index) => {
-      const status = String(row.status || "").trim().toUpperCase() === "CANCELLED" ? "CANCELLED" : "COMPLETED";
+      // History groups closed rows under CANCELLED; appointmentStatus / isCancelledAppointment say which.
+      const appointmentStatus = String(row.status || "").trim().toUpperCase();
+      const status = CLOSED_APPOINTMENT_STATUSES.has(appointmentStatus) ? "CANCELLED" : "COMPLETED";
       const historyStartAt = row.createdAt || null;
       const historyEndAt = row.finishedAt || row.createdAt || null;
       let historyDurationSeconds = null;
@@ -21437,6 +21509,7 @@ app.get("/history/user", async (req, res) => {
       }
       return {
         historyID: `appointment-${row.appointmentID}-${index}`,
+        appointmentStatus,
         appointmentID: Number(row.appointmentID),
         priestID: row.priestID === null ? null : Number(row.priestID),
         priestName: String(row.priestName || "").trim(),

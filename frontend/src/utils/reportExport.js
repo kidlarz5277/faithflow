@@ -89,7 +89,7 @@ export const buildShortTypeLabels = (labels) => {
 
 const toPercent = (count, total) => (total > 0 ? Math.round((count / total) * 1000) / 10 : 0);
 
-export const REPORT_STATUS_ORDER = ["Completed", "Ongoing", "Cancelled"];
+export const REPORT_STATUS_ORDER = ["Completed", "Ongoing", "Cancelled", "Declined"];
 
 const createStatusCounts = () => Object.fromEntries(REPORT_STATUS_ORDER.map((status) => [status, 0]));
 

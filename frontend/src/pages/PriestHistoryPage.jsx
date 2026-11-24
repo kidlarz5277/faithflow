@@ -117,6 +117,7 @@ const formatStatusLabel = (status) => {
   const normalized = String(status || "").trim().toUpperCase();
   if (normalized === "COMPLETED") return "Completed";
   if (normalized === "CANCELLED") return "Cancelled";
+  if (normalized === "DECLINED") return "Declined";
   return toLabel(status) || "Recorded";
 };
 const toLabel = (value) =>
@@ -273,6 +274,7 @@ function PriestHistoryPage() {
         (entry) =>
           entry?.status === "COMPLETED" ||
           entry?.status === "CANCELLED" ||
+          entry?.status === "DECLINED" ||
           Boolean(entry?.finishedAt),
       );
       const sacramentPayload = await sacramentResponse.json().catch(() => []);
@@ -421,7 +423,9 @@ function PriestHistoryPage() {
         selectedRequestCategory === "all" ||
         (selectedRequestCategory === "special_program" ? isSpecial : !isSpecial);
       const matchesType = selectedType === "all" || sacramentName === selectedType;
-      const matchesStatus = selectedStatus === "all" || status.toUpperCase() === selectedStatus;
+      // The Cancelled tab also holds DECLINED records (both are closed appointments).
+      const statusKey = status.toUpperCase() === "DECLINED" ? "CANCELLED" : status.toUpperCase();
+      const matchesStatus = selectedStatus === "all" || statusKey === selectedStatus;
       return matchesSearch && matchesCategory && matchesType && matchesStatus;
     });
     return sortHistoryRecords(nextItems, selectedSort);
@@ -469,7 +473,7 @@ function PriestHistoryPage() {
   if (!user || accountType !== "priest") return null;
 
   const completedCount = records.filter((entry) => entry?.status === "COMPLETED").length;
-  const cancelledCount = records.filter((entry) => entry?.status === "CANCELLED").length;
+  const cancelledCount = records.filter((entry) => entry?.status === "CANCELLED" || entry?.status === "DECLINED").length;
 
   const handleLogout = () => {
     localStorage.removeItem("faithflow_auth");
