@@ -30,7 +30,7 @@ const todayDate = () => {
   return new Date(now.getFullYear(), now.getMonth(), now.getDate());
 };
 
-export function ParishDateField({ name, value, onChange, allowFuture = false, disablePast = false }) {
+export function ParishDateField({ name, value, onChange, allowFuture = false, disablePast = false, disabled = false }) {
   const selected = parseIso(value);
   const maxDate = todayDate();
   const max = toIso(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate());
@@ -66,12 +66,17 @@ export function ParishDateField({ name, value, onChange, allowFuture = false, di
   };
 
   return (
-    <div className={`parish-date-field${open ? " is-open" : ""}`} ref={rootRef}>
-      <button type="button" className="parish-date-trigger" onClick={() => setOpen((current) => !current)}>
+    <div className={`parish-date-field${open && !disabled ? " is-open" : ""}`} ref={rootRef}>
+      <button
+        type="button"
+        className="parish-date-trigger"
+        disabled={disabled}
+        onClick={() => setOpen((current) => !current)}
+      >
         <span>{formatDisplay(value) || "MM/DD/YYYY"}</span>
         <CalendarDays size={18} aria-hidden="true" />
       </button>
-      {open ? (
+      {open && !disabled ? (
         <div className="parish-date-popover" role="dialog" aria-label="Choose a date">
           <div className="parish-date-nav">
             <button type="button" aria-label="Previous month" onClick={() => setCursor(new Date(year, month - 1, 1))}>

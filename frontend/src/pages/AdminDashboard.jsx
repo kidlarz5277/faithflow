@@ -505,6 +505,17 @@ const getMarriageAccountRoleByGender = (genderValue) => {
   if (normalized === "male") return "groom";
   return null;
 };
+// Profile birthdates can arrive as "YYYY-MM-DD" or as a full timestamp; date inputs need the
+// Manila calendar date as "YYYY-MM-DD".
+const toManilaDateInputValue = (value) => {
+  const raw = String(value || "").trim();
+  if (!raw) return "";
+  if (/^\d{4}-\d{2}-\d{2}$/.test(raw)) return raw;
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) return /^\d{4}-\d{2}-\d{2}/.test(raw) ? raw.slice(0, 10) : "";
+  return parsed.toLocaleDateString("en-CA", { timeZone: "Asia/Manila" });
+};
+
 const calculateAgeFromBirthdate = (birthdateValue) => {
   const rawBirthdate = String(birthdateValue || "").trim();
   if (!rawBirthdate) return "";
@@ -894,6 +905,8 @@ function AdminDashboard({ isReadOnly = false }) {
   const [appointmentCredentials, setAppointmentCredentials] = useState({});
   const [appointmentNote, setAppointmentNote] = useState("");
   const [useMarriageAccountDetails, setUseMarriageAccountDetails] = useState(false);
+  // Latest profile (first/last name, birthdate, phone, address) for "Use Account details".
+  const [marriageAccountProfile, setMarriageAccountProfile] = useState(null);
   const [useAccountPhoneNumber, setUseAccountPhoneNumber] = useState({});
   const [resolvedUserGender, setResolvedUserGender] = useState("");
   const [resolvedUserBirthdate, setResolvedUserBirthdate] = useState("");
@@ -2875,41 +2888,64 @@ function AdminDashboard({ isReadOnly = false }) {
   const marriageAccountTargetPhoneFieldKey = marriageAccountRole ? `${marriageAccountRole}PhoneNumber` : null;
   const marriageAccountTargetAgeFieldKey = marriageAccountRole ? `${marriageAccountRole}Age` : null;
   const marriageAccountTargetAddressFieldKey = marriageAccountRole ? `${marriageAccountRole}Address` : null;
+  // While "Use Account details" is on, the bride/groom fields it filled are locked. Fields the
+  // profile had no value for stay editable so the user can still complete the form.
+  const MARRIAGE_ACCOUNT_FIELD_SUFFIXES = ["Name", "FullName", "FirstName", "LastName", "BirthDate", "Birthdate", "Age", "PhoneNumber", "Address"];
+  const isMarriageAccountLockedField = (fieldKey) =>
+    isUserDashboardMarriageFlow &&
+    useMarriageAccountDetails &&
+    Boolean(marriageAccountRole) &&
+    MARRIAGE_ACCOUNT_FIELD_SUFFIXES.some((suffix) => fieldKey === `${marriageAccountRole}${suffix}`) &&
+    String(appointmentCredentials[fieldKey] || "").trim() !== "";
 
   useEffect(() => {
     setResolvedUserGender(String(user?.gender || "").trim().toLowerCase());
     setResolvedUserBirthdate(String(user?.birthdate || "").trim());
   }, [user?.gender, user?.birthdate]);
 
+  // Fills the bride or groom fields from the signed-in account. The Marriage form fields are set by
+  // the parish (currently First Name / Last Name / Birth Date; older forms used Full Name / Age), so
+  // only the keys that exist on the current form are filled.
   const applyMarriageAccountDetails = (
     roleOverride = marriageAccountRole,
     birthdateOverride = String(resolvedUserBirthdate || user?.birthdate || "").trim(),
   ) => {
     if (!isUserDashboardMarriageFlow) return;
     if (!roleOverride) return;
-    const targetNameFieldKey = `${roleOverride}Name`;
-    const targetPhoneFieldKey = `${roleOverride}PhoneNumber`;
+    const account = { ...(user || {}), ...(marriageAccountProfile || {}) };
 
     const accountFullName =
-      String(user?.fullName || "").trim() ||
-      String(user?.userName || "").trim() ||
-      String(user?.email || "").trim();
-    const accountPhoneNumber = String(user?.contactNumber || "")
+      String(account.fullName || "").trim() ||
+      [account.firstName, account.lastName].map((part) => String(part || "").trim()).filter(Boolean).join(" ") ||
+      String(account.userName || "").trim();
+    const nameParts = accountFullName.split(/\s+/).filter(Boolean);
+    const accountFirstName =
+      String(account.firstName || "").trim() || (nameParts.length > 1 ? nameParts.slice(0, -1).join(" ") : nameParts[0] || "");
+    const accountLastName = String(account.lastName || "").trim() || (nameParts.length > 1 ? nameParts[nameParts.length - 1] : "");
+    const accountPhoneNumber = String(account.contactNumber || "")
       .replace(/\D/g, "")
       .slice(0, 11);
-    const accountAddress = String(user?.address || "").trim();
-    const accountBirthdate = String(birthdateOverride || "").trim();
+    const accountAddress = String(account.address || "").trim();
+    const accountBirthdate = toManilaDateInputValue(birthdateOverride || account.birthdate);
     const computedAge = calculateAgeFromBirthdate(accountBirthdate);
 
-    if (!accountFullName && !accountPhoneNumber && !accountAddress && !computedAge) return;
+    const formFieldKeys = new Set(regularAppointmentFields.map((field) => String(field?.key || "")));
+    const hasField = (key) => formFieldKeys.has(key);
+    const values = {
+      [`${roleOverride}FirstName`]: accountFirstName,
+      [`${roleOverride}LastName`]: accountLastName,
+      [`${roleOverride}Name`]: accountFullName,
+      [`${roleOverride}FullName`]: accountFullName,
+      [`${roleOverride}BirthDate`]: accountBirthdate,
+      [`${roleOverride}Birthdate`]: accountBirthdate,
+      [`${roleOverride}Age`]: computedAge,
+      [`${roleOverride}PhoneNumber`]: accountPhoneNumber,
+      [`${roleOverride}Address`]: accountAddress,
+    };
+    const updates = Object.fromEntries(Object.entries(values).filter(([key, value]) => value && hasField(key)));
+    if (Object.keys(updates).length === 0) return;
 
-    setAppointmentCredentials((current) => ({
-      ...current,
-      ...(accountFullName ? { [targetNameFieldKey]: accountFullName } : {}),
-      ...(accountPhoneNumber ? { [targetPhoneFieldKey]: accountPhoneNumber } : {}),
-      ...(accountAddress ? { [`${roleOverride}Address`]: accountAddress } : {}),
-      ...(computedAge && marriageAccountTargetAgeFieldKey ? { [marriageAccountTargetAgeFieldKey]: computedAge } : {}),
-    }));
+    setAppointmentCredentials((current) => ({ ...current, ...updates }));
   };
 
   const fetchLatestUserProfile = async () => {
@@ -2923,6 +2959,9 @@ function AdminDashboard({ isReadOnly = false }) {
     }
     const latestGender = String(responseData?.user?.gender || "").trim().toLowerCase();
     const latestBirthdate = String(responseData?.user?.birthdate || "").trim();
+    if (responseData?.user && typeof responseData.user === "object") {
+      setMarriageAccountProfile(responseData.user);
+    }
     if (latestGender) {
       setResolvedUserGender(latestGender);
     }
@@ -2942,10 +2981,11 @@ function AdminDashboard({ isReadOnly = false }) {
       setAppointmentCredentials((current) => {
         const next = { ...current };
         const clearRoleFields = (role) => {
-          next[`${role}Name`] = "";
-          next[`${role}PhoneNumber`] = "";
-          next[`${role}Age`] = "";
-          next[`${role}Address`] = "";
+          ["Name", "FullName", "FirstName", "LastName", "BirthDate", "Birthdate", "PhoneNumber", "Age", "Address"].forEach(
+            (suffix) => {
+              if (`${role}${suffix}` in next) next[`${role}${suffix}`] = "";
+            },
+          );
         };
         if (marriageAccountRole) {
           clearRoleFields(marriageAccountRole);
@@ -2961,24 +3001,14 @@ function AdminDashboard({ isReadOnly = false }) {
 
     let targetRole = marriageAccountRole;
     let targetBirthdate = String(resolvedUserBirthdate || user?.birthdate || "").trim();
-    if (!targetRole) {
-      try {
-        const latestProfile = await fetchLatestUserProfile();
-        targetRole = getMarriageAccountRoleByGender(latestProfile?.gender);
-        targetBirthdate = String(latestProfile?.birthdate || targetBirthdate).trim();
-      } catch (error) {
-        setAppointmentFormError(error.message || "Unable to load account details.");
-        return;
-      }
-    }
-    if (!targetBirthdate) {
-      try {
-        const latestProfile = await fetchLatestUserProfile();
-        targetBirthdate = String(latestProfile?.birthdate || "").trim();
-        if (!targetRole) {
-          targetRole = getMarriageAccountRoleByGender(latestProfile?.gender);
-        }
-      } catch (error) {
+    // Always read the latest profile: the saved login has no separate first/last name, and the
+    // user may have changed their gender, birthdate, phone or address since signing in.
+    try {
+      const latestProfile = await fetchLatestUserProfile();
+      targetRole = getMarriageAccountRoleByGender(latestProfile?.gender) || targetRole;
+      targetBirthdate = String(latestProfile?.birthdate || targetBirthdate).trim();
+    } catch (error) {
+      if (!targetRole) {
         setAppointmentFormError(error.message || "Unable to load account details.");
         return;
       }
@@ -3011,6 +3041,8 @@ function AdminDashboard({ isReadOnly = false }) {
     user?.address,
     user?.birthdate,
     resolvedUserBirthdate,
+    marriageAccountProfile,
+    regularAppointmentFields,
   ]);
 
   const validateAppointmentCredentials = () => {
@@ -5614,6 +5646,7 @@ function AdminDashboard({ isReadOnly = false }) {
                           name={field.key}
                           value={appointmentCredentials[field.key] || ""}
                           onChange={handleAppointmentCredentialChange}
+                          disabled={isMarriageAccountLockedField(field.key)}
                         />
                       ) : (
                         <input
@@ -5640,14 +5673,7 @@ function AdminDashboard({ isReadOnly = false }) {
                           minLength={isPhoneFieldKey(field.key) ? 11 : undefined}
                           maxLength={isPhoneFieldKey(field.key) ? 11 : undefined}
                           disabled={
-                            (isUserDashboardMarriageFlow &&
-                              useMarriageAccountDetails &&
-                              isMarriageDetailsStep &&
-                              Boolean(marriageAccountTargetFieldKey) &&
-                              (field.key === marriageAccountTargetFieldKey ||
-                                field.key === marriageAccountTargetPhoneFieldKey ||
-                                field.key === marriageAccountTargetAgeFieldKey ||
-                                field.key === marriageAccountTargetAddressFieldKey)) ||
+                            isMarriageAccountLockedField(field.key) ||
                             (isReadOnly && Boolean(useAccountPhoneNumber[field.key]))
                           }
                         />
