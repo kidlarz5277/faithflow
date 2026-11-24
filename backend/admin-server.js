@@ -1134,6 +1134,7 @@ app.all("/appointments/admin", forwardRequestToMainServer);
 app.all("/appointments/requests", forwardRequestToMainServer);
 app.all("/appointments/:id/history-details", forwardRequestToMainServer);
 app.all("/appointments/:id/progress", forwardRequestToMainServer);
+app.post("/appointments/:id/progress/task-sms", forwardRequestToMainServer);
 app.all("/appointments/:id/schedule-remarks", forwardRequestToMainServer);
 app.all("/appointments/:id/schedule-remarks/:remarkID/review", forwardRequestToMainServer);
 app.all("/appointments/:id/preferred-slots", forwardRequestToMainServer);

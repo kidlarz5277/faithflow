@@ -704,6 +704,12 @@ const getBlessingTypeDetail = (item) => {
   return otherText || blessingType;
 };
 
+// Checklist tasks that name a weekday or a monthly/weekly schedule ("Every 3rd Sunday Of The Month",
+// "3 Consecutive Sundays") get a button to text the requester the actual date.
+const RECURRING_SCHEDULE_PATTERN =
+  /\b(sun|mon|tues|wednes|thurs|fri|satur)days?\b|\bof the month\b|\b(weekly|monthly|every week|every month)\b/i;
+const mentionsRecurringSchedule = (taskLabel) => RECURRING_SCHEDULE_PATTERN.test(String(taskLabel || ""));
+
 function AdminProgressDetails() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -752,6 +758,11 @@ function AdminProgressDetails() {
   const [paymentStatus, setPaymentStatus] = useState("unpaid");
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [isAppointmentDetailsOpen, setIsAppointmentDetailsOpen] = useState(false);
+  // "Text the date" popup for checklist tasks that name a weekday or monthly schedule (SMS only, not saved).
+  const [taskSmsTarget, setTaskSmsTarget] = useState(null);
+  const [taskSmsNote, setTaskSmsNote] = useState("");
+  const [taskSmsError, setTaskSmsError] = useState("");
+  const [isSendingTaskSms, setIsSendingTaskSms] = useState(false);
   const [isPaymentUndoConfirmOpen, setIsPaymentUndoConfirmOpen] = useState(false);
   const [isUndoingPayment, setIsUndoingPayment] = useState(false);
   const [paymentInvoiceInput, setPaymentInvoiceInput] = useState("");
@@ -931,6 +942,48 @@ function AdminProgressDetails() {
   const blessingTypeDetail = getBlessingTypeDetail(selectedProgressItem);
   const appointmentSubjectName = selectedProgressItem ? getAppointmentDisplayName(selectedProgressItem) : "";
   const appointmentRequesterName = String(selectedProgressItem?.requesterFullName || "").trim();
+
+  const openTaskSmsModal = (taskLabel) => {
+    setTaskSmsTarget({ label: String(taskLabel || "").trim() });
+    setTaskSmsNote("");
+    setTaskSmsError("");
+  };
+
+  const closeTaskSmsModal = () => {
+    if (isSendingTaskSms) return;
+    setTaskSmsTarget(null);
+    setTaskSmsNote("");
+    setTaskSmsError("");
+  };
+
+  const handleSendTaskSms = async () => {
+    const appointmentID = Number(selectedProgressItem?.appointmentID);
+    const note = taskSmsNote.trim();
+    if (!taskSmsTarget || !Number.isInteger(appointmentID) || appointmentID <= 0) return;
+    if (note.length < 3) {
+      setTaskSmsError("Enter the date or note to send (at least 3 characters).");
+      return;
+    }
+    setIsSendingTaskSms(true);
+    setTaskSmsError("");
+    try {
+      const response = await fetch(`/admin-api/appointments/${appointmentID}/progress/task-sms`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ taskLabel: taskSmsTarget.label, note }),
+      });
+      const responseData = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(responseData?.message || "Unable to send the SMS.");
+      const recipientCount = Number(responseData?.recipients) || 1;
+      pushUiNotice(`SMS sent to ${recipientCount} number${recipientCount === 1 ? "" : "s"}.`);
+      setTaskSmsTarget(null);
+      setTaskSmsNote("");
+    } catch (error) {
+      setTaskSmsError(error.message || "Unable to send the SMS.");
+    } finally {
+      setIsSendingTaskSms(false);
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("faithflow_auth");
@@ -2763,7 +2816,7 @@ function AdminProgressDetails() {
                             <label
                               className={`progress-task-item ${isChecked ? "is-checked" : ""} ${
                                 isEditMode && isTextEditingEnabled ? "is-editing" : ""
-                              }`}
+                              }${!(isEditMode && isTextEditingEnabled) && mentionsRecurringSchedule(task) ? " has-sms" : ""}`}
                             >
                               <input
                                 type="checkbox"
@@ -2803,6 +2856,22 @@ function AdminProgressDetails() {
                                   {task}
                                 </span>
                               )}
+                              {!(isEditMode && isTextEditingEnabled) && mentionsRecurringSchedule(task) ? (
+                                <button
+                                  type="button"
+                                  className="progress-task-sms-button"
+                                  aria-label={`Text the requester the date for: ${String(task || "").trim()}`}
+                                  title="Text the requester the date for this task"
+                                  onClick={(event) => {
+                                    // The button sits inside the task's <label>; don't toggle the checkbox.
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    openTaskSmsModal(task);
+                                  }}
+                                >
+                                  <MessageSquare size={16} aria-hidden="true" />
+                                </button>
+                              ) : null}
                               {isEditMode && isTextEditingEnabled ? (
                                 <button
                                   type="button"
@@ -3805,6 +3874,60 @@ function AdminProgressDetails() {
                 disabled={!taskCheckToggleTarget.isNextChecked && taskUncheckReason.trim().length < 3}
               >
                 Confirm
+              </button>
+            </div>
+          </section>
+        </div>
+      ) : null}
+      {taskSmsTarget ? (
+        <div className="progress-delete-modal-overlay" role="presentation" onClick={closeTaskSmsModal}>
+          <section
+            className="progress-delete-modal progress-delete-modal--confirm progress-delete-modal--wide"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Text the requester a date"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="progress-delete-modal-body">
+              <span className="progress-delete-modal-icon progress-task-sms-modal-icon" aria-hidden="true">
+                <MessageSquare size={24} />
+              </span>
+              <h3>Text the date for this task</h3>
+              <p>
+                <strong>{taskSmsTarget.label}</strong>
+              </p>
+              <label className="progress-uncheck-reason-field">
+                <span>Date or note</span>
+                <textarea
+                  value={taskSmsNote}
+                  onChange={(event) => setTaskSmsNote(event.target.value)}
+                  placeholder="Ex. Sunday, December 21, 2026 at 8:00 AM, Parish Hall"
+                  data-title-case="off"
+                  rows={3}
+                  maxLength={300}
+                  autoFocus
+                />
+                <small>{taskSmsNote.trim().length}/300 characters. Sent by SMS only; it is not saved.</small>
+              </label>
+              {taskSmsNote.trim() ? (
+                <p className="progress-task-sms-preview">
+                  <span>SMS preview</span>
+                  {`Faithflow: Your ${selectedProgressItem?.sacramentName || selectedProgressItem?.sacramentalType || "appointment"} request update. ${taskSmsTarget.label.replace(/[.\s]+$/, "")}: ${taskSmsNote.trim().replace(/[.\s]+$/, "")}.`}
+                </p>
+              ) : null}
+              {taskSmsError ? <p className="progress-task-sms-error">{taskSmsError}</p> : null}
+            </div>
+            <div className="progress-delete-modal-actions">
+              <button type="button" className="secondary" onClick={closeTaskSmsModal} disabled={isSendingTaskSms}>
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="primary"
+                onClick={() => void handleSendTaskSms()}
+                disabled={isSendingTaskSms || taskSmsNote.trim().length < 3}
+              >
+                {isSendingTaskSms ? "Sending..." : "Send SMS"}
               </button>
             </div>
           </section>

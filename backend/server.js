@@ -17192,6 +17192,75 @@ app.delete("/progress-templates/:id", async (req, res) => {
   }
 });
 
+// Texts the requester a date/note for one checklist task (e.g. "Attend BEC Seminar - every 3rd Sunday"
+// -> "December 21, 2026 at 8:00 AM"). SMS only: nothing is saved to the checklist or the database.
+// Staff-only: the request must come through the admin server with a signed-in admin session.
+app.post("/appointments/:id/progress/task-sms", async (req, res) => {
+  try {
+    const isParishStaffWrite = String(req.headers["x-faithflow-write-source"] || "").trim().toLowerCase() === "admin";
+    if (!isParishStaffWrite || req.auth?.accountType !== "admin") {
+      return res.status(403).json({ message: "Only the parish office can send checklist SMS." });
+    }
+    const appointmentID = Number(req.params.id);
+    if (!Number.isInteger(appointmentID) || appointmentID <= 0) {
+      return res.status(400).json({ message: "Invalid appointment ID." });
+    }
+    const taskLabel = toSmsSafeText(String(req.body?.taskLabel || "").replace(/\s+/g, " ")).slice(0, 200);
+    const note = toSmsSafeText(String(req.body?.note || "").replace(/\s+/g, " ")).slice(0, 300);
+    if (!taskLabel) return res.status(400).json({ message: "The checklist task is missing." });
+    if (!note) return res.status(400).json({ message: "Enter the date or note to send." });
+
+    const appointmentResult = await query(
+      `
+        SELECT
+          a."appointmentID",
+          COALESCE(s."sacramentName", ss."s_sacramentName", 'appointment') AS "serviceName",
+          u."contactNumber" AS "userContactNumber",
+          a.credentials
+        FROM appointments a
+        LEFT JOIN sacraments s ON s."sacramentID" = a."sacramentID"
+        LEFT JOIN special_sacraments ss ON ss."s_sacramentID" = a."s_sacramentID"
+        LEFT JOIN users u ON u."userID" = a."userID"
+        WHERE a."appointmentID" = $1
+        LIMIT 1
+      `,
+      [appointmentID],
+    );
+    const appointment = appointmentResult.rows[0];
+    if (!appointment) return res.status(404).json({ message: "Appointment not found." });
+
+    const recipients = [];
+    const seen = new Set();
+    for (const value of [appointment.userContactNumber, ...getAppointmentCredentialPhoneNumbers(appointment.credentials)]) {
+      const international = toInternationalPhone(value);
+      if (!international || seen.has(international)) continue;
+      seen.add(international);
+      recipients.push(String(value).trim());
+    }
+    if (recipients.length === 0) {
+      return res.status(422).json({ message: "This request has no valid mobile number to text." });
+    }
+
+    const serviceName = toSmsSafeText(appointment.serviceName) || "appointment";
+    const message = `Faithflow: Your ${serviceName} request update. ${taskLabel.replace(/[.\s]+$/, "")}: ${note.replace(/[.\s]+$/, "")}.`;
+    const results = await Promise.allSettled(recipients.map((phoneNumber) => sendSms({ phoneNumber, message })));
+    const sentTo = recipients.filter((_, index) => results[index].status === "fulfilled");
+    results.forEach((result, index) => {
+      if (result.status === "rejected") {
+        console.error(`Appointment ${appointmentID} task SMS failed for ${recipients[index]}:`, result.reason?.message);
+      }
+    });
+    if (sentTo.length === 0) {
+      return res.status(502).json({ message: "The SMS could not be sent. Please try again later." });
+    }
+    console.log(`Appointment ${appointmentID} task SMS accepted for ${sentTo.join(", ")}.`);
+    return res.json({ sent: true, recipients: sentTo.length, failed: recipients.length - sentTo.length, message });
+  } catch (error) {
+    console.error("Checklist task SMS error:", error);
+    return res.status(500).json({ message: "Unable to send the SMS." });
+  }
+});
+
 app.get("/appointments/:id/progress", async (req, res) => {
   try {
     const appointmentID = Number(req.params.id);
