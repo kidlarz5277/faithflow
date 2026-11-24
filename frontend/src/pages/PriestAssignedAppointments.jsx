@@ -9,6 +9,7 @@ import {
   getCalendarEntryDisplayTitle,
   getCalendarEntryLocationLabel,
   getCalendarRequesterName,
+  getCredentialSubjectName,
   getManilaDateKeyAndMinutes,
   sanitizeScheduleNotes,
 } from "../utils/parishSchedule";
@@ -249,6 +250,13 @@ const buildCredentialDetails = (credentials, sacramentName) => {
   return { fields, files };
 };
 
+// Name to show on a card: the name(s) typed into the form (both partners for Marriage),
+// otherwise the requester / account holder's name (e.g. Blessing has no name field).
+const getAppointmentDisplayName = (entry) =>
+  getCredentialSubjectName(entry) ||
+  String(entry?.requesterFullName || "").trim() ||
+  String(getCalendarRequesterName(entry) || "").trim();
+
 const hasCredentialDetails = (entry) =>
   Boolean(entry?.credentials && typeof entry.credentials === "object" && Object.keys(entry.credentials).length > 0);
 
@@ -424,7 +432,7 @@ function PriestAssignedAppointments() {
       const typeKey = getScheduleTypeKey(entry);
       const status = String(entry?.remarkStatusLabel || entry?.remarkStatus || "").trim();
       const idLabel = String(entry?.id || "").trim();
-      const requester = String(entry?.requesterFullName || getCalendarRequesterName(entry) || "").trim();
+      const requester = `${getAppointmentDisplayName(entry)} ${String(entry?.requesterFullName || "").trim()}`.trim();
       const locationLabel = String(
         entry?.locationLabel || getCalendarEntryLocationLabel(entry, { emptyLabel: "" }) || "",
       ).trim();
@@ -576,7 +584,7 @@ function PriestAssignedAppointments() {
     const isEditingRemarks = alreadyRemarked && Number(editingRemarkId) === Number(entry.id);
     const canUpdateRemarks = remarkStatus === "remarks_sent" || remarkStatus === "reviewed_by_secretary";
     const timingMeta = getTimingMeta(entry);
-    const requesterName = String(entry.requesterFullName || getCalendarRequesterName(entry) || "").trim();
+    const requesterName = getAppointmentDisplayName(entry);
     const locationLabel = getUsefulLocationLabel(entry);
     const sacramentName = String(entry.sacramentName || "").trim();
     const showSacrament = sacramentName && sacramentName.toLowerCase() !== String(entry.title || "").trim().toLowerCase();
@@ -708,13 +716,15 @@ function PriestAssignedAppointments() {
     if (!detailsEntry) return null;
     const sacramentName = String(detailsEntry.sacramentName || "").trim();
     const { fields, files } = buildCredentialDetails(detailsEntry.credentials, sacramentName || detailsEntry.title);
-    const requesterName = String(detailsEntry.requesterFullName || getCalendarRequesterName(detailsEntry) || "").trim();
+    const subjectName = getAppointmentDisplayName(detailsEntry);
+    const requesterName = String(detailsEntry.requesterFullName || "").trim();
     const summaryItems = [
       { label: "Schedule", value: formatScheduleWhen(detailsEntry) },
       { label: "Location", value: getUsefulLocationLabel(detailsEntry) },
-      { label: "Requester", value: requesterName },
+      { label: "Name", value: subjectName },
+      requesterName && requesterName !== subjectName ? { label: "Requested by", value: requesterName } : null,
       { label: "Contact Number", value: String(detailsEntry.contactNumber || "").trim() },
-    ].filter((item) => item.value);
+    ].filter((item) => item?.value);
     const requestNote = cleanScheduleNotes(detailsEntry.note);
     return (
       <div className="appointment-confirm-overlay" role="presentation" onClick={() => setDetailsEntry(null)}>

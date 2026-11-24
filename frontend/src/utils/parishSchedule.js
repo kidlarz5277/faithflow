@@ -528,6 +528,27 @@ const composeRoleName = (credentials, role) => {
   return [first, last].filter(Boolean).join(" ");
 };
 
+const FILE_NAME_LIKE = /\.(png|jpe?g|pdf|webp|gif|docx?)$/i;
+
+// The name(s) typed into the appointment form, ignoring the account holder's name.
+// Marriage returns both partners ("Groom & Bride"). Returns "" when the form has no name field
+// (e.g. Blessing), so callers can fall back to the requester.
+export const getCredentialSubjectName = (appointment) => {
+  const credentials = appointment?.credentials && typeof appointment.credentials === "object" ? appointment.credentials : {};
+  const groomName = composeRoleName(credentials, "groom");
+  const brideName = composeRoleName(credentials, "bride");
+  if (groomName || brideName) return [groomName, brideName].filter(Boolean).join(" & ");
+  const childName = resolveChildDisplayName(credentials);
+  if (childName) return childName;
+  const deceasedName = readCredentialByKeyMatch(
+    credentials,
+    (key) => key === "deceasedname" || key === "deceasedfullname",
+  );
+  if (deceasedName) return deceasedName;
+  const fullName = String(credentials.fullName || "").trim();
+  return fullName && !FILE_NAME_LIKE.test(fullName) ? fullName : "";
+};
+
 export const getAppointmentSubjectName = (appointment) => {
   const credentials = appointment?.credentials && typeof appointment.credentials === "object" ? appointment.credentials : {};
   const sacramentName = String(
