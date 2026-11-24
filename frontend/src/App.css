@@ -1409,13 +1409,33 @@ body :is(.about-feature-item p, .about-card p, .about-description p) {
     padding: 0 16px;
   }
 
-  .about-header-actions {
-    gap: 6px;
+  .about-header-bar {
+    flex-wrap: wrap;
+    gap: 10px;
+    padding-top: 12px;
   }
 
+  .about-header-logo {
+    width: 36px;
+    height: 36px;
+  }
+
+  .about-header h1 {
+    font-size: 1.2rem;
+  }
+
+  .about-header-actions {
+    gap: 6px;
+    margin-left: auto;
+  }
+
+  /* The buttons are a fixed 112px on desktop; three of them don't fit beside the logo on a phone. */
+  .about-faq-link,
   .about-signup-link,
   .about-login-link {
-    padding: 7px 10px;
+    width: auto;
+    height: 34px;
+    padding: 0 12px;
     font-size: 0.78rem;
   }
 

@@ -3232,13 +3232,12 @@
     gap: 10px;
   }
 
-  .progress-request-overview--context {
+  /* Two cards per row instead of a 640px strip (the strip widened the whole page on phones). */
+  .progress-request-overview.progress-request-overview--context {
     padding: 8px;
-    overflow-x: auto;
-  }
-
-  .progress-request-overview {
-    min-width: 640px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
   }
 }
 
@@ -3933,14 +3932,17 @@
   position: static;
 }
 
+/* Same space on both sides so the centred title stays centred beside the corner buttons. */
 .progress-main-header.progress-main-header--with-actions {
   padding-right: 300px;
+  padding-left: 300px;
 }
 
 @media (max-width: 1100px) {
   .progress-main-header.progress-main-header--with-actions {
     padding-top: 54px;
     padding-right: 16px;
+    padding-left: 16px;
   }
 }
 
@@ -3955,4 +3957,9 @@
     font-size: 0.72rem;
     padding: 6px 10px;
   }
+}
+
+/* The panel is a grid without explicit columns, so it grew to its widest child (~640px) on phones. */
+.dashboard-panel.progress-details-panel {
+  grid-template-columns: minmax(0, 1fr);
 }

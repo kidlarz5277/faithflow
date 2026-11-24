@@ -223,6 +223,23 @@
   flex: 0 0 180px;
 }
 
+/* Phones: search takes its own row; the filter/sort selects share the row below it. */
+@media (max-width: 600px) {
+  .appointment-search-row {
+    flex-wrap: wrap;
+  }
+
+  .appointment-search-row .appointment-filter-field:first-child {
+    flex: 1 1 100%;
+  }
+
+  .appointment-search-row .appointment-filter-field:not(:first-child),
+  .appointment-search-row .appointment-sort-field {
+    flex: 1 1 140px;
+    min-width: 0;
+  }
+}
+
 .appointment-search-row .appointment-filter-field:first-child {
   flex: 1 1 auto;
   min-width: 0;
