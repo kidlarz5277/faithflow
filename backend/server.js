@@ -13901,7 +13901,9 @@ app.get("/dashboard/office-status", async (req, res) => {
     }
 
     const nowSnapshot = getManilaNowSnapshot();
-    const [weekdayResult, specificDatesResult, schedulesResult] = await Promise.all([
+    // All four lookups run together; the half-day lookup used to wait for the others to finish,
+    // which added a second full database round trip to every office-status request.
+    const [weekdayResult, specificDatesResult, schedulesResult, halfDay] = await Promise.all([
       query(
         `
           SELECT weekday
@@ -13931,6 +13933,7 @@ app.get("/dashboard/office-status", async (req, res) => {
         `,
         [adminID, nowSnapshot.dateISO],
       ),
+      fetchRecurringHalfDay(adminID),
     ]);
 
     const recurringWeekday = weekdayResult.rows.length > 0 ? Number(weekdayResult.rows[0].weekday) : null;
@@ -13953,7 +13956,6 @@ app.get("/dashboard/office-status", async (req, res) => {
       recurringWeekday <= 6 &&
       nowSnapshot.weekday === recurringWeekday;
     const isFullDayOff = isSpecificDateDayOff || isRecurringDayOff;
-    const halfDay = await fetchRecurringHalfDay(adminID);
     const isHalfDayToday = !isFullDayOff && Boolean(halfDay) && nowSnapshot.weekday === halfDay.weekday;
     const halfDayStart = isHalfDayToday ? toMinutes(halfDay.startTime) : null;
     const halfDayEnd = isHalfDayToday ? toMinutes(halfDay.endTime) : null;

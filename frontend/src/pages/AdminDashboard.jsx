@@ -1165,6 +1165,10 @@ function AdminDashboard({ isReadOnly = false }) {
       generatedAt: new Date().toISOString(),
     };
   }, [calendarEntries, dayOffSpecificDates, dayOffWeekday]);
+  const buildLocalOfficeStatusFallbackRef = useRef(buildLocalOfficeStatusFallback);
+  buildLocalOfficeStatusFallbackRef.current = buildLocalOfficeStatusFallback;
+  const parishActivitiesCountRef = useRef(0);
+  parishActivitiesCountRef.current = Array.isArray(parishActivities) ? parishActivities.length : 0;
   const getSacramentColorClass = (sacramentName) => {
     const normalized = normalizeSacramentKey(sacramentName).replace(/\s+/g, "-");
     if (normalized === "marriage") return "is-marriage";
@@ -1330,6 +1334,10 @@ function AdminDashboard({ isReadOnly = false }) {
         throw new Error("Unable to load calendar entries.");
       }
       const allPriests = await priestsResponse.json().catch(() => []);
+      if (!isReadOnly && priestsResponse.ok && Array.isArray(allPriests)) {
+        // Same list loadPriests() fetches; reuse it instead of requesting /api/priests twice.
+        setPriests(allPriests.filter((priest) => priest && priest.isActive !== false));
+      }
       const disabledPriestIdSet = new Set(
         (Array.isArray(allPriests) ? allPriests : [])
           .filter((priest) => priest && priest.isActive === false)
@@ -1400,7 +1408,10 @@ function AdminDashboard({ isReadOnly = false }) {
       return;
     }
 
-    const shouldShowLoading = !silent && parishActivities.length === 0;
+    // Read the count through a ref so this callback keeps one identity. Depending on
+    // parishActivities.length re-ran every effect that lists this callback (and refetched the
+    // whole dashboard) as soon as the activities arrived.
+    const shouldShowLoading = !silent && parishActivitiesCountRef.current === 0;
     if (shouldShowLoading) {
       setIsLoadingParishActivities(true);
     }
@@ -1419,7 +1430,7 @@ function AdminDashboard({ isReadOnly = false }) {
       setParishActivities(Array.isArray(responseData) ? responseData : []);
       setParishActivitiesError("");
     } catch (error) {
-      if (parishActivities.length === 0) {
+      if (parishActivitiesCountRef.current === 0) {
         setParishActivities([]);
       }
       setParishActivitiesError(error.message || "Unable to load recent parish activities.");
@@ -1428,7 +1439,7 @@ function AdminDashboard({ isReadOnly = false }) {
         setIsLoadingParishActivities(false);
       }
     }
-  }, [isReadOnly, parishActivities.length, resolvedReadOnlyAdminID, user?.adminID]);
+  }, [isReadOnly, resolvedReadOnlyAdminID, user?.adminID]);
 
   const loadSacraments = async () => {
     setIsLoadingSacraments(true);
@@ -1646,7 +1657,7 @@ function AdminDashboard({ isReadOnly = false }) {
           generatedAt: String(responseData?.generatedAt || "").trim(),
         });
       } catch (error) {
-        setOfficeStatus(buildLocalOfficeStatusFallback());
+        setOfficeStatus(buildLocalOfficeStatusFallbackRef.current());
         if (!silent) setCalendarError(error.message || "Unable to load office status.");
       } finally {
         if (!silent) {
@@ -1654,7 +1665,9 @@ function AdminDashboard({ isReadOnly = false }) {
         }
       }
     },
-    [isReadOnly, resolvedReadOnlyAdminID, user?.adminID, buildLocalOfficeStatusFallback],
+    // The fallback builder changes whenever calendar entries or day-off settings load. It is read
+    // through a ref so that those loads don't trigger another /dashboard/office-status request.
+    [isReadOnly, resolvedReadOnlyAdminID, user?.adminID],
   );
 
   useEffect(() => {
@@ -1663,7 +1676,6 @@ function AdminDashboard({ isReadOnly = false }) {
     loadParishActivities();
     loadDayOffSettings();
     if (!isReadOnly) {
-      loadPriests();
       loadDashboardStats();
       loadPriestScheduleNotes();
     }
