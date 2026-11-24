@@ -61,14 +61,11 @@ const getProgressStateFromStatus = (statusValue) => {
   return "For Review";
 };
 
-// CANCELLED = an approved appointment that was cancelled (by the parish or at the requester's request).
-// Requests withdrawn before approval are also CANCELLED but never reached the tracker: they are listed on
-// the Declined Requests page, as are DECLINED ones.
-const isProgressCancelledAppointment = (appointment) => {
-  const status = String(appointment?.status || "").trim().toUpperCase();
-  if (status !== "CANCELLED") return false;
-  return !appointment?.withdrawnByRequester;
-};
+// Every CANCELLED appointment is listed in the Cancelled view: approved appointments that were cancelled
+// (by the parish or at the requester's request) and requests the requester withdrew before approval.
+// DECLINED requests are on the Declined Requests page instead.
+const isProgressCancelledAppointment = (appointment) =>
+  String(appointment?.status || "").trim().toUpperCase() === "CANCELLED";
 
 const readChecklistMetrics = (appointment) => {
   const totalTasks = Math.max(0, Number(appointment?.totalTasks) || 0);
@@ -630,7 +627,8 @@ function AdminProgressTracker() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           adminID,
-          status: "CONFIRMED",
+          // A request withdrawn before approval goes back to review; an approved one back to Confirmed.
+          status: item?.withdrawnByRequester ? "PENDING" : "CONFIRMED",
           confirmRestore: true,
         }),
       });
@@ -989,7 +987,10 @@ function AdminProgressTracker() {
               <h3 id="restore-cancelled-appointment-title">Restore this appointment?</h3>
               <p>
                 {selectedRestoreItem.sacramentName || selectedRestoreItem.sacramentalType || "This appointment"} will
-                return to the Progress Tracker. The requester will be notified.
+                {selectedRestoreItem.withdrawnByRequester
+                  ? " go back to Appointment Requests for review, since it was withdrawn before approval."
+                  : " return to the Progress Tracker."}{" "}
+                The requester will be notified.
               </p>
             </div>
             <div className="header-logout-modal-actions">
