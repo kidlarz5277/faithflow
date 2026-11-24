@@ -29,7 +29,22 @@ const formatDateTime = (dateValue) => {
   });
 };
 
-const SACRAMENTAL_FILTER_OPTIONS = ["Marriage", "Funeral Mass", "Baptism", "Blessing", "Special Sacrament Program"];
+// Requester shown on a tracker card. Marriage lists two people on the form, so its requester is one
+// person: the account holder's name, or if there is none, one name from the form (groom, else bride).
+// Other services keep showing the person the service is for.
+const getTrackerRequesterName = (appointment) => {
+  const accountName = String(appointment?.requesterFullName || "").trim();
+  const sacramentName = String(appointment?.sacramentName || "").trim().toLowerCase();
+  if (sacramentName.includes("marriage") || sacramentName.includes("kasalan")) {
+    const coupleName = getAppointmentSubjectName({ ...appointment, requesterFullName: "" });
+    const oneFormName = String(coupleName || "").split(" & ")[0].trim();
+    const singleAccountName = accountName.includes(" & ") ? "" : accountName;
+    return singleAccountName || oneFormName || "Unknown Account";
+  }
+  return getAppointmentSubjectName(appointment) || accountName || "Unknown Account";
+};
+
+const SACRAMENTAL_FILTER_OPTIONS =["Marriage", "Funeral Mass", "Baptism", "Blessing", "Special Sacrament Program"];
 
 const toReadableLabel = (value) =>
   String(value || "")
@@ -307,10 +322,7 @@ function AdminProgressTracker() {
             const hasStoredMetrics = Object.prototype.hasOwnProperty.call(appointment || {}, "progressPercent");
             return {
               ...appointment,
-              requesterFullName:
-                getAppointmentSubjectName({ ...appointment, sacramentName }) ||
-                String(appointment?.requesterFullName || "").trim() ||
-                "Unknown Account",
+              requesterFullName: getTrackerRequesterName({ ...appointment, sacramentName }),
               sacramentName,
               sacramentalType,
               declineReason: String(appointment?.note || appointment?.declineReason || "").trim(),
