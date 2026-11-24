@@ -4026,3 +4026,36 @@
   font-size: 0.86rem;
   font-weight: 600;
 }
+
+/* SMS date calendar: days that don't match the task's weekday are plain but still selectable. */
+.progress-priest-calendar-date-cell.is-sms-plain {
+  border-color: #eadfc8;
+  background: #ffffff;
+}
+
+.progress-task-sms-place-field {
+  margin-top: 12px;
+}
+
+.progress-task-sms-place-field input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d9d2bf;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font: inherit;
+  background: #ffffff;
+}
+
+/* Keep the SMS time slots two per row on phones (13 slots stacked one per row is a long scroll). */
+@media (max-width: 720px) {
+  .progress-schedule-slot-grid.progress-task-sms-slot-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+  }
+
+  .progress-task-sms-slot-grid .progress-schedule-slot-button {
+    padding: 8px 6px;
+    font-size: 0.78rem;
+  }
+}

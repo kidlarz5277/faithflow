@@ -710,6 +710,18 @@ const RECURRING_SCHEDULE_PATTERN =
   /\b(sun|mon|tues|wednes|thurs|fri|satur)days?\b|\bof the month\b|\b(weekly|monthly|every week|every month)\b/i;
 const mentionsRecurringSchedule = (taskLabel) => RECURRING_SCHEDULE_PATTERN.test(String(taskLabel || ""));
 
+// Weekday numbers (0 = Sunday) named in a task, used to highlight matching dates on the SMS calendar.
+const WEEKDAY_PATTERNS = [/\bsundays?\b/i, /\bmondays?\b/i, /\btuesdays?\b/i, /\bwednesdays?\b/i, /\bthursdays?\b/i, /\bfridays?\b/i, /\bsaturdays?\b/i];
+const getMentionedWeekdays = (taskLabel) =>
+  WEEKDAY_PATTERNS.map((pattern, weekday) => (pattern.test(String(taskLabel || "")) ? weekday : -1)).filter((day) => day >= 0);
+
+// Same 1-hour slots as the event schedule picker (4:00 AM to 5:00 PM).
+const formatHourLabel = (hour) => `${hour % 12 || 12}:00 ${hour >= 12 ? "PM" : "AM"}`;
+const TASK_SMS_TIME_SLOTS = Array.from({ length: 13 }, (_, index) => {
+  const startHour = 4 + index;
+  return { key: `${startHour}`, label: `${formatHourLabel(startHour)} - ${formatHourLabel(startHour + 1)}` };
+});
+
 function AdminProgressDetails() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -761,6 +773,9 @@ function AdminProgressDetails() {
   // "Text the date" popup for checklist tasks that name a weekday or monthly schedule (SMS only, not saved).
   const [taskSmsTarget, setTaskSmsTarget] = useState(null);
   const [taskSmsNote, setTaskSmsNote] = useState("");
+  const [taskSmsMonth, setTaskSmsMonth] = useState(() => new Date(new Date().getFullYear(), new Date().getMonth(), 1));
+  const [taskSmsDate, setTaskSmsDate] = useState("");
+  const [taskSmsSlot, setTaskSmsSlot] = useState(null);
   const [taskSmsError, setTaskSmsError] = useState("");
   const [isSendingTaskSms, setIsSendingTaskSms] = useState(false);
   const [isPaymentUndoConfirmOpen, setIsPaymentUndoConfirmOpen] = useState(false);
@@ -944,24 +959,42 @@ function AdminProgressDetails() {
   const appointmentRequesterName = String(selectedProgressItem?.requesterFullName || "").trim();
 
   const openTaskSmsModal = (taskLabel) => {
-    setTaskSmsTarget({ label: String(taskLabel || "").trim() });
+    const label = String(taskLabel || "").trim();
+    setTaskSmsTarget({ label, weekdays: getMentionedWeekdays(label) });
     setTaskSmsNote("");
+    setTaskSmsDate("");
+    setTaskSmsSlot(null);
     setTaskSmsError("");
+    const today = new Date();
+    setTaskSmsMonth(new Date(today.getFullYear(), today.getMonth(), 1));
   };
 
   const closeTaskSmsModal = () => {
     if (isSendingTaskSms) return;
     setTaskSmsTarget(null);
     setTaskSmsNote("");
+    setTaskSmsDate("");
+    setTaskSmsSlot(null);
     setTaskSmsError("");
   };
 
+  // "Sunday, December 21, 2026, 8:00 AM - 9:00 AM, Parish Hall"
+  const taskSmsComposedNote = [
+    taskSmsDate
+      ? `${new Date(`${taskSmsDate}T00:00:00`).toLocaleDateString("en-US", { weekday: "long" })}, ${formatLongDate(taskSmsDate)}`
+      : "",
+    taskSmsSlot?.label || "",
+    taskSmsNote.trim().replace(/[.\s]+$/, ""),
+  ]
+    .filter(Boolean)
+    .join(", ");
+
   const handleSendTaskSms = async () => {
     const appointmentID = Number(selectedProgressItem?.appointmentID);
-    const note = taskSmsNote.trim();
+    const note = taskSmsComposedNote;
     if (!taskSmsTarget || !Number.isInteger(appointmentID) || appointmentID <= 0) return;
-    if (note.length < 3) {
-      setTaskSmsError("Enter the date or note to send (at least 3 characters).");
+    if (!taskSmsDate) {
+      setTaskSmsError("Pick a date on the calendar first.");
       return;
     }
     setIsSendingTaskSms(true);
@@ -978,6 +1011,8 @@ function AdminProgressDetails() {
       pushUiNotice(`SMS sent to ${recipientCount} number${recipientCount === 1 ? "" : "s"}.`);
       setTaskSmsTarget(null);
       setTaskSmsNote("");
+      setTaskSmsDate("");
+      setTaskSmsSlot(null);
     } catch (error) {
       setTaskSmsError(error.message || "Unable to send the SMS.");
     } finally {
@@ -3882,40 +3917,134 @@ function AdminProgressDetails() {
       {taskSmsTarget ? (
         <div className="progress-delete-modal-overlay" role="presentation" onClick={closeTaskSmsModal}>
           <section
-            className="progress-delete-modal progress-delete-modal--confirm progress-delete-modal--wide"
+            className="progress-delete-modal progress-delete-modal--schedule-split"
             role="dialog"
             aria-modal="true"
             aria-label="Text the requester a date"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="progress-delete-modal-body">
+            <div className="progress-delete-modal-body progress-delete-modal-body--left">
               <span className="progress-delete-modal-icon progress-task-sms-modal-icon" aria-hidden="true">
                 <MessageSquare size={24} />
               </span>
               <h3>Text the date for this task</h3>
               <p>
                 <strong>{taskSmsTarget.label}</strong>
+                <br />
+                Pick the date on the calendar{taskSmsTarget.weekdays.length > 0 ? " (matching days are highlighted)" : ""}, add a time
+                if needed, then send. This is sent by SMS only and is not saved.
               </p>
-              <label className="progress-uncheck-reason-field">
-                <span>Date or note</span>
-                <textarea
-                  value={taskSmsNote}
-                  onChange={(event) => setTaskSmsNote(event.target.value)}
-                  placeholder="Ex. Sunday, December 21, 2026 at 8:00 AM, Parish Hall"
-                  data-title-case="off"
-                  rows={3}
-                  maxLength={300}
-                  autoFocus
-                />
-                <small>{taskSmsNote.trim().length}/300 characters. Sent by SMS only; it is not saved.</small>
-              </label>
-              {taskSmsNote.trim() ? (
-                <p className="progress-task-sms-preview">
-                  <span>SMS preview</span>
-                  {`Faithflow: Your ${selectedProgressItem?.sacramentName || selectedProgressItem?.sacramentalType || "appointment"} request update. ${taskSmsTarget.label.replace(/[.\s]+$/, "")}: ${taskSmsNote.trim().replace(/[.\s]+$/, "")}.`}
-                </p>
-              ) : null}
-              {taskSmsError ? <p className="progress-task-sms-error">{taskSmsError}</p> : null}
+              <div className="progress-schedule-split-layout">
+                <div className="progress-schedule-split-panel">
+                  <h4>Calendar</h4>
+                  <div className="progress-priest-calendar-month">
+                    <button
+                      type="button"
+                      className="progress-calendar-month-nav"
+                      aria-label="Previous month"
+                      onClick={() => setTaskSmsMonth((current) => new Date(current.getFullYear(), current.getMonth() - 1, 1))}
+                    >
+                      <ChevronLeft size={14} aria-hidden="true" />
+                    </button>
+                    <strong>{taskSmsMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}</strong>
+                    <button
+                      type="button"
+                      className="progress-calendar-month-nav"
+                      aria-label="Next month"
+                      onClick={() => setTaskSmsMonth((current) => new Date(current.getFullYear(), current.getMonth() + 1, 1))}
+                    >
+                      <ChevronRight size={14} aria-hidden="true" />
+                    </button>
+                  </div>
+                  <div className="progress-priest-calendar-grid">
+                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((dayName) => (
+                      <span key={`sms-calendar-head-${dayName}`} className="progress-priest-calendar-day-name">
+                        {dayName}
+                      </span>
+                    ))}
+                    {Array.from({ length: new Date(taskSmsMonth.getFullYear(), taskSmsMonth.getMonth(), 1).getDay() }).map((_, index) => (
+                      <span key={`sms-calendar-empty-${index}`} className="progress-priest-calendar-date-cell is-empty" />
+                    ))}
+                    {Array.from({ length: new Date(taskSmsMonth.getFullYear(), taskSmsMonth.getMonth() + 1, 0).getDate() }).map((_, index) => {
+                      const dayNumber = index + 1;
+                      const dateKey = `${taskSmsMonth.getFullYear()}-${String(taskSmsMonth.getMonth() + 1).padStart(2, "0")}-${String(dayNumber).padStart(2, "0")}`;
+                      const weekday = new Date(taskSmsMonth.getFullYear(), taskSmsMonth.getMonth(), dayNumber).getDay();
+                      const isPast = dateKey < getManilaDateKey();
+                      const isDayOff =
+                        dayOffSpecificDates.includes(dateKey) || (Number.isInteger(dayOffWeekday) && dayOffWeekday === weekday);
+                      const isMatch = taskSmsTarget.weekdays.includes(weekday);
+                      const isUnavailable = isPast || isDayOff;
+                      const isSelected = !isUnavailable && taskSmsDate === dateKey;
+                      return (
+                        <button
+                          key={`sms-calendar-date-${dateKey}`}
+                          type="button"
+                          className={`progress-priest-calendar-date-cell ${
+                            isDayOff ? "is-day-off" : isPast ? "is-locked" : isMatch ? "is-free" : "is-sms-plain"
+                          }${isSelected ? " is-selected" : ""}`}
+                          disabled={isUnavailable}
+                          aria-label={`${formatLongDate(dateKey)}${isDayOff ? ", day off" : isPast ? ", past" : isMatch ? ", matches this task" : ""}`}
+                          onClick={() => {
+                            setTaskSmsDate(dateKey);
+                            if (taskSmsError) setTaskSmsError("");
+                          }}
+                        >
+                          <span>{dayNumber}</span>
+                          {isDayOff ? <small>Off</small> : null}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <div className="progress-priest-calendar-modal-legend">
+                    {taskSmsTarget.weekdays.length > 0 ? (
+                      <span><i className="is-free" /> Matches this task</span>
+                    ) : null}
+                    <span><i className="is-day-off" /> Day off</span>
+                    <span><i className="is-locked" /> Past</span>
+                  </div>
+                </div>
+                <div className="progress-schedule-split-panel">
+                  <h4>Time (optional)</h4>
+                  <p className="progress-picked-date-label">
+                    Selected date: <strong>{taskSmsDate ? formatLongDate(taskSmsDate) : "Not set"}</strong>
+                  </p>
+                  <div className="progress-schedule-slot-grid progress-task-sms-slot-grid" role="listbox" aria-label="Time slots">
+                    {TASK_SMS_TIME_SLOTS.map((slot) => {
+                      const isSelected = taskSmsSlot?.key === slot.key;
+                      return (
+                        <button
+                          key={`sms-slot-${slot.key}`}
+                          type="button"
+                          role="option"
+                          aria-selected={isSelected}
+                          className={`progress-schedule-slot-button${isSelected ? " is-selected" : ""}`}
+                          onClick={() => setTaskSmsSlot(isSelected ? null : slot)}
+                        >
+                          <span>{slot.label}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <label className="progress-uncheck-reason-field progress-task-sms-place-field">
+                    <span>Place or extra note (optional)</span>
+                    <input
+                      type="text"
+                      value={taskSmsNote}
+                      onChange={(event) => setTaskSmsNote(event.target.value)}
+                      placeholder="Ex. Parish Hall"
+                      data-title-case="off"
+                      maxLength={120}
+                    />
+                  </label>
+                  <p className="progress-task-sms-preview">
+                    <span>SMS preview</span>
+                    {taskSmsDate
+                      ? `Faithflow: Your ${selectedProgressItem?.sacramentName || selectedProgressItem?.sacramentalType || "appointment"} request update. ${taskSmsTarget.label.replace(/[.\s]+$/, "")}: ${taskSmsComposedNote}.`
+                      : "Pick a date to see the message."}
+                  </p>
+                  {taskSmsError ? <p className="progress-task-sms-error">{taskSmsError}</p> : null}
+                </div>
+              </div>
             </div>
             <div className="progress-delete-modal-actions">
               <button type="button" className="secondary" onClick={closeTaskSmsModal} disabled={isSendingTaskSms}>
@@ -3925,7 +4054,7 @@ function AdminProgressDetails() {
                 type="button"
                 className="primary"
                 onClick={() => void handleSendTaskSms()}
-                disabled={isSendingTaskSms || taskSmsNote.trim().length < 3}
+                disabled={isSendingTaskSms || !taskSmsDate}
               >
                 {isSendingTaskSms ? "Sending..." : "Send SMS"}
               </button>
